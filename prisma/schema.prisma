@@ -27,7 +27,7 @@ model Clients {
 
   Notes Notes[]
 
-  User Users @relation(fields: [ownerId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  User Users @relation(fields: [ownerId], references: [id], onDelete: NoAction)
 }
 
 model Documents {
@@ -39,8 +39,8 @@ model Documents {
   status    String
   createdAt DateTime
   createdBy String
-  Client    Clients  @relation(fields: [clientId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  User      Users    @relation(fields: [createdBy], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  Client    Clients  @relation(fields: [clientId], references: [id], onDelete: NoAction)
+  User      Users    @relation(fields: [createdBy], references: [id], onDelete: NoAction)
 }
 
 model Events {
@@ -53,8 +53,8 @@ model Events {
   endingAt    DateTime
   createdAt   DateTime @default(now())
   createdBy   String
-  Client      Clients  @relation(fields: [clientId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  User        Users    @relation(fields: [createdBy], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  Client      Clients  @relation(fields: [clientId], references: [id], onDelete: NoAction)
+  User        Users    @relation(fields: [createdBy], references: [id], onDelete: NoAction)
 }
 
 model History {
@@ -63,8 +63,8 @@ model History {
   action    String
   createdAt DateTime
   createdBy String
-  Client    Clients  @relation(fields: [clientId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  User      Users    @relation(fields: [createdBy], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  Client    Clients  @relation(fields: [clientId], references: [id], onDelete: NoAction)
+  User      Users    @relation(fields: [createdBy], references: [id], onDelete: NoAction)
 }
 
 model Notes {
@@ -73,8 +73,8 @@ model Notes {
   description String
   createdAt   DateTime @default(now())
   createdBy   String
-  Client      Clients  @relation(fields: [clientId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  User        Users    @relation(fields: [createdBy], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  Client      Clients  @relation(fields: [clientId], references: [id], onDelete: NoAction)
+  User        Users    @relation(fields: [createdBy], references: [id], onDelete: NoAction)
 }
 
 model Users {
