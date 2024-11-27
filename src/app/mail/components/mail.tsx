@@ -12,6 +12,7 @@ import React from "react";
 import { AccountSwitch } from "./account-switch";
 import Sidebar from "./sidebar";
 import ThreadList from "./thread-list";
+import ThreadDisplay from "./thread-display";
 
 interface MailProps {
   defaultLayout: number[] | undefined;
@@ -118,7 +119,7 @@ export function Mail({
         </ResizablePanel>
         <ResizableHandle withHandle />
         <ResizablePanel defaultSize={defaultLayout[2]} minSize={30}>
-          ThreadDisplay
+          <ThreadDisplay/>
         </ResizablePanel>
       </ResizablePanelGroup>
     </TooltipProvider>
