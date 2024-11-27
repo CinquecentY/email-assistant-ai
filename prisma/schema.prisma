@@ -3,85 +3,88 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
 model Clients {
-  id          Int         @id @default(autoincrement()) @map("id")
-  name        String      @map("name") @db.VarChar(255)
-  email       String      @map("email") @db.VarChar(255)
-  phoneNumber String      @map("phone_number") @db.VarChar(50)
-  city        String      @map("city") @db.VarChar(255)
-  country     String      @map("country") @db.VarChar(255)
-  ownerId     Int         @map("owner_id")
-  status      String      @map("status") @db.VarChar(50)
-  createdAt   DateTime    @map("created_at") @db.Timestamp(6)
-  createdBy   Int         @map("created_by")
-  documents   Documents[]
-  events      Events[]
-  history     History[]
-  notes       Notes[]
+  id          String   @id @default(cuid())
+  name        String
+  email       String
+  phoneNumber String
+  city        String
+  country     String
+  ownerId     String
+  status      String
+  createdAt   DateTime @default(now())
+  createdBy   String
 
-  @@map("clients")
+  Documents Documents[]
+
+  Events Events[]
+
+  History History[]
+
+  Notes Notes[]
+
+  User Users @relation(fields: [ownerId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
 
 model Documents {
-  id        Int      @id @default(autoincrement()) @map("id")
-  type      String   @map("type") @db.VarChar(50)
-  clientId  Int      @map("client_id")
-  amount    Int      @map("amount")
-  products  String   @map("products") @db.VarChar(255)
-  status    String   @map("status") @db.VarChar(50)
-  createdAt DateTime @map("created_at") @db.Timestamp(6)
-  createdBy Int      @map("created_by")
-  client    Clients  @relation(fields: [clientId], references: [id])
-
-  @@map("documents")
+  id        String   @id @default(cuid())
+  type      String
+  clientId  String
+  amount    Int
+  products  String
+  status    String
+  createdAt DateTime
+  createdBy String
+  Client    Clients  @relation(fields: [clientId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  User      Users    @relation(fields: [createdBy], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
 
 model Events {
-  id          Int      @id @default(autoincrement()) @map("id")
-  clientId    Int      @map("client_id")
-  ownerId     Int      @map("owner_id")
-  name        String   @map("name") @db.VarChar(255)
-  description String   @map("description") @db.VarChar(255)
-  startingAt  DateTime @map("starting_at") @db.Timestamp(6)
-  endingAt    DateTime @map("ending_at") @db.Timestamp(6)
-  createdAt   DateTime @map("created_at") @db.Timestamp(6)
-  createdBy   Int      @map("created_by")
-  client      Clients  @relation(fields: [clientId], references: [id])
-
-  @@map("events")
+  id          String   @id @default(cuid())
+  clientId    String
+  ownerId     String
+  name        String
+  description String
+  startingAt  DateTime
+  endingAt    DateTime
+  createdAt   DateTime @default(now())
+  createdBy   String
+  Client      Clients  @relation(fields: [clientId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  User        Users    @relation(fields: [createdBy], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
 
 model History {
-  id        Int      @id @default(autoincrement()) @map("id")
-  clientId  Int      @map("client_id")
-  action    String   @map("action") @db.VarChar(255)
-  createdAt DateTime @map("created_at") @db.Timestamp(6)
-  createdBy Int      @map("created_by")
-  client    Clients  @relation(fields: [clientId], references: [id])
-
-  @@map("history")
+  id        String   @id @default(cuid())
+  clientId  String
+  action    String
+  createdAt DateTime
+  createdBy String
+  Client    Clients  @relation(fields: [clientId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  User      Users    @relation(fields: [createdBy], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
 
 model Notes {
-  id          Int      @id @default(autoincrement()) @map("id")
-  clientId    Int      @map("client_id")
-  description String   @map("description") @db.VarChar(255)
-  createdAt   DateTime @map("created_at") @db.Timestamp(6)
-  createdBy   Int      @map("created_by")
-  client      Clients  @relation(fields: [clientId], references: [id])
-
-  @@map("notes")
+  id          String   @id @default(cuid())
+  clientId    String
+  description String
+  createdAt   DateTime @default(now())
+  createdBy   String
+  Client      Clients  @relation(fields: [clientId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  User        Users    @relation(fields: [createdBy], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
 
 model Users {
-  id           String    @id @default(cuid()) @map("id")
-  emailAddress String?    @unique @map("email")
-  name         String?   @map("name") @db.VarChar(255)
-  createdAt    DateTime  @default(now()) @map("created_at") @db.DateTime(0)
-
-  @@map("users")
+  id           String      @id @default(cuid())
+  email String?     @unique
+  name         String?
+  createdAt    DateTime    @default(now())
+  Clients      Clients[]
+  Documents    Documents[]
+  Events       Events[]
+  History      History[]
+  Notes        Notes[]
 }
