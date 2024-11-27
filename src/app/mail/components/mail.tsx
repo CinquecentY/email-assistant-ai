@@ -11,6 +11,7 @@ import { cn } from "@/lib/utils";
 import React from "react";
 import { AccountSwitch } from "./account-switch";
 import Sidebar from "./sidebar";
+import ThreadList from "./thread-list";
 
 interface MailProps {
   defaultLayout: number[] | undefined;
@@ -70,7 +71,7 @@ export function Mail({
               <AccountSwitch isCollapsed={isCollapsed} />
             </div>
             <Separator />
-            <Sidebar isCollapsed={false}/>
+            <Sidebar isCollapsed={false} />
             <div className="flex-1"></div>
             Ask AI
           </div>
@@ -108,10 +109,10 @@ export function Mail({
             <Separator />
             Search Bar
             <TabsContent value="inbox" className="m-0">
-              ThreadList
+              <ThreadList />
             </TabsContent>
             <TabsContent value="done" className="m-0">
-              ThreadList
+              <ThreadList />
             </TabsContent>
           </Tabs>
         </ResizablePanel>
