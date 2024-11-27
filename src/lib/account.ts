@@ -1,6 +1,7 @@
 import { db } from "@/server/db";
 import axios from "axios";
 import { SyncResponse, EmailMessage, SyncUpdatedResponse } from "./types";
+import { syncEmailsToDatabase } from "./sync-to-db";
 
 const API_BASE_URL = "https://api.aurinko.io/v1";
 
@@ -76,7 +77,7 @@ class Account {
     if (!response) throw new Error("Failed to sync emails");
 
     try {
-      //await syncEmailsToDatabase(allEmails, account.id)
+      await syncEmailsToDatabase(allEmails, account.id)
     } catch (error) {
       console.log("error", error);
     }
