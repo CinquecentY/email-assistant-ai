@@ -186,5 +186,74 @@ export const mailRouter = createTRPCRouter({
         },
       });
     }),
-    
+
+  getReplyDetails: protectedProcedure
+    .input(
+      z.object({
+        accountId: z.string(),
+        threadId: z.string(),
+        replyType: z.enum(["reply", "replyAll"]),
+      }),
+    )
+    .query(async ({ ctx, input }) => {
+      const account = await authoriseAccountAccess(
+        input.accountId,
+        ctx.auth.userId,
+      );
+
+      const thread = await ctx.db.thread.findUnique({
+        where: { id: input.threadId },
+        include: {
+          emails: {
+            orderBy: { sentAt: "asc" },
+            select: {
+              from: true,
+              to: true,
+              cc: true,
+              bcc: true,
+              sentAt: true,
+              subject: true,
+              internetMessageId: true,
+            },
+          },
+        },
+      });
+
+      if (!thread || thread.emails.length === 0) {
+        throw new Error("Thread not found or empty");
+      }
+
+      const lastExternalEmail = thread.emails
+        .reverse()
+        .find((email) => email.from.id !== account.id);
+
+      if (!lastExternalEmail) {
+        throw new Error("No external email found in thread");
+      }
+
+      const allRecipients = new Set([
+        ...thread.emails.flatMap((e) => [e.from, ...e.to, ...e.cc]),
+      ]);
+
+      if (input.replyType === "reply") {
+        return {
+          to: [lastExternalEmail.from],
+          cc: [],
+          from: { name: account.name, address: account.email },
+          subject: `${lastExternalEmail.subject}`,
+          id: lastExternalEmail.internetMessageId,
+        };
+      } else if (input.replyType === "replyAll") {
+        return {
+          to: [
+            lastExternalEmail.from,
+            ...lastExternalEmail.to.filter((addr) => addr.id !== account.id),
+          ],
+          cc: lastExternalEmail.cc.filter((addr) => addr.id !== account.id),
+          from: { name: account.name, address: account.email },
+          subject: `${lastExternalEmail.subject}`,
+          id: lastExternalEmail.internetMessageId,
+        };
+      }
+    }),
 });
