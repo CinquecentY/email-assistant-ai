@@ -10,6 +10,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 import React from "react";
 import { AccountSwitch } from "./account-switch";
+import Sidebar from "./sidebar";
 
 interface MailProps {
   defaultLayout: number[] | undefined;
@@ -69,7 +70,7 @@ export function Mail({
               <AccountSwitch isCollapsed={isCollapsed} />
             </div>
             <Separator />
-            Sidebar
+            <Sidebar isCollapsed={false}/>
             <div className="flex-1"></div>
             Ask AI
           </div>
