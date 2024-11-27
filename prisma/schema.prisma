@@ -1,20 +1,87 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
-    provider = "prisma-client-js"
+  provider = "prisma-client-js"
 }
 
 datasource db {
-    provider = "mysql"
-    url      = env("DATABASE_URL")
+  provider = "mysql"
+  url      = env("DATABASE_URL")
 }
 
-model Post {
-    id        Int      @id @default(autoincrement())
-    name      String
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+model Clients {
+  id          Int         @id @default(autoincrement()) @map("id")
+  name        String      @map("name") @db.VarChar(255)
+  email       String      @map("email") @db.VarChar(255)
+  phoneNumber String      @map("phone_number") @db.VarChar(50)
+  city        String      @map("city") @db.VarChar(255)
+  country     String      @map("country") @db.VarChar(255)
+  ownerId     Int         @map("owner_id")
+  status      String      @map("status") @db.VarChar(50)
+  createdAt   DateTime    @map("created_at") @db.Timestamp(6)
+  createdBy   Int         @map("created_by")
+  documents   Documents[]
+  events      Events[]
+  history     History[]
+  notes       Notes[]
 
-    @@index([name])
+  @@map("clients")
+}
+
+model Documents {
+  id        Int      @id @default(autoincrement()) @map("id")
+  type      String   @map("type") @db.VarChar(50)
+  clientId  Int      @map("client_id")
+  amount    Int      @map("amount")
+  products  String   @map("products") @db.VarChar(255)
+  status    String   @map("status") @db.VarChar(50)
+  createdAt DateTime @map("created_at") @db.Timestamp(6)
+  createdBy Int      @map("created_by")
+  client    Clients  @relation(fields: [clientId], references: [id])
+
+  @@map("documents")
+}
+
+model Events {
+  id          Int      @id @default(autoincrement()) @map("id")
+  clientId    Int      @map("client_id")
+  ownerId     Int      @map("owner_id")
+  name        String   @map("name") @db.VarChar(255)
+  description String   @map("description") @db.VarChar(255)
+  startingAt  DateTime @map("starting_at") @db.Timestamp(6)
+  endingAt    DateTime @map("ending_at") @db.Timestamp(6)
+  createdAt   DateTime @map("created_at") @db.Timestamp(6)
+  createdBy   Int      @map("created_by")
+  client      Clients  @relation(fields: [clientId], references: [id])
+
+  @@map("events")
+}
+
+model History {
+  id        Int      @id @default(autoincrement()) @map("id")
+  clientId  Int      @map("client_id")
+  action    String   @map("action") @db.VarChar(255)
+  createdAt DateTime @map("created_at") @db.Timestamp(6)
+  createdBy Int      @map("created_by")
+  client    Clients  @relation(fields: [clientId], references: [id])
+
+  @@map("history")
+}
+
+model Notes {
+  id          Int      @id @default(autoincrement()) @map("id")
+  clientId    Int      @map("client_id")
+  description String   @map("description") @db.VarChar(255)
+  createdAt   DateTime @map("created_at") @db.Timestamp(6)
+  createdBy   Int      @map("created_by")
+  client      Clients  @relation(fields: [clientId], references: [id])
+
+  @@map("notes")
+}
+
+model Users {
+  id           String    @id @default(cuid()) @map("id")
+  emailAddress String?    @unique @map("email")
+  name         String?   @map("name") @db.VarChar(255)
+  createdAt    DateTime  @default(now()) @map("created_at") @db.DateTime(0)
+
+  @@map("users")
 }
