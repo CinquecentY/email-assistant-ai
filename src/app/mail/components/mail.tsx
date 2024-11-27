@@ -9,6 +9,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 import React from "react";
+import { AccountSwitch } from "./account-switch";
 
 interface MailProps {
   defaultLayout: number[] | undefined;
@@ -65,7 +66,7 @@ export function Mail({
                 isCollapsed ? "h-[52px]" : "px-2",
               )}
             >
-              Account Switcher
+              <AccountSwitch isCollapsed={isCollapsed} />
             </div>
             <Separator />
             Sidebar
