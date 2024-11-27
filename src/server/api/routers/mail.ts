@@ -256,4 +256,42 @@ export const mailRouter = createTRPCRouter({
         };
       }
     }),
+  // TODO Add the rest here
+  getEmailSuggestions: protectedProcedure
+    .input(
+      z.object({
+        accountId: z.string(),
+        query: z.string(),
+      }),
+    )
+    .query(async ({ ctx, input }) => {
+      const account = await authoriseAccountAccess(
+        input.accountId,
+        ctx.auth.userId,
+      );
+      return await ctx.db.emailAddress.findMany({
+        where: {
+          accountId: account.id,
+          OR: [
+            {
+              address: {
+                contains: input.query,
+                mode: "insensitive",
+              },
+            },
+            {
+              name: {
+                contains: input.query,
+                mode: "insensitive",
+              },
+            },
+          ],
+        },
+        select: {
+          address: true,
+          name: true,
+        },
+        take: 10,
+      });
+    }),
 });
