@@ -1,11 +1,17 @@
 "use client";
-import React from "react";
+import React, { type ComponentProps } from "react";
 import useThreads from "../use-threads";
-import { format } from "date-fns";
+import { format, formatDistanceToNow } from "date-fns";
+import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
+import DOMPurify from "dompurify";
+import { Badge } from "@/components/ui/badge";
+import { useThread } from "../use-thread";
 
 function ThreadList() {
   const { threads, isFetching } = useThreads();
 
+  const [threadId, setThreadId] = useThread();
   const groupedThreads = threads?.reduce(
     (acc, thread) => {
       const date = format(thread.lastMessageDate ?? new Date(), "yyyy-MM-dd");
@@ -25,11 +31,84 @@ function ThreadList() {
             <div className="mt-4 text-xs font-medium text-muted-foreground first:mt-0">
               {format(new Date(date), "MMMM d, yyyy")}
             </div>
+            {threads.map((item) => (
+              <Button
+                id={`thread-${item.id}`}
+                key={item.id}
+                className={cn(
+                  "relative flex flex-col items-start gap-2 rounded-lg border p-3 text-left text-sm transition-all h-auto",
+                )}
+              >
+                <div className="flex w-full flex-col gap-1">
+                  <div className="flex items-center">
+                    <div className="flex items-center gap-2">
+                      <div className="font-semibold">
+                        {item.emails.at(-1)?.from?.name}
+                      </div>
+                    </div>
+                    <div
+                      className={cn(
+                        "ml-auto text-xs",
+                        threadId === item.id
+                          ? "text-foreground"
+                          : "text-muted-foreground",
+                      )}
+                    >
+                      {formatDistanceToNow(
+                        item.emails.at(-1)?.sentAt ?? new Date(),
+                        {
+                          addSuffix: true,
+                        },
+                      )}
+                    </div>
+                  </div>
+                  <div className="text-xs font-medium">{item.subject}</div>
+                </div>
+                <div
+                  className="line-clamp-2 text-xs text-muted-foreground"
+                  dangerouslySetInnerHTML={{
+                    // HACK Dangerously sanitzed using DOMPurify
+                    __html: DOMPurify.sanitize(
+                      item.emails.at(-1)?.bodySnippet ?? "",
+                      {
+                        USE_PROFILES: { html: true },
+                      },
+                    ),
+                  }}
+                ></div>
+                {item.emails[0]?.sysLabels.length ? (
+                  <div className="flex items-center gap-2">
+                    {item.emails.at(0)?.sysLabels.map((label) => (
+                      <Badge
+                        key={label}
+                        variant={getBadgeVariantFromLabel(label)}
+                      >
+                        {label}
+                      </Badge>
+                    ))}
+                  </div>
+                ) : null}
+              </Button>
+            ))}
           </React.Fragment>
         ))}
       </div>
     </div>
   );
+}
+
+function getBadgeVariantFromLabel(
+  label: string,
+): ComponentProps<typeof Badge>["variant"] {
+  if (["work"].includes(label.toLowerCase())) {
+    return "default";
+  }
+
+  if (["personal"].includes(label.toLowerCase())) {
+    return "outline";
+  }
+
+  return "secondary";
 }
 
 export default ThreadList;
