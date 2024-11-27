@@ -28,7 +28,7 @@ export const POST = async (req: NextRequest) => {
 
   const { deltaToken, emails } = response;
 
-  console.log(deltaToken, emails);
+  //console.log(deltaToken, emails);
 
   await syncEmailsToDatabase(emails, accountId);
 
