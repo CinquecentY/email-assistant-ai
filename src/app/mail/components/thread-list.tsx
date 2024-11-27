@@ -36,8 +36,11 @@ function ThreadList() {
                 id={`thread-${item.id}`}
                 key={item.id}
                 className={cn(
-                  "relative flex flex-col items-start gap-2 rounded-lg border p-3 text-left text-sm transition-all h-auto",
+                  "relative flex h-auto flex-col items-start gap-2 rounded-lg border p-3 text-left text-sm transition-all",
                 )}
+                onClick={() => {
+                  setThreadId(item.id);
+                }}
               >
                 <div className="flex w-full flex-col gap-1">
                   <div className="flex items-center">
