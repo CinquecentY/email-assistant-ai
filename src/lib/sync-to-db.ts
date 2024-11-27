@@ -4,7 +4,7 @@ import { EmailAddress, EmailAttachment, EmailMessage } from "./types";
 import pLimit from "p-limit";
 
 async function syncEmailsToDatabase(emails: EmailMessage[], accountId: string) {
-  console.log(`Syncing ${emails.length} emails to database`);
+  // console.log(`Syncing ${emails.length} emails to database`);
   const limit = pLimit(10); // Process up to 10 emails concurrently
   /*
   const oramaClient = new OramaManager(accountId);
@@ -55,7 +55,7 @@ async function upsertEmail(
   index: number,
   accountId: string,
 ) {
-  console.log(`Upserting email ${index + 1}`, JSON.stringify(email, null, 2));
+  // console.log(`Upserting email ${index + 1}`, JSON.stringify(email, null, 2));
   try {
     // determine email label type
     let emailLabelType: "inbox" | "sent" | "draft" = "inbox";
