@@ -35,6 +35,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import EmailDisplay from "./email-display";
+import ReplyBox from "./reply-box";
 
 function ThreadDisplay() {
   const [threadId, setThreadId] = useThread();
@@ -236,7 +237,7 @@ function ThreadDisplay() {
           </div>
           <div className="flex-1"></div>
           <Separator className="mt-auto" />
-          ReplyBox
+          <ReplyBox />
         </div>
       ) : (
         <>
