@@ -78,13 +78,31 @@ model Notes {
 }
 
 model Users {
-  id           String      @id @default(cuid())
-  email String?     @unique
-  name         String?
-  createdAt    DateTime    @default(now())
-  Clients      Clients[]
-  Documents    Documents[]
-  Events       Events[]
-  History      History[]
-  Notes        Notes[]
+  id        String      @id @default(cuid())
+  email     String?     @unique
+  name      String?
+  createdAt DateTime    @default(now())
+  Clients   Clients[]
+  Documents Documents[]
+  Events    Events[]
+  History   History[]
+  Notes     Notes[]
+
+  Account Accounts[]
+}
+
+model Accounts {
+  id     String @id @default(cuid())
+  userId String
+
+  binaryIndex Json?
+
+  token    String @unique
+  provider String
+  email    String
+  name     String
+
+  nextDeltaToken String?
+
+  user Users @relation(fields: [userId], references: [id])
 }
