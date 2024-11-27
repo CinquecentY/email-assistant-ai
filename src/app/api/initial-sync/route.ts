@@ -3,7 +3,7 @@ import { syncEmailsToDatabase } from "@/lib/sync-to-db";
 import { db } from "@/server/db";
 import { NextRequest, NextResponse } from "next/server";
 
-export const maxDuration = 300;
+export const maxDuration = 30;
 
 export const POST = async (req: NextRequest) => {
   const body = await req.json();
