@@ -50,7 +50,7 @@ const Component = ({
     })) || [],
   );
 
-  //const sendEmail = api.mail.sendEmail.useMutation();
+  const sendEmail = api.mail.sendEmail.useMutation();
   React.useEffect(() => {
     if (!replyDetails || !threadId) return;
 
@@ -73,7 +73,7 @@ const Component = ({
 
   const handleSend = async (value: string) => {
     if (!replyDetails) return;
-    /*sendEmail.mutate(
+    sendEmail.mutate(
       {
         accountId,
         threadId: threadId ?? undefined,
@@ -97,7 +97,7 @@ const Component = ({
           // editor?.commands.clearContent()
         },
       },
-    );*/
+    );
   };
 
   return (
@@ -114,7 +114,7 @@ const Component = ({
       setSubject={setSubject}
       to={toValues.map((to) => to.value)}
       handleSend={handleSend}
-      isSending={/*sendEmail.isPending*/ false}
+      isSending={sendEmail.isPending}
     />
   );
 };
