@@ -1,17 +1,18 @@
-'use server'
-import { streamText } from 'ai';
-import { createStreamableValue } from 'ai/rsc';
-import { google } from '@ai-sdk/google';
+"use server";
+import { streamText } from "ai";
+import { createStreamableValue } from "ai/rsc";
+import { google } from "@ai-sdk/google";
 
+const model = google("gemini-1.5-flash");
 
 export async function generateEmail(context: string, prompt: string) {
-    console.log("context", context)
-    const stream = createStreamableValue('');
+  console.log("context", context);
+  const stream = createStreamableValue("");
 
-    (async () => {
-        const { textStream } = await streamText({
-            model: google('gemini-1.5-flash'),
-            prompt: `
+  (async () => {
+    const { textStream } = await streamText({
+      model: model,
+      prompt: `
             You are an AI email assistant embedded in an email client app. Your purpose is to help the user compose emails by providing suggestions and relevant information based on the context of their previous emails.
             
             THE TIME NOW IS ${new Date().toLocaleString()}
@@ -34,26 +35,26 @@ export async function generateEmail(context: string, prompt: string) {
             - Directly output the email, no need to say 'Here is your email' or anything like that.
             - No need to output subject
             `,
-        });
+    });
 
-        for await (const delta of textStream) {
-            stream.update(delta);
-        }
+    for await (const delta of textStream) {
+      stream.update(delta);
+    }
 
-        stream.done();
-    })();
+    stream.done();
+  })();
 
-    return { output: stream.value };
+  return { output: stream.value };
 }
 
 export async function generate(input: string) {
-    const stream = createStreamableValue('');
+  const stream = createStreamableValue("");
 
-    console.log("input", input);
-    (async () => {
-        const { textStream } = await streamText({
-            model: google('gemini-1.5-pro-latest'),
-            prompt: `
+  console.log("input", input);
+  (async () => {
+    const { textStream } = await streamText({
+      model: model,
+      prompt: `
             ALWAYS RESPOND IN PLAIN TEXT, no html or markdown.
             You are a helpful AI embedded in a email client app that is used to autocomplete sentences, similar to google gmail autocomplete
             The traits of AI include expert knowledge, helpfulness, cleverness, and articulateness.
@@ -72,14 +73,14 @@ export async function generate(input: string) {
 
             Your output is directly concatenated to the input, so do not add any new lines or formatting, just plain text.
             `,
-        });
+    });
 
-        for await (const delta of textStream) {
-            stream.update(delta);
-        }
+    for await (const delta of textStream) {
+      stream.update(delta);
+    }
 
-        stream.done();
-    })();
+    stream.done();
+  })();
 
-    return { output: stream.value };
+  return { output: stream.value };
 }
