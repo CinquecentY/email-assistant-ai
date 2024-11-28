@@ -53,7 +53,7 @@ const AIComposeButton = (props: Props) => {
   };
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger>
+      <DialogTrigger asChild>
         <Button onClick={() => setOpen(true)} size="icon" variant={"outline"}>
           <Sparkles className="size-5" />
         </Button>
