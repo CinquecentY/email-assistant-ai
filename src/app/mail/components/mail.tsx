@@ -17,6 +17,7 @@ import { UserButton } from "@clerk/nextjs";
 import { ModeToggle } from "@/components/theme-toggle";
 import ComposeButton from "./compose-button";
 import SearchBar from "./search-bar";
+import AskAI from "./ask-ai";
 
 interface MailProps {
   defaultLayout: number[] | undefined;
@@ -78,9 +79,9 @@ export function Mail({
               <AccountSwitch isCollapsed={isCollapsed} />
             </div>
             <Separator />
-            <Sidebar isCollapsed={false} />
+            <Sidebar isCollapsed={isCollapsed} />
             <div className="flex-1"></div>
-            Ask AI
+            <AskAI isCollapsed={isCollapsed} />
             <ComposeButton />
             <ModeToggle />
             {
