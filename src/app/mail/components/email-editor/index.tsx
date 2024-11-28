@@ -137,7 +137,7 @@ const EmailEditor = ({
             editor?.commands.clearContent();
             await handleSend(value);
           }}
-          //isLoading={isSending}
+          disabled={isSending}
         >
           Send
         </Button>
