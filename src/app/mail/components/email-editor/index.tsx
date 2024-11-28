@@ -69,8 +69,13 @@ const EmailEditor = ({
   const customText = Text.extend({
     addKeyboardShortcuts() {
       return {
-        "Control-j": () => {
+        "Alt-a": () => {
           aiGenerate(this.editor.getText());
+          return true;
+        },
+        "Alt-r": () => {
+          // TODO Add AI reply function
+          setGeneration("AI Reply");
           return true;
         },
       };
@@ -173,12 +178,20 @@ const EmailEditor = ({
       </div>
       <Separator />
       <div className="flex items-center justify-between px-4 py-3">
-        <span className="text-sm">
-          Tip: Press{" "}
-          <kbd className="rounded-lg border border-gray-200 bg-gray-100 px-2 py-1.5 text-xs font-semibold text-gray-800">
-            Ctrl + J
-          </kbd>{" "}
-          for AI autocomplete
+        <span className="flex gap-1">
+          <span className="text-sm">
+            Tip: Press{" "}
+            <kbd className="rounded-lg border border-gray-200 bg-gray-100 px-2 py-1.5 text-xs font-semibold text-gray-800">
+              Alt + A
+            </kbd>{" "}
+            for AI autocomplete
+          </span>
+          <span className="text-sm">
+            <kbd className="rounded-lg border border-gray-200 bg-gray-100 px-2 py-1.5 text-xs font-semibold text-gray-800">
+              Alt + R
+            </kbd>{" "}
+            for AI reply
+          </span>
         </span>
         <Button
           onClick={async () => {
