@@ -13,6 +13,8 @@ import TagInput from "./tag-input";
 import { Input } from "@/components/ui/input";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
 import AIComposeButton from "./ai-compose-button";
+import { generate } from "./action";
+import { readStreamableValue } from "ai/rsc";
 
 type EmailEditorProps = {
   toValues: { label: string; value: string }[];
@@ -54,11 +56,21 @@ const EmailEditor = ({
 
   const [generation, setGeneration] = React.useState("");
 
+  const aiGenerate = async (prompt: string) => {
+    const { output } = await generate(prompt);
+
+    for await (const delta of readStreamableValue(output)) {
+      if (delta) {
+        setGeneration(delta);
+      }
+    }
+  };
+
   const customText = Text.extend({
     addKeyboardShortcuts() {
       return {
-        "Meta-j": () => {
-          //aiGenerate(this.editor.getText());
+        "Control-j": () => {
+          aiGenerate(this.editor.getText());
           return true;
         },
       };
@@ -79,9 +91,33 @@ const EmailEditor = ({
   });
 
   React.useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (
+        event.key === "Enter" &&
+        editor &&
+        !["INPUT", "TEXTAREA", "SELECT"].includes(
+          document.activeElement?.tagName || "",
+        )
+      ) {
+        editor.commands.focus();
+      }
+      if (event.key === "Escape" && editor) {
+        editor.commands.blur();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [editor]);
+
+  React.useEffect(() => {
     if (!generation || !editor) return;
-    editor.commands.insertContent(generation)
-}, [generation, editor]);
+    editor.commands.insertContent(generation);
+  }, [generation, editor]);
 
   return (
     <div>
@@ -140,7 +176,7 @@ const EmailEditor = ({
         <span className="text-sm">
           Tip: Press{" "}
           <kbd className="rounded-lg border border-gray-200 bg-gray-100 px-2 py-1.5 text-xs font-semibold text-gray-800">
-            Cmd + J
+            Ctrl + J
           </kbd>{" "}
           for AI autocomplete
         </span>
