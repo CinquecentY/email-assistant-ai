@@ -12,7 +12,7 @@ import { Button } from "@/components/ui/button";
 import TagInput from "./tag-input";
 import { Input } from "@/components/ui/input";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
-
+import AIComposeButton from "./ai-compose-button";
 
 type EmailEditorProps = {
   toValues: { label: string; value: string }[];
@@ -44,7 +44,10 @@ const EmailEditor = ({
 }: EmailEditorProps) => {
   const [ref] = useAutoAnimate();
   const [accountId] = useLocalStorage("accountId", "");
-  const { data: suggestions } = api.mail.getEmailSuggestions.useQuery({ accountId: accountId, query: '' }, { enabled: !!accountId });
+  const { data: suggestions } = api.mail.getEmailSuggestions.useQuery(
+    { accountId: accountId, query: "" },
+    { enabled: !!accountId },
+  );
   const [value, setValue] = React.useState("");
 
   const [expanded, setExpanded] = React.useState(defaultToolbarExpand ?? false);
@@ -74,6 +77,12 @@ const EmailEditor = ({
       setValue(editor.getHTML());
     },
   });
+
+  React.useEffect(() => {
+    if (!generation || !editor) return;
+    editor.commands.insertContent(generation)
+}, [generation, editor]);
+
   return (
     <div>
       <div className="flex border-b p-4 py-2">
@@ -113,7 +122,10 @@ const EmailEditor = ({
             <span className="font-medium text-green-600">Draft </span>
             <span>to {to.join(", ")}</span>
           </div>
-          AIComposeButton
+          <AIComposeButton
+            isComposing={defaultToolbarExpand}
+            onGenerate={setGeneration}
+          />
         </div>
       </div>
       <div className="prose w-full px-4">
