@@ -21,7 +21,7 @@ export const POST = async (req: NextRequest) => {
     return NextResponse.json({ error: "ACCOUNT_NOT_FOUND" }, { status: 404 });
 
   const account = new Account(dbAccount.token);
-  await account.createSubscription();
+  //await account.createSubscription();
   const response = await account.performInitialSync();
   if (!response)
     return NextResponse.json({ error: "FAILED_TO_SYNC" }, { status: 500 });
@@ -40,6 +40,6 @@ export const POST = async (req: NextRequest) => {
       nextDeltaToken: deltaToken,
     },
   });
-  console.log("sync complete", deltaToken);
+  //console.log("sync complete", deltaToken);
   return NextResponse.json({ success: true, deltaToken }, { status: 200 });
 };

@@ -27,7 +27,7 @@ class Account {
     return response.data;
   }
 
-  async createSubscription() {
+  /*async createSubscription() {
     const webhookUrl =
       process.env.NODE_ENV === "development"
         ? "https://would-deer-strict-locations.trycloudflare.com"
@@ -46,7 +46,7 @@ class Account {
       },
     );
     return res.data;
-  }
+  }*/
 
   async syncEmails() {
     const account = await db.accounts.findUnique({
