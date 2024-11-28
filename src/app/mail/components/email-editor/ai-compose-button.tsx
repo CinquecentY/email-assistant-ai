@@ -16,6 +16,7 @@ import useThreads from "../../use-threads";
 import { Button } from "@/components/ui/button";
 import { readStreamableValue } from "ai/rsc";
 import { generateEmail } from "./action";
+import { turndown } from "@/lib/turndown";
 
 type Props = {
   onGenerate: (value: string) => void;
@@ -29,13 +30,6 @@ const AIComposeButton = (props: Props) => {
   const [threadId] = useThread();
   const thread = threads?.find((t) => t.id === threadId);
   const aiGenerate = async (prompt: string) => {
-    const { output } = await generateEmail("", prompt);
-    for await (const delta of readStreamableValue(output)) {
-      if (delta) {        
-        props.onGenerate(delta);
-      }
-    }
-    /*
     let context: string | undefined = "";
     if (!props.isComposing) {
       context = thread?.emails
@@ -47,16 +41,15 @@ const AIComposeButton = (props: Props) => {
     }
 
     const { output } = await generateEmail(
-      context + `\n\nMy name is: ${account?.name}`,
+      context + `\n\nMy email is: ${account?.email}`,
       prompt,
     );
-
+// `\n\nMy name is: ${account?.name}`
     for await (const delta of readStreamableValue(output)) {
       if (delta) {
         props.onGenerate(delta);
       }
     }
-  */
   };
   return (
     <Dialog open={open} onOpenChange={setOpen}>
