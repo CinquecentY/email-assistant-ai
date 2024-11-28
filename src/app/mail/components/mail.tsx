@@ -13,6 +13,9 @@ import { AccountSwitch } from "./account-switch";
 import Sidebar from "./sidebar";
 import ThreadList from "./thread-list";
 import ThreadDisplay from "./thread-display";
+import { UserButton } from "@clerk/nextjs";
+import { ModeToggle } from "@/components/theme-toggle";
+import ComposeButton from "./compose-button";
 
 interface MailProps {
   defaultLayout: number[] | undefined;
@@ -69,12 +72,19 @@ export function Mail({
                 isCollapsed ? "h-[52px]" : "px-2",
               )}
             >
+              <UserButton />
+              
               <AccountSwitch isCollapsed={isCollapsed} />
             </div>
             <Separator />
             <Sidebar isCollapsed={false} />
             <div className="flex-1"></div>
             Ask AI
+            <ComposeButton />
+            <ModeToggle />
+              {
+                // TODO Move these out man!
+              }
           </div>
         </ResizablePanel>
         <ResizableHandle withHandle />
@@ -119,7 +129,7 @@ export function Mail({
         </ResizablePanel>
         <ResizableHandle withHandle />
         <ResizablePanel defaultSize={defaultLayout[2]} minSize={30}>
-          <ThreadDisplay/>
+          <ThreadDisplay />
         </ResizablePanel>
       </ResizablePanelGroup>
     </TooltipProvider>

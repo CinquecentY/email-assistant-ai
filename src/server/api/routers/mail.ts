@@ -2,6 +2,8 @@ import { Prisma } from "@prisma/client";
 import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "../trpc";
 import { db } from "@/server/db";
+import Account from "@/lib/account";
+import { emailAddressSchema } from "@/lib/types";
 
 export const authoriseAccountAccess = async (
   accountId: string,
@@ -256,7 +258,93 @@ export const mailRouter = createTRPCRouter({
         };
       }
     }),
+  syncEmails: protectedProcedure
+    .input(
+      z.object({
+        accountId: z.string(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const account = await authoriseAccountAccess(
+        input.accountId,
+        ctx.auth.userId,
+      );
+      if (!account) throw new Error("Invalid token");
+      const acc = new Account(account.token);
+      acc.syncEmails();
+    }),
+  setUndone: protectedProcedure
+    .input(
+      z.object({
+        threadId: z.string().optional(),
+        threadIds: z.array(z.string()).optional(),
+        accountId: z.string(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const account = await authoriseAccountAccess(
+        input.accountId,
+        ctx.auth.userId,
+      );
+      if (!account) throw new Error("Invalid token");
+      if (input.threadId) {
+        await ctx.db.thread.update({
+          where: {
+            id: input.threadId,
+          },
+          data: {
+            done: false,
+          },
+        });
+      }
+      if (input.threadIds) {
+        await ctx.db.thread.updateMany({
+          where: {
+            id: {
+              in: input.threadIds,
+            },
+          },
+          data: {
+            done: false,
+          },
+        });
+      }
+    }),
   // TODO Add the rest here
+  sendEmail: protectedProcedure
+    .input(
+      z.object({
+        accountId: z.string(),
+        body: z.string(),
+        subject: z.string(),
+        from: emailAddressSchema,
+        to: z.array(emailAddressSchema),
+        cc: z.array(emailAddressSchema).optional(),
+        bcc: z.array(emailAddressSchema).optional(),
+        replyTo: emailAddressSchema,
+        inReplyTo: z.string().optional(),
+        threadId: z.string().optional(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const acc = await authoriseAccountAccess(
+        input.accountId,
+        ctx.auth.userId,
+      );
+      const account = new Account(acc.token);
+      console.log("sendmail", input);
+      await account.sendEmail({
+        body: input.body,
+        subject: input.subject,
+        threadId: input.threadId,
+        to: input.to,
+        bcc: input.bcc,
+        cc: input.cc,
+        replyTo: input.replyTo,
+        from: input.from,
+        inReplyTo: input.inReplyTo,
+      });
+    }),
   getEmailSuggestions: protectedProcedure
     .input(
       z.object({
