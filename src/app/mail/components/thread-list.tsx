@@ -32,7 +32,7 @@ function ThreadList() {
               {format(new Date(date), "MMMM d, yyyy")}
             </div>
             {threads.map((item) => (
-              <Button
+              <button
                 id={`thread-${item.id}`}
                 key={item.id}
                 className={cn(
@@ -91,7 +91,7 @@ function ThreadList() {
                     ))}
                   </div>
                 ) : null}
-              </Button>
+              </button>
             ))}
           </React.Fragment>
         ))}

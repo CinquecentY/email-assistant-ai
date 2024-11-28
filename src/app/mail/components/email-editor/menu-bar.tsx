@@ -1,122 +1,137 @@
 import { Button } from "@/components/ui/button";
-import { Editor } from "@tiptap/react";
+import { Separator } from "@/components/ui/separator";
+import type { Editor } from "@tiptap/react";
 import {
   Bold,
-  Italic,
-  Strikethrough,
   Code,
+  CodepenIcon,
   Heading1,
   Heading2,
   Heading3,
   Heading4,
   Heading5,
   Heading6,
+  Italic,
   List,
   ListOrdered,
   Quote,
-  Undo,
   Redo,
+  Strikethrough,
+  Undo,
 } from "lucide-react";
-
-// FIXME Fix text color
 
 const TipTapMenuBar = ({ editor }: { editor: Editor }) => {
   return (
     <div className="flex flex-wrap gap-2">
-      <Button
+      <button
         onClick={() => editor.chain().focus().toggleBold().run()}
         disabled={!editor.can().chain().focus().toggleBold().run()}
         className={editor.isActive("bold") ? "is-active" : ""}
+        aria-label="Bold"
       >
-        <Bold className="size-4 text-secondary-foreground text-white" />
-      </Button>
-      <Button
+        <Bold className="size-4 text-secondary-foreground" />
+      </button>
+      <button
         onClick={() => editor.chain().focus().toggleItalic().run()}
         disabled={!editor.can().chain().focus().toggleItalic().run()}
         className={editor.isActive("italic") ? "is-active" : ""}
+        aria-label="Italic"
       >
         <Italic className="size-4 text-secondary-foreground" />
-      </Button>
-      <Button
+      </button>
+      <button
         onClick={() => editor.chain().focus().toggleStrike().run()}
         disabled={!editor.can().chain().focus().toggleStrike().run()}
         className={editor.isActive("strike") ? "is-active" : ""}
+        aria-label="Strike"
       >
-        <Strikethrough className="size-4 text-secondary-foreground text-white" />
-      </Button>
-      <Button
+        <Strikethrough className="size-4 text-secondary-foreground" />
+      </button>
+      <button
         onClick={() => editor.chain().focus().toggleCode().run()}
         disabled={!editor.can().chain().focus().toggleCode().run()}
         className={editor.isActive("code") ? "is-active" : ""}
+        aria-label="Code"
       >
-        <Code className="size-4 text-secondary-foreground text-white" />
-      </Button>
-      <Button
+        <Code className="size-4 text-secondary-foreground" />
+      </button>
+      <button
         onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
         className={editor.isActive("heading", { level: 1 }) ? "is-active" : ""}
+        aria-label="Heading 1"
       >
         <Heading1 className="size-4 text-secondary-foreground" />
-      </Button>
-      <Button
+      </button>
+      <button
         onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
         className={editor.isActive("heading", { level: 2 }) ? "is-active" : ""}
+        aria-label="Heading 2"
       >
-        <Heading2 className="size-4 text-secondary-foreground text-white" />
-      </Button>
-      <Button
+        <Heading2 className="size-4 text-secondary-foreground" />
+      </button>
+      <button
         onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}
         className={editor.isActive("heading", { level: 3 }) ? "is-active" : ""}
+        aria-label="Heading 3"
       >
-        <Heading3 className="size-4 text-secondary-foreground text-white" />
-      </Button>
-      <Button
+        <Heading3 className="size-4 text-secondary-foreground" />
+      </button>
+      <button
         onClick={() => editor.chain().focus().toggleHeading({ level: 4 }).run()}
         className={editor.isActive("heading", { level: 4 }) ? "is-active" : ""}
+        aria-label="Heading 4"
       >
-        <Heading4 className="size-4 text-secondary-foreground text-white" />
-      </Button>
-      <Button
+        <Heading4 className="size-4 text-secondary-foreground" />
+      </button>
+      <button
         onClick={() => editor.chain().focus().toggleHeading({ level: 5 }).run()}
         className={editor.isActive("heading", { level: 5 }) ? "is-active" : ""}
+        aria-label="Heading 5"
       >
-        <Heading5 className="size-4 text-secondary-foreground text-white" />
-      </Button>
-      <Button
+        <Heading5 className="size-4 text-secondary-foreground" />
+      </button>
+      <button
         onClick={() => editor.chain().focus().toggleHeading({ level: 6 }).run()}
         className={editor.isActive("heading", { level: 6 }) ? "is-active" : ""}
+        aria-label="Heading 6"
       >
-        <Heading6 className="size-4 text-secondary-foreground text-white" />
-      </Button>
-      <Button
+        <Heading6 className="size-4 text-secondary-foreground" />
+      </button>
+      <button
         onClick={() => editor.chain().focus().toggleBulletList().run()}
         className={editor.isActive("bulletList") ? "is-active" : ""}
+        aria-label="Bullet List"
       >
-        <List className="size-4 text-secondary-foreground text-white" />
-      </Button>
-      <Button
+        <List className="size-4 text-secondary-foreground" />
+      </button>
+      <button
         onClick={() => editor.chain().focus().toggleOrderedList().run()}
         className={editor.isActive("orderedList") ? "is-active" : ""}
+        aria-label="Ordered List"
       >
-        <ListOrdered className="size-4 text-secondary-foreground text-white" />
-      </Button>
-      <Button
+        <ListOrdered className="size-4 text-secondary-foreground" />
+      </button>
+      <button
         onClick={() => editor.chain().focus().toggleBlockquote().run()}
         className={editor.isActive("blockquote") ? "is-active" : ""}
+        aria-label="Blockquote"
       >
-        <Quote className="size-4 text-secondary-foreground text-white" />
-      </Button>
-      <Button
+        <Quote className="size-4 text-secondary-foreground" />
+      </button>
+      <button
         onClick={() => editor.chain().focus().undo().run()}
         disabled={!editor.can().chain().focus().undo().run()}
+        aria-label="Undo"
       >
-        <Undo className="size-4 text-secondary-foreground text-white" />
-      </Button>
-      <Button
+        <Undo className="size-4 text-secondary-foreground" />
+      </button>
+      <button
         onClick={() => editor.chain().focus().redo().run()}
         disabled={!editor.can().chain().focus().redo().run()}
+        aria-label="Redo"
       >
-        <Redo className="size-4 text-secondary-foreground text-white" />
-      </Button>
+        <Redo className="size-4 text-secondary-foreground" />
+      </button>
     </div>
   );
 };
