@@ -16,6 +16,7 @@ import ThreadDisplay from "./thread-display";
 import { UserButton } from "@clerk/nextjs";
 import { ModeToggle } from "@/components/theme-toggle";
 import ComposeButton from "./compose-button";
+import SearchBar from "./search-bar";
 
 interface MailProps {
   defaultLayout: number[] | undefined;
@@ -73,7 +74,7 @@ export function Mail({
               )}
             >
               <UserButton />
-              
+
               <AccountSwitch isCollapsed={isCollapsed} />
             </div>
             <Separator />
@@ -82,9 +83,9 @@ export function Mail({
             Ask AI
             <ComposeButton />
             <ModeToggle />
-              {
-                // TODO Move these out man!
-              }
+            {
+              // TODO Move these out man!
+            }
           </div>
         </ResizablePanel>
         <ResizableHandle withHandle />
@@ -118,7 +119,7 @@ export function Mail({
               </TabsList>
             </div>
             <Separator />
-            Search Bar
+            <SearchBar />
             <TabsContent value="inbox" className="m-0">
               <ThreadList />
             </TabsContent>
