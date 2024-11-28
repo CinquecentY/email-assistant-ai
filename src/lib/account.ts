@@ -77,7 +77,7 @@ class Account {
     if (!response) throw new Error("Failed to sync emails");
 
     try {
-      await syncEmailsToDatabase(allEmails, account.id)
+      await syncEmailsToDatabase(allEmails, account.id);
     } catch (error) {
       console.log("error", error);
     }
