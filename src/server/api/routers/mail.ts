@@ -102,6 +102,9 @@ export const mailRouter = createTRPCRouter({
         input.accountId,
         ctx.auth.userId,
       );
+      // TODO Find better syncing
+      const acc = new Account(account.token);
+      acc.syncEmails();
 
       /*let filter: Prisma.ThreadWhereInput = {};
       if (input.tab === "inbox") {
