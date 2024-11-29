@@ -39,6 +39,7 @@ export function Mail({
     const accountIdParams = searchParams.get("accountId");
     if (accountIdParams && accountIdParams !== accountId) {
       setAccountId(accountIdParams);
+      window.location.href = "/mail";
     }
   }, []);
   return (
