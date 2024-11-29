@@ -35,12 +35,14 @@ export function AccountSwitch({ isCollapsed }: AccountSwitcherProps) {
           aria-label="Select account"
         >
           <SelectValue
-            className={
-              isCollapsed ? "hover:bg-accent hover:text-accent-foreground" : ""
-            }
+            className={cn(
+              isCollapsed && "hover:bg-accent hover:text-accent-foreground",
+            )}
             placeholder="Select an account"
           >
-            <span className={cn({ hidden: !isCollapsed },"font-bold uppercase")}>
+            <span
+              className={cn({ hidden: !isCollapsed }, "font-bold uppercase")}
+            >
               {data.find((account) => account.id === accountId)?.email[0]}
             </span>
             <span className={cn("ml-2", isCollapsed && "hidden")}>
