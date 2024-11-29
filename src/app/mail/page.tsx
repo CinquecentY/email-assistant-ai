@@ -6,7 +6,7 @@ import { ModeToggle } from "@/components/theme-toggle";
 
 const MailDashboard = () => {
   return (
-    <Suspense>
+    <>
       <div className="absolute bottom-3 left-3 z-10">
         <div className="flex items-center rounded bg-slate-50 p-2 backdrop-blur-sm">
           <span className="flex items-center gap-3">
@@ -18,8 +18,10 @@ const MailDashboard = () => {
           </span>
         </div>
       </div>
-      <Mail defaultLayout={[20, 32, 48]} navCollapsedSize={4} />
-    </Suspense>
+      <Suspense>
+        <Mail defaultLayout={[20, 32, 48]} navCollapsedSize={4} />
+      </Suspense>
+    </>
   );
 };
 
