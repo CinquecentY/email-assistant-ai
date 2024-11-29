@@ -64,7 +64,7 @@ function ThreadDisplay() {
   const [isSearching, setIsSearching] = useAtom(isSearchingAtom);
 
   return (
-    <div className="flex h-full flex-col">
+    <div className="flex h-full max-h-screen flex-col">
       <div className="flex min-h-11 items-center p-2">
         <Button className={"h-7 md:hidden"} variant={"secondary"}>
           <ChevronLeft />
@@ -76,11 +76,11 @@ function ThreadDisplay() {
       ) : (
         <>
           {thread ? (
-            <div className="flex flex-1 flex-col overflow-scroll">
+            <div className="flex flex-col overflow-scroll">
               <div className="flex items-start p-4">
                 <div className="flex items-start gap-4 text-sm">
                   <Avatar>
-                    <AvatarImage alt={"lol"} />
+                    <AvatarImage alt={"avatarImage"} />
                     <AvatarFallback>
                       {thread?.emails[0]?.from?.name
                         ?.split(" ")
@@ -108,15 +108,14 @@ function ThreadDisplay() {
                 )}
               </div>
               <Separator />
-              <div className="flex max-h-[calc(100vh-500px)] flex-col overflow-scroll">
+              <div className="flex flex-col overflow-scroll">
                 <div className="flex flex-col gap-4 p-6">
                   {thread.emails.map((email) => {
                     return <EmailDisplay key={email.id} email={email} />;
                   })}
                 </div>
               </div>
-              <div className="flex-1"></div>
-              <Separator className="mt-auto" />
+              <Separator />
               <ReplyBox />
             </div>
           ) : (

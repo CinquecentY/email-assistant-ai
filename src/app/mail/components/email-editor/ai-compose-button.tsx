@@ -17,6 +17,12 @@ import { Button } from "@/components/ui/button";
 import { readStreamableValue } from "ai/rsc";
 import { generateEmail } from "./action";
 import { turndown } from "@/lib/turndown";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 type Props = {
   onGenerate: (value: string) => void;
@@ -44,7 +50,7 @@ const AIComposeButton = (props: Props) => {
       context + `\n\nMy email is: ${account?.email}`,
       prompt,
     );
-// `\n\nMy name is: ${account?.name}`
+    // `\n\nMy name is: ${account?.name}`
     for await (const delta of readStreamableValue(output)) {
       if (delta) {
         props.onGenerate(delta);
@@ -54,9 +60,22 @@ const AIComposeButton = (props: Props) => {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button onClick={() => setOpen(true)} size="icon" variant={"outline"}>
-          <Sparkles className="size-5" />
-        </Button>
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                onClick={() => setOpen(true)}
+                size="icon"
+                variant={"outline"}
+              >
+                <Sparkles className="size-5" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Unleash the power of AI!</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
