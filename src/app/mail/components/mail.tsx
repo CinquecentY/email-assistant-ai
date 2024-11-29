@@ -5,7 +5,6 @@ import {
   ResizableHandle,
 } from "@/components/ui/resizable";
 import { Separator } from "@/components/ui/separator";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 import React from "react";
@@ -13,9 +12,6 @@ import { AccountSwitch } from "./account-switch";
 import Sidebar from "./sidebar";
 import ThreadList from "./thread-list";
 import ThreadDisplay from "./thread-display";
-import { UserButton } from "@clerk/nextjs";
-import { ModeToggle } from "@/components/theme-toggle";
-import ComposeButton from "./compose-button";
 import SearchBar from "./search-bar";
 import AskAI from "./ask-ai";
 import { Button } from "@/components/ui/button";
@@ -81,11 +77,6 @@ export function Mail({
             <Sidebar isCollapsed={isCollapsed} />
             <div className="flex-1"></div>
             <AskAI isCollapsed={isCollapsed} />
-            <ComposeButton />
-            <ModeToggle />
-            {
-              // TODO Move these out man!
-            }
           </div>
         </ResizablePanel>
         <ResizableHandle withHandle />
