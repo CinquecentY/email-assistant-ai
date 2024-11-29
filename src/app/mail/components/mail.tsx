@@ -16,6 +16,8 @@ import SearchBar from "./search-bar";
 import AskAI from "./ask-ai";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft } from "lucide-react";
+import { useSearchParams } from "next/navigation";
+import { useLocalStorage } from "usehooks-ts";
 
 interface MailProps {
   defaultLayout: number[] | undefined;
@@ -29,7 +31,16 @@ export function Mail({
   navCollapsedSize,
 }: MailProps) {
   const [isCollapsed, setIsCollapsed] = React.useState(defaultCollapsed);
+  const searchParams = useSearchParams();
+  const [accountId, setAccountId] = useLocalStorage("accountId", "");
 
+  React.useEffect(() => {
+    document.title = "Email Assistant AI";
+    const accountIdParams = searchParams.get("accountId");
+    if (accountIdParams && accountIdParams !== accountId) {
+      setAccountId(accountIdParams);
+    }
+  }, []);
   return (
     <TooltipProvider delayDuration={0}>
       <ResizablePanelGroup

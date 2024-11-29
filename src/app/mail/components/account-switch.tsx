@@ -10,6 +10,7 @@ import { cn } from "@/lib/utils";
 import { api } from "@/trpc/react";
 import { Plus } from "lucide-react";
 import React from "react";
+import { toast } from "sonner";
 import { useLocalStorage } from "usehooks-ts";
 
 interface AccountSwitcherProps {
@@ -20,12 +21,17 @@ export function AccountSwitch({ isCollapsed }: AccountSwitcherProps) {
   const { data } = api.mail.getAccounts.useQuery();
   const [accountId, setAccountId] = useLocalStorage("accountId", "");
 
+  // TODO Handle Exception
   if (!data) return null;
   return (
     <div
       className={cn("flex w-full items-center gap-2", isCollapsed && "h-full")}
     >
-      <Select defaultValue={accountId} onValueChange={setAccountId}>
+      <Select
+        defaultValue={accountId}
+        value={accountId}
+        onValueChange={setAccountId}
+      >
         <SelectTrigger
           className={cn(
             "flex w-full flex-1 items-center gap-2 [&>span]:line-clamp-1 [&>span]:flex [&>span]:w-full [&>span]:items-center [&>span]:gap-1 [&>span]:truncate [&_svg]:h-4 [&_svg]:w-4 [&_svg]:shrink-0",
@@ -62,7 +68,7 @@ export function AccountSwitch({ isCollapsed }: AccountSwitcherProps) {
                 const url = await getAurinkoAuthorizationUrl("Google");
                 window.location.href = url;
               } catch (error) {
-                //toast.error((error as Error).message)
+                toast.error((error as Error).message);
               }
             }}
             className="relative flex w-full cursor-pointer items-center rounded-sm py-1.5 pl-2 pr-8 text-sm outline-none hover:bg-gray-50 focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50"
