@@ -13,18 +13,19 @@ const transitionDebug = {
 };
 const AskAI = ({ isCollapsed }: { isCollapsed: boolean }) => {
   const [accountId] = useLocalStorage("accountId", "");
-  const { input, handleInputChange, handleSubmit, messages } = useChat({
-    api: "/api/chat",
-    body: {
-      accountId,
-    },
-    onError: (error) => {
-      toast.error("Error", {
-        description: error.message,
-      });
-    },
-    initialMessages: [],
-  });
+  const { input, handleInputChange, setInput, handleSubmit, messages } =
+    useChat({
+      api: "/api/chat",
+      body: {
+        accountId,
+      },
+      onError: (error) => {
+        toast.error("Error", {
+          description: error.message,
+        });
+      },
+      initialMessages: [],
+    });
   React.useEffect(() => {
     const messageContainer = document.getElementById("message-container");
     if (messageContainer) {
@@ -85,42 +86,26 @@ const AskAI = ({ isCollapsed }: { isCollapsed: boolean }) => {
               </div>
               <div className="h-2"></div>
               <div className="flex flex-wrap items-center gap-2">
-                <span
-                  onClick={() =>
-                    handleInputChange({
-                      target: {
-                        value: "What can I ask?",
-                      },
-                    })
-                  }
+                <button
+                  onClick={() => setInput("What can I ask?")}
                   className="rounded-md bg-gray-800 px-2 py-1 text-xs text-gray-200"
                 >
                   What can I ask?
-                </span>
-                <span
-                  onClick={() =>
-                    handleInputChange({
-                      target: {
-                        value: "When is my next flight?",
-                      },
-                    })
-                  }
-                  className="rounded-md bg-gray-800 px-2 py-1 text-xs text-gray-200"
-                >
-                  When is my next flight?
-                </span>
-                <span
-                  onClick={() =>
-                    handleInputChange({
-                      target: {
-                        value: "When is my next meeting?",
-                      },
-                    })
-                  }
+                </button>
+                <button
+                  onClick={() => setInput("When is my next meeting?")}
                   className="rounded-md bg-gray-800 px-2 py-1 text-xs text-gray-200"
                 >
                   When is my next meeting?
-                </span>
+                </button>
+                <button
+                  onClick={() =>
+                    setInput("What can you tell me about my emails?")
+                  }
+                  className="rounded-md bg-gray-800 px-2 py-1 text-xs text-gray-200"
+                >
+                  What can you tell me about my emails?
+                </button>
               </div>
             </div>
           )}
@@ -149,6 +134,7 @@ const AskAI = ({ isCollapsed }: { isCollapsed: boolean }) => {
             <button
               type="submit"
               className="ml-2 flex h-9 w-9 items-center justify-center rounded-full bg-gray-200 dark:bg-gray-800"
+              aria-label="send"
             >
               <Send className="size-4 text-gray-500 dark:text-gray-300" />
             </button>
