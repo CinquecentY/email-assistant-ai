@@ -15,6 +15,7 @@ import { useAutoAnimate } from "@formkit/auto-animate/react";
 import AIComposeButton from "./ai-compose-button";
 import { generate } from "./action";
 import { readStreamableValue } from "ai/rsc";
+import { cn } from "@/lib/utils";
 
 type EmailEditorProps = {
   toValues: { label: string; value: string }[];
@@ -84,11 +85,17 @@ const EmailEditor = ({
 
   const editor = useEditor({
     autofocus: false,
-    extensions: [StarterKit, customText /*, GhostExtension*/],
+    extensions: [StarterKit, customText],
     editorProps: {
       attributes: {
         placeholder: "Write your email here...",
       },
+    },
+    onFocus: () => {
+      if (!defaultToolbarExpand) setExpanded(true);
+    },
+    onBlur: () => {
+      if (!defaultToolbarExpand) setExpanded(false);
     },
     onUpdate: ({ editor, transaction }) => {
       setValue(editor.getHTML());
@@ -125,11 +132,8 @@ const EmailEditor = ({
   }, [generation, editor]);
 
   return (
-    <div>
-      <div className="flex border-b p-4 py-2">
-        {editor && <TipTapMenuBar editor={editor} />}
-      </div>
-      <div ref={ref} className="space-y-2 p-4 pb-0">
+    <div className="px-2">
+      <div ref={ref} className="space-y-2 p-4">
         {expanded && (
           <>
             <TagInput
@@ -155,26 +159,31 @@ const EmailEditor = ({
             />
           </>
         )}
-        <div className="flex items-center gap-2">
-          <div
-            className="cursor-pointer"
-            onClick={() => setExpanded((e) => !e)}
-          >
-            <span className="font-medium text-green-600">Draft </span>
-            <span>to {to.join(", ")}</span>
-          </div>
-          <AIComposeButton
-            isComposing={defaultToolbarExpand}
-            onGenerate={setGeneration}
+      </div>
+      <div className="rounded border p-2">
+        <div
+          className={cn(
+            "mb-2 flex border-b",
+            !expanded && "[&_svg]:text-muted-foreground",
+          )}
+        >
+          <span className="flex-1">
+            {editor && <TipTapMenuBar editor={editor} />}{" "}
+          </span>
+          <span className="py-1">
+            <AIComposeButton
+              isComposing={defaultToolbarExpand}
+              onGenerate={setGeneration}
+            />
+          </span>
+        </div>
+        <div className="prose w-full px-4">
+          <EditorContent
+            value={value}
+            editor={editor}
+            placeholder="Write your email here..."
           />
         </div>
-      </div>
-      <div className="prose w-full px-4">
-        <EditorContent
-          value={value}
-          editor={editor}
-          placeholder="Write your email here..."
-        />
       </div>
       <Separator />
       <div className="flex items-center justify-between px-4 py-3">

@@ -84,9 +84,17 @@
 .tiptap.ProseMirror {
   outline: none;
 }
+button.chained-command {
+  padding: 0.5rem;
+}
+button.chained-command:hover {
+  background-color: var(--accent);
+}
+button.chained-command:hover > svg {
+  color: var(--accent-foreground);
+}
 
 .is-active {
   background-color: #dadada;
   border-radius: 4px;
-  padding: 0px 2px;
 }

@@ -7,14 +7,14 @@ import { ModeToggle } from "@/components/theme-toggle";
 const MailDashboard = () => {
   return (
     <>
-      <div className="absolute bottom-4 left-3 z-10">
-        <div className="flex items-center">
+      <div className="absolute bottom-3 left-3 z-10">
+        <div className="flex items-center rounded bg-slate-50 p-2 backdrop-blur-sm">
           <span className="flex items-center gap-3">
-          <UserButton />
-          <ModeToggle />
+            <UserButton />
+            <ModeToggle />
           </span>
           <span className="ml-12 w-56">
-          <ComposeButton />
+            <ComposeButton />
           </span>
         </div>
       </div>
