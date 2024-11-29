@@ -14,11 +14,6 @@ export const getAurinkoAuthorizationUrl = async (serviceType: "Google") => {
   });
 
   if (!user) throw new Error("User not found");
-
-  /*const accounts = await db.account.count({
-        where: { userId }
-    })*/
-
   const params = new URLSearchParams({
     clientId: process.env.AURINKO_CLIENT_ID as string,
     serviceType,
