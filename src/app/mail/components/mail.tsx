@@ -71,8 +71,8 @@ export function Mail({
           <div className="flex h-full flex-1 flex-col">
             <div
               className={cn(
-                "flex h-[52px] items-center justify-center",
-                isCollapsed ? "h-[52px]" : "px-2",
+                "flex h-11 items-center justify-center",
+                isCollapsed ? "h-11" : "px-2",
               )}
             >
               <AccountSwitch isCollapsed={isCollapsed} />
