@@ -27,27 +27,6 @@ class Account {
     return response.data;
   }
 
-  /*async createSubscription() {
-    const webhookUrl =
-      process.env.NODE_ENV === "development"
-        ? "https://would-deer-strict-locations.trycloudflare.com"
-        : process.env.NEXT_PUBLIC_URL;
-    const res = await axios.post(
-      "https://api.aurinko.io/v1/subscriptions",
-      {
-        resource: "/email/messages",
-        notificationUrl: webhookUrl + "/api/aurinko/webhook"
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${this.token}`,
-          "Content-Type": "application/json",
-        },
-      },
-    );
-    return res.data;
-  }*/
-
   async syncEmails() {
     const account = await db.accounts.findUnique({
       where: {
@@ -235,59 +214,6 @@ class Account {
       }
       throw error;
     }
-  }
-
-  async getWebhooks() {
-    type Response = {
-      records: {
-        id: number;
-        resource: string;
-        notificationUrl: string;
-        active: boolean;
-        failSince: string;
-        failDescription: string;
-      }[];
-      totalSize: number;
-      offset: number;
-      done: boolean;
-    };
-    const res = await axios.get<Response>(`${API_BASE_URL}/subscriptions`, {
-      headers: {
-        Authorization: `Bearer ${this.token}`,
-        "Content-Type": "application/json",
-      },
-    });
-    return res.data;
-  }
-
-  async createWebhook(resource: string, notificationUrl: string) {
-    const res = await axios.post(
-      `${API_BASE_URL}/subscriptions`,
-      {
-        resource,
-        notificationUrl,
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${this.token}`,
-          "Content-Type": "application/json",
-        },
-      },
-    );
-    return res.data;
-  }
-
-  async deleteWebhook(subscriptionId: string) {
-    const res = await axios.delete(
-      `${API_BASE_URL}/subscriptions/${subscriptionId}`,
-      {
-        headers: {
-          Authorization: `Bearer ${this.token}`,
-          "Content-Type": "application/json",
-        },
-      },
-    );
-    return res.data;
   }
 }
 type EmailAddress = {
