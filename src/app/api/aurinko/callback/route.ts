@@ -27,7 +27,7 @@ export const GET = async (req: NextRequest) => {
     );
   const accountDetails = await getAccountDetails(token.accessToken);
   await db.accounts.upsert({
-    where: { email: accountDetails.email },
+    where: { email: accountDetails.email, userId },
     create: {
       id: token.accountId.toString(),
       userId,
