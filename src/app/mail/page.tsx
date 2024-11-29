@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Suspense } from "react";
 import Mail from "./components/mail";
 import { UserButton } from "@clerk/nextjs";
 import ComposeButton from "./components/compose-button";
@@ -18,7 +18,9 @@ const MailDashboard = () => {
           </span>
         </div>
       </div>
-      <Mail defaultLayout={[20, 32, 48]} navCollapsedSize={4} />
+      <Suspense>
+        <Mail defaultLayout={[20, 32, 48]} navCollapsedSize={4} />
+      </Suspense>
     </>
   );
 };

@@ -7,8 +7,14 @@ export const POST = async (req: NextRequest) => {
   const body = await req.json();
   const { accountId, userId } = body;
   if (!accountId || !userId)
-    return NextResponse.json({ error: "INVALID_REQUEST" }, { status: 400 });
-
+    return NextResponse.json(
+      {
+        error: "INVALID_REQUEST",
+        message: `Missing ${!accountId && "accountId "}${!userId && "userId"}`,
+      },
+      { status: 400 },
+    );
+// TODO add messages to errors
   const dbAccount = await db.accounts.findUnique({
     where: {
       id: accountId,
@@ -19,7 +25,6 @@ export const POST = async (req: NextRequest) => {
     return NextResponse.json({ error: "ACCOUNT_NOT_FOUND" }, { status: 404 });
 
   const account = new Account(dbAccount.token);
-  //await account.createSubscription();
   const response = await account.performInitialSync();
   if (!response)
     return NextResponse.json({ error: "FAILED_TO_SYNC" }, { status: 500 });
