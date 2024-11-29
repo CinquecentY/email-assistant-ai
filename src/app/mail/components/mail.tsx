@@ -82,7 +82,7 @@ export function Mail({
         <ResizableHandle withHandle />
         <ResizablePanel defaultSize={defaultLayout[1]} minSize={30}>
           <div className="flex items-center gap-4 px-4 py-2">
-            <Button className={cn("h-7")} variant={"secondary"}>
+            <Button className={"h-7 md:hidden"} variant={"secondary"}>
               <ChevronLeft />
             </Button>
             <h1 className="text-xl font-bold">Inbox</h1>

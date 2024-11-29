@@ -65,8 +65,8 @@ function ThreadDisplay() {
 
   return (
     <div className="flex h-full flex-col">
-      <div className="flex items-center p-2">
-        <Button className={cn("h-7")} variant={"secondary"}>
+      <div className="flex min-h-11 items-center p-2">
+        <Button className={"h-7 md:hidden"} variant={"secondary"}>
           <ChevronLeft />
         </Button>
       </div>
