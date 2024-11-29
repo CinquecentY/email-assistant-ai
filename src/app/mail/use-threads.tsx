@@ -5,8 +5,8 @@ import { useLocalStorage } from "usehooks-ts";
 const useThreads = () => {
   const { data: accounts } = api.mail.getAccounts.useQuery();
   const [accountId] = useLocalStorage("accountId", "");
-  const [tab] = useLocalStorage("normalhuman-tab", "inbox");
-  const [done] = useLocalStorage("normalhuman-done", false);
+  const [tab] = useLocalStorage("email-assistant-ai-tab", "inbox");
+  const [done] = useLocalStorage("email-assistant-ai-done", false);
   const queryKey = getQueryKey(
     api.mail.getThreads,
     { accountId, tab, done },
