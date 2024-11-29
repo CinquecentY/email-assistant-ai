@@ -7,8 +7,14 @@ export const POST = async (req: NextRequest) => {
   const body = await req.json();
   const { accountId, userId } = body;
   if (!accountId || !userId)
-    return NextResponse.json({ error: "INVALID_REQUEST" }, { status: 400 });
-
+    return NextResponse.json(
+      {
+        error: "INVALID_REQUEST",
+        message: `Missing ${!accountId && "accountId "}${!userId && "userId"}`,
+      },
+      { status: 400 },
+    );
+// TODO add messages to errors
   const dbAccount = await db.accounts.findUnique({
     where: {
       id: accountId,
