@@ -34,7 +34,10 @@ const SearchBar = () => {
         />
         <div className="absolute right-2 top-2.5 flex items-center gap-2">
           {isFetching && (
-            <Loader2 className="h-4 w-4 animate-spin text-gray-400" />
+            <span>
+              <span className="sr-only">Fetching emails...</span>
+              <Loader2 className="h-4 w-4 animate-spin text-gray-400" />
+            </span>
           )}
           <button
             className="rounded-sm hover:bg-gray-800"

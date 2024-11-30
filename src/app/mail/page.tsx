@@ -4,7 +4,7 @@ import { UserButton } from "@clerk/nextjs";
 import ComposeButton from "./components/compose-button";
 import { ModeToggle } from "@/components/theme-toggle";
 
-const MailDashboard = () => {
+function MailDashboard() {
   return (
     <>
       <div className="absolute bottom-3 left-3 z-10">
@@ -23,6 +23,6 @@ const MailDashboard = () => {
       </Suspense>
     </>
   );
-};
+}
 
 export default MailDashboard;
