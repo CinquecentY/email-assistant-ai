@@ -52,11 +52,11 @@ const AskAI = ({ isCollapsed }: { isCollapsed: boolean }) => {
                 key={message.id}
                 layout="position"
                 className={cn(
-                  "z-10 mt-2 max-w-[250px] break-words rounded-2xl bg-gray-200 dark:bg-gray-800",
+                  "z-10 mt-2 max-w-[250px] break-words rounded-2xl bg-gray-200",
                   {
-                    "self-end text-gray-900 dark:text-gray-100":
+                    "self-end text-gray-900 dark:text-gray-100 dark:bg-gray-800":
                       message.role === "user",
-                    "self-start bg-blue-500 text-white":
+                    "self-start bg-blue-500 text-white dark:bg-blue-900":
                       message.role === "assistant",
                   },
                 )}
