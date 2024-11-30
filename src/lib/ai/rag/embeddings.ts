@@ -1,6 +1,6 @@
+import { OramaManager } from "@/lib/orama";
 import { embed, embedMany } from "ai";
 import { googleEmbeddingModel } from "../model/google";
-import { db } from "@/server/db";
 
 const generateChunks = (input: string): string[] => {
   return input
@@ -30,4 +30,14 @@ export const generateEmbedding = async (value: string): Promise<number[]> => {
     value: input,
   });
   return embedding;
+};
+
+export const findRelevantContent = async (userQuery: string) => {
+  // TODO get accountID
+  /*const oramaManager = new OramaManager(accountId);
+  await oramaManager.initialize();
+  const { hits } = await oramaManager.vectorSearch({
+    prompt: userQuery,
+  });
+  return hits;*/
 };
