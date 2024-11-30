@@ -38,11 +38,11 @@ const AskAI = ({ isCollapsed }: { isCollapsed: boolean }) => {
 
   if (isCollapsed) return null;
   return (
-    <div className="mb-14 p-4">
+    <div className="mb-14 bg-background p-4">
       <div className="h-4"></div>
       <motion.div className="flex flex-1 flex-col items-end justify-end rounded-lg border bg-gray-100 p-4 pb-4 shadow-inner dark:bg-gray-900">
         <div
-          className="flex max-h-[50vh] w-full flex-col gap-2 overflow-y-scroll"
+          className="flex max-h-[50vh] w-full flex-col gap-2 overflow-y-auto"
           id="message-container"
         >
           <AnimatePresence mode="wait">

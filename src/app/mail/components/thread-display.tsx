@@ -76,7 +76,7 @@ function ThreadDisplay() {
       ) : (
         <>
           {thread ? (
-            <div className="flex flex-col overflow-scroll">
+            <div className="flex h-full max-h-full flex-col overflow-auto bg-background">
               <div className="flex items-start p-4">
                 <div className="flex items-start gap-4 text-sm">
                   <Avatar>
@@ -108,7 +108,7 @@ function ThreadDisplay() {
                 )}
               </div>
               <Separator />
-              <div className="flex flex-col overflow-scroll">
+              <div className="flex flex-col overflow-auto">
                 <div className="flex flex-col gap-4 p-6">
                   {thread.emails.map((email) => {
                     return <EmailDisplay key={email.id} email={email} />;
@@ -120,7 +120,7 @@ function ThreadDisplay() {
             </div>
           ) : (
             <>
-              <div className="p-8 text-center text-muted-foreground">
+              <div className="flex-1 bg-background p-8 text-center text-muted-foreground">
                 No message selected {threadId}
               </div>
             </>

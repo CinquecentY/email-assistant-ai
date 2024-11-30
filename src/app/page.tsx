@@ -30,12 +30,12 @@ export default async function Home() {
           </h1>
           <div className="inline-flex flex-wrap justify-center gap-2 lowercase md:text-3xl">
             <h2>Check your emails.</h2>
-            <h2>Ask about your emails.</h2>
+            <h2>Talk to your emails.</h2>
             <h2>Do more with your emails.</h2>
           </div>
           <Button
             variant={"secondary"}
-            className="font-semi-bold size-1/2 md:mt-2 md:size-1/4 md:rounded-2xl md:py-4 md:text-4xl"
+            className="font-semi-bold size-fit p-4 text-xl md:mt-2 md:size-1/4 md:rounded-2xl md:py-4 md:text-4xl"
             asChild
           >
             <Link href="/mail">
@@ -82,7 +82,7 @@ export default async function Home() {
               </Link>
             </span>
           </div>
-          <span className="inline-flex gap-2 divide-x-2">
+          <span className="inline-flex gap-2">
             <span>© 2024 Y.Ah, Inc</span>
             <Link className="font-bold" href="/privacy">
               Privacy Policy

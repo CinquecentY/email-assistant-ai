@@ -8,27 +8,27 @@ function Terms() {
           <h1 className="mb-2 text-center text-3xl font-semibold text-gray-700">
             Terms and Conditions
           </h1>
-          <h2 className="mb-20 text-center lowercase text-gray-600">
+          <h2 className="mb-20 text-center lowercase">
             Last updated December 30th, 2024
           </h2>
-          <h3 className="mb-5 text-left text-2xl font-semibold text-gray-600">
+          <h3 className="mb-5 text-left text-2xl font-semibold">
             1. Introduction
           </h3>
-          <p className="mb-10 mt-5 text-justify leading-relaxed text-gray-600">
+          <p className="mb-10 mt-5 text-justify leading-relaxed">
             By using Y.Ah, Inc you confirm your acceptance of, and agree to be
             bound by, these terms and conditions.
           </p>
-          <h3 className="mb-5 text-left text-2xl font-semibold text-gray-600">
+          <h3 className="mb-5 text-left text-2xl font-semibold">
             2. Agreement to Terms and Conditions
           </h3>
-          <p className="mb-10 mt-5 text-justify leading-relaxed text-gray-600">
+          <p className="mb-10 mt-5 text-justify leading-relaxed">
             This Agreement takes effect on the date on which you first use the
             Y.Ah, Inc application.
           </p>
-          <h3 className="mb-5 text-left text-2xl font-semibold text-gray-600">
+          <h3 className="mb-5 text-left text-2xl font-semibold">
             3. Unlimited Access Software License with Termination Rights
           </h3>
-          <p className="mb-10 mt-5 text-justify leading-relaxed text-gray-600">
+          <p className="mb-10 mt-5 text-justify leading-relaxed">
             The Y.Ah, Inc Software License facilitates the acquisition of Y.Ah,
             Inc software through a single purchase, granting users unrestricted
             and perpetual access to its comprehensive functionalities. Tailored
@@ -45,17 +45,15 @@ function Terms() {
             unrestricted termination rights, which provide adaptability and
             address potential unforeseen circumstances.
           </p>
-          <h3 className="mb-5 text-left text-2xl font-semibold text-gray-600">
-            4. Refunds
-          </h3>
-          <p className="mb-10 mt-5 text-justify leading-relaxed text-gray-600">
+          <h3 className="mb-5 text-left text-2xl font-semibold">4. Refunds</h3>
+          <p className="mb-10 mt-5 text-justify leading-relaxed">
             Due to the nature of digital products, the Y.Ah, Inc boilerplate
             cannot be refunded or exchanged once access is granted.
           </p>
-          <h3 className="mb-5 text-left text-2xl font-semibold text-gray-600">
+          <h3 className="mb-5 text-left text-2xl font-semibold">
             5. Disclaimer
           </h3>
-          <p className="mb-10 mt-5 text-justify leading-relaxed text-gray-600">
+          <p className="mb-10 mt-5 text-justify leading-relaxed">
             It is not warranted that Y.Ah, Inc will meet your requirements or
             that its operation will be uninterrupted or error free. All express
             and implied warranties or conditions not stated in this Agreement
@@ -65,10 +63,10 @@ function Terms() {
             excluded and expressly disclaimed. This Agreement does not affect
             your statutory rights.
           </p>
-          <h3 className="mb-5 text-left text-2xl font-semibold text-gray-600">
+          <h3 className="mb-5 text-left text-2xl font-semibold">
             6. Warranties and Limitation of Liability
           </h3>
-          <p className="mb-10 mt-5 text-justify leading-relaxed text-gray-600">
+          <p className="mb-10 mt-5 text-justify leading-relaxed">
             Y.Ah, Inc does not give any warranty, guarantee or other term as to
             the quality, fitness for purpose or otherwise of the software. Y.Ah,
             Inc shall not be liable to you by reason of any representation
@@ -89,26 +87,26 @@ function Terms() {
             this clause. You hereby release Y.Ah, Inc from any and all
             obligations, liabilities and claims in excess of this limitation.
           </p>
-          <h3 className="mb-5 text-left text-2xl font-semibold text-gray-600">
+          <h3 className="mb-5 text-left text-2xl font-semibold">
             7. Responsibilities
           </h3>
-          <p className="mb-10 mt-5 text-justify leading-relaxed text-gray-600">
+          <p className="mb-10 mt-5 text-justify leading-relaxed">
             Y.Ah, Inc is not responsible for what the user does with the
             user-generated content.
           </p>
-          <h3 className="mb-5 text-left text-2xl font-semibold text-gray-600">
+          <h3 className="mb-5 text-left text-2xl font-semibold">
             8. Price Adjustments
           </h3>
-          <p className="mb-10 mt-5 text-justify leading-relaxed text-gray-600">
+          <p className="mb-10 mt-5 text-justify leading-relaxed">
             As we continue to improve Y.Ah, Inc and expand our offerings, the
             price may increase. The discount is provided to help customers
             secure the current price without being surprised by future
             increases.
           </p>
-          <h3 className="mb-5 text-left text-2xl font-semibold text-gray-600">
+          <h3 className="mb-5 text-left text-2xl font-semibold">
             9. General Terms and Law
           </h3>
-          <p className="mb-10 mt-5 text-justify leading-relaxed text-gray-600">
+          <p className="mb-10 mt-5 text-justify leading-relaxed">
             This Agreement is governed by the laws of Singapore. You acknowledge
             that no joint venture, partnership, employment, or agency
             relationship exists between you and Y.Ah, Inc as a result of your

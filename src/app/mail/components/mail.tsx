@@ -87,7 +87,7 @@ export function Mail({
             </div>
             <Separator />
             <Sidebar isCollapsed={isCollapsed} />
-            <div className="flex-1"></div>
+            <div className="flex-1 bg-background"></div>
             <AskAI isCollapsed={isCollapsed} />
           </div>
         </ResizablePanel>

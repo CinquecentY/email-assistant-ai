@@ -34,7 +34,7 @@ export function AccountSwitch({ isCollapsed }: AccountSwitcherProps) {
       >
         <SelectTrigger
           className={cn(
-            "flex w-full flex-1 items-center gap-2 [&>span]:line-clamp-1 [&>span]:flex [&>span]:w-full [&>span]:items-center [&>span]:gap-1 [&>span]:truncate [&_svg]:h-4 [&_svg]:w-4 [&_svg]:shrink-0",
+            "bg-background/50 flex w-full flex-1 items-center gap-2 [&>span]:line-clamp-1 [&>span]:flex [&>span]:w-full [&>span]:items-center [&>span]:gap-1 [&>span]:truncate [&_svg]:h-4 [&_svg]:w-4 [&_svg]:shrink-0",
             isCollapsed &&
               "flex h-full w-9 shrink-0 items-center justify-center p-0 [&>span]:w-auto [&>svg]:hidden",
           )}

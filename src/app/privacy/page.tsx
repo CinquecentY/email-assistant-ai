@@ -8,13 +8,11 @@ function Privacy() {
           <h1 className="mb-2 text-3xl font-semibold text-gray-700">
             Privacy Policy
           </h1>
-          <h2 className="mb-20 lowercase text-gray-600">
-            Last updated November 30th 2024
-          </h2>
-          <h3 className="mb-5 text-left text-2xl font-semibold text-gray-600">
+          <h2 className="mb-20 lowercase">Last updated November 30th 2024</h2>
+          <h3 className="mb-5 text-left text-2xl font-semibold">
             Introduction
           </h3>
-          <p className="mb-10 mt-5 text-justify leading-relaxed text-gray-600">
+          <p className="mb-10 mt-5 text-justify leading-relaxed">
             Y.Ah, Inc (“Y.Ah, Inc,” “we,” “us,” or “our”) we value your privacy
             and are committed to protecting and processing your personal
             information responsibly. This Privacy Statement describes how we
@@ -23,10 +21,10 @@ function Privacy() {
             have regarding such personal information. We may provide additional
             data privacy information by using a supplementary privacy notice.
           </p>
-          <h3 className="mb-5 text-left text-2xl font-semibold text-gray-600">
+          <h3 className="mb-5 text-left text-2xl font-semibold">
             Personal Information We Collect and Use
           </h3>
-          <p className="mb-10 mt-5 text-justify leading-relaxed text-gray-600">
+          <p className="mb-10 mt-5 text-justify leading-relaxed">
             This section describes the various types of information that we
             collect and how we use it. It includes information on:
             <ul>
@@ -38,30 +36,26 @@ function Privacy() {
               <li>Children</li>
             </ul>
           </p>
-          <h3 className="mb-5 text-left text-2xl font-semibold text-gray-600">
-            Our Website
-          </h3>
-          <p className="mb-10 mt-5 text-justify leading-relaxed text-gray-600">
+          <h3 className="mb-5 text-left text-2xl font-semibold">Our Website</h3>
+          <p className="mb-10 mt-5 text-justify leading-relaxed">
             Our website offers ways to communicate with you about us, our
             products, and services. The information that we collect on websites
             is used to provide you with access to the website, to operate the
             website, to improve your experience, and to personalize the way that
             information is provided to you.
           </p>
-          <h3 className="mb-5 text-left text-2xl font-semibold text-gray-600">
-            Marketing
-          </h3>
-          <p className="mb-10 mt-5 text-justify leading-relaxed text-gray-600">
+          <h3 className="mb-5 text-left text-2xl font-semibold">Marketing</h3>
+          <p className="mb-10 mt-5 text-justify leading-relaxed">
             We use the information that we collect to communicate with you about
             relevant products, services, and offerings. We also use this
             information to personalize your online experience with our content
             and advertisements and to develop internal marketing and business
             intelligence.
           </p>
-          <h3 className="mb-5 text-left text-2xl font-semibold text-gray-600">
+          <h3 className="mb-5 text-left text-2xl font-semibold">
             Cookies and related technologies
           </h3>
-          <p className="mb-10 mt-5 text-justify leading-relaxed text-gray-600">
+          <p className="mb-10 mt-5 text-justify leading-relaxed">
             When you visit our website, our applications, or view our content on
             certain third-party websites, we collect information regarding your
             connection and your activity by using various online tracking
@@ -72,17 +66,15 @@ function Privacy() {
             users. We use advertising partners to provide and assist in the use
             of such technologies on www.normalhuman.com and other sites.
           </p>
-          <h3 className="mb-5 text-left text-2xl font-semibold text-gray-600">
-            Children
-          </h3>
-          <p className="mb-10 mt-5 text-justify leading-relaxed text-gray-600">
+          <h3 className="mb-5 text-left text-2xl font-semibold">Children</h3>
+          <p className="mb-10 mt-5 text-justify leading-relaxed">
             Unless otherwise indicated, our websites, products, and services are
             not intended for use by children under the age of 16.
           </p>
-          <h3 className="mb-5 text-left text-2xl font-semibold text-gray-600">
+          <h3 className="mb-5 text-left text-2xl font-semibold">
             Not covered by this Privacy Statement
           </h3>
-          <p className="mb-10 mt-5 text-justify leading-relaxed text-gray-600">
+          <p className="mb-10 mt-5 text-justify leading-relaxed">
             This Privacy Statement does not apply to job applicants and
             candidates who apply for employment with us or to our employees and
             non-employee workers. It also does not apply to the personal
@@ -91,10 +83,10 @@ function Privacy() {
             “business”) for the personal information that we process on their
             behalf.
           </p>
-          <h3 className="mb-5 text-left text-2xl font-semibold text-gray-600">
+          <h3 className="mb-5 text-left text-2xl font-semibold">
             Sharing Personal Information
           </h3>
-          <p className="mb-10 mt-5 text-justify leading-relaxed text-gray-600">
+          <p className="mb-10 mt-5 text-justify leading-relaxed">
             We may share your personal information internally and externally
             with suppliers, advisors, or Business Partners for Y.Ah, Inc’s
             legitimate business purposes, and only on a need-to-know basis. When
@@ -103,10 +95,10 @@ function Privacy() {
             with the applicable law. This section describes how we share
             information and how we facilitate that sharing.
           </p>
-          <h3 className="mb-5 text-left text-2xl font-semibold text-gray-600">
+          <h3 className="mb-5 text-left text-2xl font-semibold">
             Information Security and Retention
           </h3>
-          <p className="mb-10 mt-5 text-justify leading-relaxed text-gray-600">
+          <p className="mb-10 mt-5 text-justify leading-relaxed">
             To protect your personal information from unauthorized access, use,
             and disclosure, we implement reasonable physical, administrative,
             and technical safeguards. These safeguards include role-based access
@@ -116,7 +108,7 @@ function Privacy() {
             legal and regulatory retention requirements. Legal and regulatory
             retention requirements may include retaining information for:
           </p>
-          <ul className="mb-10 mt-5 list-inside list-disc text-justify leading-relaxed text-gray-600">
+          <ul className="mb-10 mt-5 list-inside list-disc text-justify leading-relaxed">
             <li>audit and accounting purposes,</li>
             <li>statutory retention terms,</li>
             <li>the handling of disputes,</li>
@@ -125,15 +117,13 @@ function Privacy() {
               countries where we do business.
             </li>
           </ul>
-          <h3 className="mb-5 text-left text-2xl font-semibold text-gray-600">
-            Your Rights
-          </h3>
-          <p className="mb-10 mt-5 text-justify leading-relaxed text-gray-600">
+          <h3 className="mb-5 text-left text-2xl font-semibold">Your Rights</h3>
+          <p className="mb-10 mt-5 text-justify leading-relaxed">
             You have certain rights when it comes to the handling of your
             personal information. By emailing us at support@normal-human.com,
             you can:
           </p>
-          <ul className="mb-10 mt-5 list-inside list-disc text-justify leading-relaxed text-gray-600">
+          <ul className="mb-10 mt-5 list-inside list-disc text-justify leading-relaxed">
             <li>
               request access to the personal information that we have on you, or
               have it updated or corrected. Depending on the applicable law, you
@@ -157,10 +147,10 @@ function Privacy() {
               we are processing your personal information.
             </li>
           </ul>
-          <h3 className="mb-5 text-left text-2xl font-semibold text-gray-600">
+          <h3 className="mb-5 text-left text-2xl font-semibold">
             Privacy Statement Updates
           </h3>
-          <p className="mb-10 mt-5 text-justify leading-relaxed text-gray-600">
+          <p className="mb-10 mt-5 text-justify leading-relaxed">
             If a material change is made to this Privacy Statement, the
             effective date is revised, and a notice is posted on the updated
             Privacy Statement for 30 days. By continuing to use our websites and

@@ -62,7 +62,7 @@ const EmailDisplay = ({ email }: Props) => {
       </div>
       <div className="h-4"></div>
       <Letter
-        className="rounded-md bg-white text-black"
+        className="p-2 rounded-md bg-white text-black"
         html={email?.body ?? ""}
       />
     </div>

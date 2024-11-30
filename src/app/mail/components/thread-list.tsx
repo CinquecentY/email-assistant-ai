@@ -7,11 +7,14 @@ import { cn } from "@/lib/utils";
 import DOMPurify from "dompurify";
 import { Badge } from "@/components/ui/badge";
 import { useThread } from "../use-thread";
+import { useAutoAnimate } from "@formkit/auto-animate/react";
 
 function ThreadList() {
   const { threads, isFetching } = useThreads();
 
   const [threadId, setThreadId] = useThread();
+  const [parent] = useAutoAnimate(/* optional config */);
+
   const groupedThreads = threads?.reduce(
     (acc, thread) => {
       const date = format(thread.lastMessageDate ?? new Date(), "yyyy-MM-dd");
@@ -24,8 +27,11 @@ function ThreadList() {
     {} as Record<string, typeof threads>,
   );
   return (
-    <div className="max-h-[calc(100vh-120px)] max-w-full overflow-y-scroll">
-      <div className="flex flex-col gap-2 p-4 pt-0" /*ref={parent}*/>
+    <div className="flex h-full bg-background max-h-[calc(100vh-120px)] max-w-full overflow-y-auto">
+      <div
+        className="flex flex-1 flex-col gap-2 bg-background p-4 pt-0"
+        ref={parent}
+      >
         {Object.entries(groupedThreads ?? {}).map(([date, threads]) => (
           <React.Fragment key={date}>
             <div className="mt-4 text-xs font-medium text-muted-foreground first:mt-0">
