@@ -1,13 +1,11 @@
-import { CoreMessage } from "ai";
+import { CoreMessage, tool } from "ai";
+import { z } from "zod";
+import { findRelevantContent } from "../rag/embeddings";
 
-export const chatPrompt = (hits: any[], messages: CoreMessage[]) => ({
+export const chatPrompt = (messages: CoreMessage[]) => ({
   system: `
 You are a AI assistant embedded in an email client app. Your purpose is to help the user manage his emails by answering questions, providing suggestions, and offering relevant information based on the context of their previous emails.
 THE TIME NOW IS ${new Date().toLocaleString()}
-
-START CONTEXT BLOCK
-${hits.map((hit) => JSON.stringify(hit.document)).join("\n")}
-END OF CONTEXT BLOCK
 
 When responding, please keep in mind:
 - Be helpful, clever, and articulate.
@@ -18,6 +16,15 @@ When responding, please keep in mind:
 - Keep your responses concise and relevant to the user's questions or the email being composed.
 `,
   messages: messages,
+  tools: {
+    getInformation: tool({
+      description: `get information from your knowledge base to answer questions.`,
+      parameters: z.object({
+        question: z.string().describe("the users question"),
+      }),
+      execute: async ({ question }) => findRelevantContent(question),
+    }),
+  },
 });
 
 export const textPolishPrompt = (message: CoreMessage) => ({
