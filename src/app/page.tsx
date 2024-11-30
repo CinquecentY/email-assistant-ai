@@ -36,6 +36,7 @@ export default async function Home() {
           <Button
             variant={"secondary"}
             className="size-1/2 font-bold md:mt-2 md:size-1/4 md:rounded-2xl md:py-4 md:text-4xl"
+            asChild
           >
             <Link href="/mail">Get started</Link>
           </Button>
