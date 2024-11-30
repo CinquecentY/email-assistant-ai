@@ -21,7 +21,9 @@ export default async function Home() {
           </span>
           <span className="inline-flex gap-8">
             <ModeToggle />
-            <UserButton />
+            <Button variant={"secondary"} className="p-1 rounded-full">
+              <UserButton />
+            </Button>
           </span>
         </nav>
         <div className="flex flex-1 flex-col items-center justify-center gap-4 px-2">
