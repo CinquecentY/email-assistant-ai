@@ -12,21 +12,10 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
     const { messages, accountId } = await req.json();
-    const oramaManager = new OramaManager(accountId);
-    await oramaManager.initialize();
-
-    const lastMessage = messages[messages.length - 1];
-    const { hits } = await oramaManager.vectorSearch({
-      prompt: lastMessage.content,
-    });
-    chatPrompt(
-      hits,
-      messages.filter((message: Message) => message.role === "user"),
-    );
+    // TODO setAccount ID
     const result = streamText({
       model: googleModel,
       ...chatPrompt(
-        hits,
         messages.filter((message: Message) => message.role === "user"),
       ),
     });
