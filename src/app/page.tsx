@@ -14,7 +14,7 @@ export default async function Home() {
           <span className="flex-1">
             <Link
               href="/"
-              className="border-b-4 px-2 pb-2 font-bold md:text-2xl"
+              className="border-b-2 px-2 font-semibold lowercase md:text-2xl"
             >
               Mail Assistant 🇦🇮
             </Link>
@@ -25,20 +25,23 @@ export default async function Home() {
           </span>
         </nav>
         <div className="flex flex-1 flex-col items-center justify-center gap-4 px-2">
-          <h1 className="text-center text-4xl font-bold md:text-7xl">
+          <h1 className="text-center text-4xl capitalize md:text-7xl">
             The only email assistant you will ever need
           </h1>
-          <div className="inline-flex flex-wrap justify-center gap-2 md:text-3xl">
-            <h2 className="font-bold">Check your emails.</h2>
-            <h2 className="font-bold">Ask about your emails.</h2>
-            <h2 className="font-bold">Do more with your emails.</h2>
+          <div className="inline-flex flex-wrap justify-center gap-2 lowercase md:text-3xl">
+            <h2>Check your emails.</h2>
+            <h2>Ask about your emails.</h2>
+            <h2>Do more with your emails.</h2>
           </div>
           <Button
             variant={"secondary"}
-            className="size-1/2 font-bold md:mt-2 md:size-1/4 md:rounded-2xl md:py-4 md:text-4xl"
+            className="font-semi-bold size-1/2 md:mt-2 md:size-1/4 md:rounded-2xl md:py-4 md:text-4xl"
             asChild
           >
-            <Link href="/mail">Get started</Link>
+            <Link href="/mail">
+              Get started
+              <span className="text-sm">(it's free)</span>
+            </Link>
           </Button>
           <sub className="text-center text-sm text-muted-foreground md:text-base">
             Powered by{" "}
@@ -79,13 +82,13 @@ export default async function Home() {
               </Link>
             </span>
           </div>
-          <span className="inline-flex gap-2">
+          <span className="inline-flex gap-2 divide-x-2">
             <span>© 2024 Y.Ah, Inc</span>
-            <Link className="font-bold" href="/terms">
-              Terms of Service
-            </Link>
             <Link className="font-bold" href="/privacy">
               Privacy Policy
+            </Link>
+            <Link className="font-bold" href="/terms">
+              Terms of Service
             </Link>
           </span>
           <span className="hidden gap-2 md:inline-flex" aria-label="socials">
