@@ -19,7 +19,7 @@ export default function RootLayout({
   return (
     <ClerkProvider>
       <html lang="en" className={`${GeistSans.variable}`}>
-        <body>
+        <body className="bg-purple-100 dark:bg-[#121212]">
           <ThemeProvider
             attribute="class"
             defaultTheme="system"
