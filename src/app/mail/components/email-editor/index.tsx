@@ -156,6 +156,7 @@ const EmailEditor = ({
               placeholder="Subject"
               value={subject}
               onChange={(e) => setSubject(e.target.value)}
+              autoComplete="message-subject"
             />
           </>
         )}

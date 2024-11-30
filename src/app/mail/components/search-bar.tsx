@@ -31,6 +31,7 @@ const SearchBar = () => {
           onChange={(e) => setSearchValue(e.target.value)}
           onFocus={() => setIsSearching(true)}
           onBlur={handleBlur}
+          autoComplete="search"
         />
         <div className="absolute right-2 top-2.5 flex items-center gap-2">
           {isFetching && (
