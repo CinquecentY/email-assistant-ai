@@ -1,7 +1,7 @@
 "use client";
 import { cn } from "@/lib/utils";
 import { AnimatePresence, motion } from "framer-motion";
-import { Send, SparklesIcon } from "lucide-react";
+import { Forward, Send, SparklesIcon } from "lucide-react";
 import { toast } from "sonner";
 import { useLocalStorage } from "usehooks-ts";
 import { useChat } from "ai/react";
@@ -26,6 +26,7 @@ const AskAI = ({ isCollapsed }: { isCollapsed: boolean }) => {
       },
       initialMessages: [],
     });
+  // TODO Disable AI when not linked to account
   React.useEffect(() => {
     const messageContainer = document.getElementById("message-container");
     if (messageContainer) {
@@ -51,11 +52,11 @@ const AskAI = ({ isCollapsed }: { isCollapsed: boolean }) => {
                 key={message.id}
                 layout="position"
                 className={cn(
-                  "z-10 mt-2 max-w-[250px] break-words rounded-2xl bg-gray-200 dark:bg-gray-800",
+                  "z-10 mt-2 max-w-[250px] break-words rounded-2xl bg-gray-200",
                   {
-                    "self-end text-gray-900 dark:text-gray-100":
+                    "self-end text-gray-900 dark:text-gray-100 dark:bg-gray-800":
                       message.role === "user",
-                    "self-start bg-blue-500 text-white":
+                    "self-start bg-blue-500 text-white dark:bg-blue-900":
                       message.role === "assistant",
                   },
                 )}
@@ -109,36 +110,44 @@ const AskAI = ({ isCollapsed }: { isCollapsed: boolean }) => {
               </div>
             </div>
           )}
-          <form onSubmit={handleSubmit} className="flex w-full">
-            <input
-              type="text"
-              onChange={handleInputChange}
-              value={input}
-              className="py- relative h-9 flex-grow rounded-full border border-gray-200 bg-white px-3 text-[15px] outline-none placeholder:text-[13px] placeholder:text-gray-400 focus-visible:ring-0 focus-visible:ring-blue-500/20 focus-visible:ring-offset-1 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100 dark:placeholder-gray-400 dark:focus-visible:ring-blue-500/20 dark:focus-visible:ring-offset-1 dark:focus-visible:ring-offset-gray-700"
-              placeholder="Ask AI anything about your emails"
-            />
-            <motion.div
-              key={messages.length}
-              layout="position"
-              className="pointer-events-none absolute z-10 flex h-9 w-[250px] items-center overflow-hidden break-words rounded-full bg-gray-200 [word-break:break-word] dark:bg-gray-800"
-              layoutId={`container-[${messages.length}]`}
-              transition={transitionDebug}
-              initial={{ opacity: 0.6, zIndex: -1 }}
-              animate={{ opacity: 0.6, zIndex: -1 }}
-              exit={{ opacity: 1, zIndex: 1 }}
-            >
-              <div className="px-3 py-2 text-[15px] leading-[15px] text-gray-900 dark:text-gray-100">
-                {input}
-              </div>
-            </motion.div>
-            <button
-              type="submit"
-              className="ml-2 flex h-9 w-9 items-center justify-center rounded-full bg-gray-200 dark:bg-gray-800"
-              aria-label="send"
-            >
-              <Send className="size-4 text-gray-500 dark:text-gray-300" />
-            </button>
-          </form>
+          {accountId ? (
+            <form onSubmit={handleSubmit} className="flex w-full">
+              <input
+                type="text"
+                onChange={handleInputChange}
+                value={input}
+                className="py- relative h-9 flex-grow rounded-full border border-gray-200 bg-white px-3 text-[15px] outline-none placeholder:text-[13px] placeholder:text-gray-400 focus-visible:ring-0 focus-visible:ring-blue-500/20 focus-visible:ring-offset-1 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100 dark:placeholder-gray-400 dark:focus-visible:ring-blue-500/20 dark:focus-visible:ring-offset-1 dark:focus-visible:ring-offset-gray-700"
+                placeholder="Ask AI anything about your emails"
+                autoComplete="new-text"
+              />
+              <motion.div
+                key={messages.length}
+                layout="position"
+                className="pointer-events-none absolute z-10 flex h-9 w-[250px] items-center overflow-hidden break-words rounded-full bg-gray-200 [word-break:break-word] dark:bg-gray-800"
+                layoutId={`container-[${messages.length}]`}
+                transition={transitionDebug}
+                initial={{ opacity: 0.6, zIndex: -1 }}
+                animate={{ opacity: 0.6, zIndex: -1 }}
+                exit={{ opacity: 1, zIndex: 1 }}
+              >
+                <div className="px-3 py-2 text-[15px] leading-[15px] text-gray-900 dark:text-gray-100">
+                  {input}
+                </div>
+              </motion.div>
+              <button
+                type="submit"
+                className="ml-2 flex h-9 w-9 items-center justify-center rounded-full bg-gray-200 dark:bg-gray-800"
+                aria-label="send"
+                disabled={input.length === 0}
+              >
+                <Forward className="size-4 text-gray-500 dark:text-gray-300" />
+              </button>
+            </form>
+          ) : (
+            <div className="rounded border bg-muted p-2 text-muted-foreground">
+              You must add an account to use the bot.
+            </div>
+          )}
         </div>
       </motion.div>
     </div>

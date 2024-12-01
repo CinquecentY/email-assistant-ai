@@ -13,9 +13,18 @@ import TagInput from "./tag-input";
 import { Input } from "@/components/ui/input";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
 import AIComposeButton from "./ai-compose-button";
-import { generate } from "./action";
-import { readStreamableValue } from "ai/rsc";
+import { autoComplete, polishText, replyToEmail } from "./action";
 import { cn } from "@/lib/utils";
+import { useThread } from "../../use-thread";
+import useThreads from "../../use-threads";
+import { turndown } from "@/lib/turndown";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { BookType, MessageSquareReply } from "lucide-react";
 
 type EmailEditorProps = {
   toValues: { label: string; value: string }[];
@@ -38,7 +47,6 @@ const EmailEditor = ({
   ccValues,
   subject,
   setSubject,
-  to,
   handleSend,
   isSending,
   onToChange,
@@ -56,13 +64,48 @@ const EmailEditor = ({
   const [expanded, setExpanded] = React.useState(defaultToolbarExpand ?? false);
 
   const [generation, setGeneration] = React.useState("");
+  const { threads, account } = useThreads();
+  const [threadId] = useThread();
+  const thread = threads?.find((t) => t.id === threadId);
 
-  const aiGenerate = async (prompt: string) => {
-    const { output } = await generate(prompt);
+  const autocompleteAI = async (prompt: string) => {
+    const context = thread?.emails
+      .map(
+        (m) =>
+          `Subject: ${m.subject}\nFrom: ${m.from.address}\n\n${turndown.turndown(m.body ?? m.bodySnippet ?? "")}`,
+      )
+      .join("\n");
+    const textStream = autoComplete(context ?? "", prompt);
 
-    for await (const delta of readStreamableValue(output)) {
-      if (delta) {
-        setGeneration(delta);
+    for await (const textPart of await textStream) {
+      if (textPart) {
+        setGeneration(textPart);
+      }
+    }
+  };
+
+  const replyAI = async (prompt: string) => {
+    const context = thread?.emails
+      .map(
+        (m) =>
+          `Subject: ${m.subject}\nFrom: ${m.from.address}\n\n${turndown.turndown(m.body ?? m.bodySnippet ?? "")}`,
+      )
+      .join("\n");
+    const textStream = replyToEmail(
+      [
+        context ?? "",
+        account &&
+          `user's data is:
+            - name ${account.name}
+            - email ${account.email}
+      `,
+      ].join("\n"),
+      prompt,
+    );
+
+    for await (const textPart of await textStream) {
+      if (textPart) {
+        setGeneration(textPart);
       }
     }
   };
@@ -71,12 +114,15 @@ const EmailEditor = ({
     addKeyboardShortcuts() {
       return {
         "Alt-a": () => {
-          aiGenerate(this.editor.getText());
+          (async () => {
+            await autocompleteAI(this.editor.getText());
+          })().catch((error: Error) => console.error("error", error.message));
           return true;
         },
-        "Alt-r": () => {
-          // TODO Add AI reply function
-          setGeneration("AI Reply");
+        "Alt-p": () => {
+          (async () => {
+            await polishEmail(this.editor.getText());
+          })().catch((error: Error) => console.error("error", error.message));
           return true;
         },
       };
@@ -97,7 +143,7 @@ const EmailEditor = ({
     onBlur: () => {
       if (!defaultToolbarExpand) setExpanded(false);
     },
-    onUpdate: ({ editor, transaction }) => {
+    onUpdate: ({ editor }) => {
       setValue(editor.getHTML());
     },
   });
@@ -110,7 +156,7 @@ const EmailEditor = ({
         event.key === "Enter" &&
         editor &&
         !["INPUT", "TEXTAREA", "SELECT"].includes(
-          document.activeElement?.tagName || "",
+          document.activeElement?.tagName ?? "",
         )
       ) {
         editor.commands.focus();
@@ -131,20 +177,29 @@ const EmailEditor = ({
     editor.commands.insertContent(generation);
   }, [generation, editor]);
 
+  async function polishEmail(prompt: string) {
+    const textStream = polishText(prompt);
+    for await (const textPart of await textStream) {
+      if (textPart) {
+        setGeneration(textPart);
+      }
+    }
+  }
+
   return (
     <div className="px-2">
       <div ref={ref} className="space-y-2 p-4">
         {expanded && (
           <>
             <TagInput
-              suggestions={suggestions?.map((s) => s.address) || []}
+              suggestions={suggestions?.map((s) => s.address) ?? []}
               value={toValues}
               placeholder="Add tags"
               label="To"
               onChange={onToChange}
             />
             <TagInput
-              suggestions={suggestions?.map((s) => s.address) || []}
+              suggestions={suggestions?.map((s) => s.address) ?? []}
               value={ccValues}
               placeholder="Add tags"
               label="Cc"
@@ -156,6 +211,7 @@ const EmailEditor = ({
               placeholder="Subject"
               value={subject}
               onChange={(e) => setSubject(e.target.value)}
+              autoComplete="message-subject"
             />
           </>
         )}
@@ -170,7 +226,23 @@ const EmailEditor = ({
           <span className="flex-1">
             {editor && <TipTapMenuBar editor={editor} />}{" "}
           </span>
-          <span className="py-1">
+          <span className="inline-flex gap-2 py-1">
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    onClick={() => replyAI(editor?.getText() ?? "")}
+                    size="icon"
+                    variant={"outline"}
+                  >
+                    <MessageSquareReply className="size-5" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>AI reply</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
             <AIComposeButton
               isComposing={defaultToolbarExpand}
               onGenerate={setGeneration}
@@ -197,15 +269,15 @@ const EmailEditor = ({
           </span>
           <span className="text-sm">
             <kbd className="rounded-lg border border-gray-200 bg-gray-100 px-2 py-1.5 text-xs font-semibold text-gray-800">
-              Alt + R
+              Alt + P
             </kbd>{" "}
-            for AI reply
+            for AI to improve written content
           </span>
         </span>
         <Button
           onClick={async () => {
             editor?.commands.clearContent();
-            await handleSend(value);
+            handleSend(value);
           }}
           disabled={isSending}
         >

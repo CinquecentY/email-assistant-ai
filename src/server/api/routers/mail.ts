@@ -102,7 +102,6 @@ export const mailRouter = createTRPCRouter({
         input.accountId,
         ctx.auth.userId,
       );
-      // TODO Find better syncing
       const acc = new Account(account.token);
       acc.syncEmails();
 
@@ -313,7 +312,6 @@ export const mailRouter = createTRPCRouter({
         });
       }
     }),
-  // TODO Add the rest here
   sendEmail: protectedProcedure
     .input(
       z.object({

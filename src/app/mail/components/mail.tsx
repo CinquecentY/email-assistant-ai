@@ -16,7 +16,7 @@ import SearchBar from "./search-bar";
 import AskAI from "./ask-ai";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft } from "lucide-react";
-import { useSearchParams } from "next/navigation";
+import { redirect, useSearchParams } from "next/navigation";
 import { useLocalStorage } from "usehooks-ts";
 
 interface MailProps {
@@ -39,7 +39,7 @@ export function Mail({
     const accountIdParams = searchParams.get("accountId");
     if (accountIdParams && accountIdParams !== accountId) {
       setAccountId(accountIdParams);
-      window.location.href = "/mail";
+      redirect("/mail");
     }
   }, []);
   return (
