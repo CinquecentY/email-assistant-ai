@@ -9,7 +9,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
-import { Sparkles } from "lucide-react";
+import { MessageSquareQuote } from "lucide-react";
 import React from "react";
 import { useThread } from "../../use-thread";
 import useThreads from "../../use-threads";
@@ -71,11 +71,11 @@ const AIComposeButton = (props: Props) => {
                 size="icon"
                 variant={"outline"}
               >
-                <Sparkles className="size-5" />
+                <MessageSquareQuote className="size-5" />
               </Button>
             </TooltipTrigger>
             <TooltipContent>
-              <p>Prompt to unleash the full power of AI!</p>
+              <p>AI write</p>
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>
@@ -84,8 +84,8 @@ const AIComposeButton = (props: Props) => {
         <DialogHeader>
           <DialogTitle>AI Compose</DialogTitle>
           <DialogDescription>
-            AI will compose an email based on the context of your previous
-            emails.
+            Unleash the full power of AI! AI will compose an email based on the
+            context of your previous emails.
           </DialogDescription>
           <div className="h-2"></div>
           <Textarea
