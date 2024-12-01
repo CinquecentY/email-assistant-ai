@@ -39,7 +39,7 @@ const HomeLayout = ({ children }: Readonly<{ children: React.ReactNode }>) => {
           </span>
         </div>
         <span className="inline-flex gap-2">
-          <span>© 2024 Yassine A.</span>
+          <span className="opacity-10" >© Yassine A.</span>
           <Link className="font-bold" href="/privacy">
             Privacy Policy
           </Link>
