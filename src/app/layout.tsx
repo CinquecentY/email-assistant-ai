@@ -9,6 +9,7 @@ import { ThemeProvider } from "@/components/theme-provider";
 
 import { Poppins } from "next/font/google";
 import { cn } from "@/lib/utils";
+import HoverBar from "@/components/hover-bar";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -35,7 +36,10 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
-            <TRPCReactProvider>{children}</TRPCReactProvider>
+            <TRPCReactProvider>
+              <HoverBar />
+              {children}
+            </TRPCReactProvider>
           </ThemeProvider>
         </body>
       </html>

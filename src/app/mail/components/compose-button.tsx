@@ -10,7 +10,7 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from "@/components/ui/drawer";
-import { Pencil } from "lucide-react";
+import { Pencil, Plus } from "lucide-react";
 
 import React from "react";
 import EmailEditor from "./email-editor";
@@ -105,14 +105,14 @@ const ComposeButton = () => {
   return (
     <Drawer open={open} onOpenChange={setOpen}>
       <DrawerTrigger asChild>
-        <Button className="w-full">
-          <Pencil className="mr-1 size-4" />
-          Compose
+        <Button className="w-full p-3">
+          <Plus className="md:mr-1" />
+          <p className="hidden md:block">New Email</p>
         </Button>
       </DrawerTrigger>
       <DrawerContent className="">
         <DrawerHeader>
-          <DrawerTitle>Compose Email</DrawerTitle>
+          <DrawerTitle>New Email</DrawerTitle>
           <EmailEditor
             toValues={toValues}
             ccValues={ccValues}

@@ -24,7 +24,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { BookType, MessageSquareReply } from "lucide-react";
+import { BookType, BotMessageSquare, MessageSquareReply } from "lucide-react";
 
 type EmailEditorProps = {
   toValues: { label: string; value: string }[];
@@ -235,7 +235,7 @@ const EmailEditor = ({
                     size="icon"
                     variant={"outline"}
                   >
-                    <MessageSquareReply className="size-5" />
+                    <BotMessageSquare className="size-5" />
                   </Button>
                 </TooltipTrigger>
                 <TooltipContent>

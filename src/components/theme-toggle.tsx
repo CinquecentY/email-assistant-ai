@@ -35,7 +35,8 @@ export function ModeToggle() {
       <Tooltip>
         <TooltipTrigger asChild>
           <Button
-            variant="outline"
+            className="rounded-full p-3"
+            variant="ghost"
             size="icon"
             onClick={toggleTheme}
             aria-label="Toggle theme"
