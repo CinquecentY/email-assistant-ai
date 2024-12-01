@@ -21,7 +21,6 @@ const DashboardLayout = ({
   const [isCollapsed, setIsCollapsed] = useAtom(isCollapsedAtom);
   const isMobile = useIsMobile();
   return (
-    <TooltipProvider delayDuration={0}>
       <ResizablePanelGroup
         direction="horizontal"
         className="h-full min-h-screen items-stretch"
@@ -50,7 +49,12 @@ const DashboardLayout = ({
                 "min-w-[50px] transition-all duration-300 ease-in-out"),
           )}
         >
-          <div className="flex h-full flex-1 flex-col">
+          <div
+            className={cn(
+              "flex h-full flex-1 flex-col",
+              isMobile && "border-r-2 border-solid",
+            )}
+          >
             <div
               className={cn(
                 "flex h-11 items-center justify-center",
@@ -68,7 +72,6 @@ const DashboardLayout = ({
         <ResizableHandle withHandle />
         {children}
       </ResizablePanelGroup>
-    </TooltipProvider>
   );
 };
 

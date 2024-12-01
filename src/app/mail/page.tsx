@@ -1,12 +1,12 @@
 import React, { Suspense } from "react";
-import Mail from "./components/mail";
+import MailDashboard from "./components/mail-dashboard";
 
-function MailDashboard() {
+function MailPage() {
   return (
     <Suspense>
-      <Mail />
+      <MailDashboard />
     </Suspense>
   );
 }
 
-export default MailDashboard;
+export default MailPage;
