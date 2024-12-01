@@ -75,7 +75,7 @@ const AIComposeButton = (props: Props) => {
               </Button>
             </TooltipTrigger>
             <TooltipContent>
-              <p>Unleash the power of AI!</p>
+              <p>Prompt to unleash the full power of AI!</p>
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>
