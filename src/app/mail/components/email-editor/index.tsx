@@ -13,11 +13,18 @@ import TagInput from "./tag-input";
 import { Input } from "@/components/ui/input";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
 import AIComposeButton from "./ai-compose-button";
-import { autoComplete, replyToEmail } from "./action";
+import { autoComplete, polishText, replyToEmail } from "./action";
 import { cn } from "@/lib/utils";
 import { useThread } from "../../use-thread";
 import useThreads from "../../use-threads";
 import { turndown } from "@/lib/turndown";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { BookType, MessageSquareReply } from "lucide-react";
 
 type EmailEditorProps = {
   toValues: { label: string; value: string }[];
@@ -112,9 +119,9 @@ const EmailEditor = ({
           })().catch((error: Error) => console.error("error", error.message));
           return true;
         },
-        "Alt-r": () => {
+        "Alt-p": () => {
           (async () => {
-            await replyAI(this.editor.getText());
+            await polishEmail(this.editor.getText());
           })().catch((error: Error) => console.error("error", error.message));
           return true;
         },
@@ -170,6 +177,15 @@ const EmailEditor = ({
     editor.commands.insertContent(generation);
   }, [generation, editor]);
 
+  async function polishEmail(prompt: string) {
+    const textStream = polishText(prompt);
+    for await (const textPart of await textStream) {
+      if (textPart) {
+        setGeneration(textPart);
+      }
+    }
+  }
+
   return (
     <div className="px-2">
       <div ref={ref} className="space-y-2 p-4">
@@ -210,7 +226,23 @@ const EmailEditor = ({
           <span className="flex-1">
             {editor && <TipTapMenuBar editor={editor} />}{" "}
           </span>
-          <span className="py-1">
+          <span className="inline-flex gap-2 py-1">
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    onClick={() => replyAI(editor?.getText() ?? "")}
+                    size="icon"
+                    variant={"outline"}
+                  >
+                    <MessageSquareReply className="size-5" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>AI reply</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
             <AIComposeButton
               isComposing={defaultToolbarExpand}
               onGenerate={setGeneration}
@@ -237,9 +269,9 @@ const EmailEditor = ({
           </span>
           <span className="text-sm">
             <kbd className="rounded-lg border border-gray-200 bg-gray-100 px-2 py-1.5 text-xs font-semibold text-gray-800">
-              Alt + R
+              Alt + P
             </kbd>{" "}
-            for AI reply
+            for AI to improve written content
           </span>
         </span>
         <Button
