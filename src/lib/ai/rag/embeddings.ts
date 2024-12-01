@@ -1,6 +1,6 @@
 import { OramaManager } from "@/lib/orama";
 import { embed, embedMany } from "ai";
-import { googleEmbeddingModel } from "../model/google";
+import { googleEmbeddingModel } from "../models/google";
 
 const generateChunks = (input: string): string[] => {
   return input

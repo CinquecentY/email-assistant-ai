@@ -14,8 +14,7 @@ import React from "react";
 import { useThread } from "../../use-thread";
 import useThreads from "../../use-threads";
 import { Button } from "@/components/ui/button";
-import { readStreamableValue } from "ai/rsc";
-import { generateEmail } from "./action";
+import { composeEmail } from "./action";
 import { turndown } from "@/lib/turndown";
 import {
   Tooltip,
@@ -46,14 +45,18 @@ const AIComposeButton = (props: Props) => {
         .join("\n");
     }
 
-    const { output } = await generateEmail(
-      context + `\n\nMy email is: ${account?.email}`,
+    const textStream = composeEmail(
+      [
+        context ?? "",
+        account &&
+          `user data is {name:${account.name}, email:${account.email}}`,
+      ].join("\n"),
       prompt,
+      account!.id,
     );
-    // `\n\nMy name is: ${account?.name}`
-    for await (const delta of readStreamableValue(output)) {
-      if (delta) {
-        props.onGenerate(delta);
+    for await (const textPart of await textStream) {
+      if (textPart) {
+        props.onGenerate(textPart);
       }
     }
   };
@@ -92,8 +95,8 @@ const AIComposeButton = (props: Props) => {
           />
           <div className="h-2"></div>
           <Button
-            onClick={() => {
-              aiGenerate(prompt);
+            onClick={async () => {
+              await aiGenerate(prompt);
               setOpen(false);
               setPrompt("");
             }}

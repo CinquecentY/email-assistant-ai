@@ -13,9 +13,11 @@ import TagInput from "./tag-input";
 import { Input } from "@/components/ui/input";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
 import AIComposeButton from "./ai-compose-button";
-import { composeEmail } from "./action";
-import { readStreamableValue } from "ai/rsc";
+import { autoComplete, replyToEmail } from "./action";
 import { cn } from "@/lib/utils";
+import { useThread } from "../../use-thread";
+import useThreads from "../../use-threads";
+import { turndown } from "@/lib/turndown";
 
 type EmailEditorProps = {
   toValues: { label: string; value: string }[];
@@ -38,7 +40,6 @@ const EmailEditor = ({
   ccValues,
   subject,
   setSubject,
-  to,
   handleSend,
   isSending,
   onToChange,
@@ -56,13 +57,48 @@ const EmailEditor = ({
   const [expanded, setExpanded] = React.useState(defaultToolbarExpand ?? false);
 
   const [generation, setGeneration] = React.useState("");
+  const { threads, account } = useThreads();
+  const [threadId] = useThread();
+  const thread = threads?.find((t) => t.id === threadId);
 
-  const aiGenerate = async (prompt: string) => {
-    const { output } = await composeEmail(prompt, accountId);
+  const autocompleteAI = async (prompt: string) => {
+    const context = thread?.emails
+      .map(
+        (m) =>
+          `Subject: ${m.subject}\nFrom: ${m.from.address}\n\n${turndown.turndown(m.body ?? m.bodySnippet ?? "")}`,
+      )
+      .join("\n");
+    const textStream = autoComplete(context ?? "", prompt);
 
-    for await (const delta of readStreamableValue(output)) {
-      if (delta) {
-        setGeneration(delta);
+    for await (const textPart of await textStream) {
+      if (textPart) {
+        setGeneration(textPart);
+      }
+    }
+  };
+
+  const replyAI = async (prompt: string) => {
+    const context = thread?.emails
+      .map(
+        (m) =>
+          `Subject: ${m.subject}\nFrom: ${m.from.address}\n\n${turndown.turndown(m.body ?? m.bodySnippet ?? "")}`,
+      )
+      .join("\n");
+    const textStream = replyToEmail(
+      [
+        context ?? "",
+        account &&
+          `user's data is:
+            - name ${account.name}
+            - email ${account.email}
+      `,
+      ].join("\n"),
+      prompt,
+    );
+
+    for await (const textPart of await textStream) {
+      if (textPart) {
+        setGeneration(textPart);
       }
     }
   };
@@ -71,12 +107,15 @@ const EmailEditor = ({
     addKeyboardShortcuts() {
       return {
         "Alt-a": () => {
-          aiGenerate(this.editor.getText());
+          (async () => {
+            await autocompleteAI(this.editor.getText());
+          })().catch((error: Error) => console.error("error", error.message));
           return true;
         },
         "Alt-r": () => {
-          // TODO Add AI reply function
-          setGeneration("AI Reply");
+          (async () => {
+            await replyAI(this.editor.getText());
+          })().catch((error: Error) => console.error("error", error.message));
           return true;
         },
       };
@@ -97,7 +136,7 @@ const EmailEditor = ({
     onBlur: () => {
       if (!defaultToolbarExpand) setExpanded(false);
     },
-    onUpdate: ({ editor, transaction }) => {
+    onUpdate: ({ editor }) => {
       setValue(editor.getHTML());
     },
   });
@@ -110,7 +149,7 @@ const EmailEditor = ({
         event.key === "Enter" &&
         editor &&
         !["INPUT", "TEXTAREA", "SELECT"].includes(
-          document.activeElement?.tagName || "",
+          document.activeElement?.tagName ?? "",
         )
       ) {
         editor.commands.focus();
@@ -137,14 +176,14 @@ const EmailEditor = ({
         {expanded && (
           <>
             <TagInput
-              suggestions={suggestions?.map((s) => s.address) || []}
+              suggestions={suggestions?.map((s) => s.address) ?? []}
               value={toValues}
               placeholder="Add tags"
               label="To"
               onChange={onToChange}
             />
             <TagInput
-              suggestions={suggestions?.map((s) => s.address) || []}
+              suggestions={suggestions?.map((s) => s.address) ?? []}
               value={ccValues}
               placeholder="Add tags"
               label="Cc"
@@ -206,7 +245,7 @@ const EmailEditor = ({
         <Button
           onClick={async () => {
             editor?.commands.clearContent();
-            await handleSend(value);
+            handleSend(value);
           }}
           disabled={isSending}
         >
