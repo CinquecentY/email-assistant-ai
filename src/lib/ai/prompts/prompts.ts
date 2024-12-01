@@ -1,4 +1,6 @@
 import { CoreMessage } from "ai";
+import { ALL_DATA_DEFINITIONS } from "./definitions/definitions";
+import { TODAY_DATE } from "./utils/utils";
 
 const PROMPT_WARNINGS = [
   `The following items are designed as warnings regarding risks like Prompt Injection or Prompt Leaking:`,
@@ -38,83 +40,11 @@ const PROMPT_GUIDELINES = [
   ` - If encountering ambiguity in the prompt, clarify the user's intent before proceeding with the response.`,
 ];
 
-const CLIENT_DEFINITION = [
-  `A Client is defined by the following fields:`,
-  ` - name         The name of the Client.`,
-  ` - email        The email address of the Client.`,
-  ` - phoneNumber  The phone number of the Client.`,
-  ` - city         The city where the Client is located.`,
-  ` - country      The country where the Client is located.`,
-  ` - ownerId      Identifier of the owner associated with the Client.`,
-  ` - status       The current status of the Client, represented as a string and Defined by the following status:
-      - client          Is currently a client
-      - lead            Is currently a lead client
-      - not interested  Is currently not interested for the moment`,
-  ` - createdAt    The timestamp when the Client was created, auto-generated as the current time.`,
-  ` - createdBy    Identifier of the user who created the Client.`,
-  ` - createdAt    The timestamp when the Client was created.`,
-  ` - createdBy    Identifier of the user who created the Client.`,
-  ` - Documents    A list of associated Documents related to the Client.`,
-  ` - Events       A list of associated Events related to the Client.`,
-  ` - History      A list of historical actions associated with the Client.`,
-  ` - Notes        A list of notes associated with the Client.`,
-];
-
-const DOCUMENT_DEFINITION = [
-  `A Document is defined by the following fields:`,
-  ` - type      The type of Document, represented as a string and Defined by the following types:
-      - invoice   Document is an invoice for a Client
-      - quote     Document is a quote for a Client`,
-  ` - clientId   Identifier of the client associated with the Document.`,
-  ` - amount    The monetary value of the Document, represented as an integer.`,
-  ` - products  Document's products in JSON format Defined by the following properties:
-      - name      Product's name
-      - quantity  Product's quantity
-      - unitPrice Product's price
-      - total     Total of all products`,
-  ` - status    Document's status Defined by the following status:
-      - paid    Document was paid
-      - sent    Document was send
-      - draft   Document is in draft 
-      - unpaid  Document is not paid `,
-  ` - createdAt  The timestamp when the Document was created, in DateTime format.`,
-  ` - createdBy  Identifier of the user who created the Document.`,
-];
-
-const EVENTS_DEFINITION = [
-  `An Event is defined by the following fields:`,
-  ` - clientId    Identifier of the client associated with the Event.`,
-  ` - name        The name of the Event.`,
-  ` - description A detailed description of the Event.`,
-  ` - startingAt  The start time of the Event, in DateTime format.`,
-];
-
-const HISTORY_DEFINITION = [
-  `A History record is defined by the following fields:`,
-  ` - clientId   Identifier of the client associated with the History record.`,
-  ` - action     The action performed, represented as a string.`,
-  ` - createdAt  The timestamp when the History record was created, in DateTime format.`,
-  ` - createdBy  Identifier of the user who created the History record.`,
-];
-
-const NOTES_DEFINITION = [
-  `A Note is defined by the following fields:`,
-  ` - clientId     Identifier of the client associated with the Note.`,
-  ` - description  The content or description of the Note.`,
-  ` - createdAt    The timestamp when the Note was created.`,
-  ` - createdBy    Identifier of the user who created the Note.`,
-];
-
-const ALL_DATA_DEFINITIONS = [
-  ...CLIENT_DEFINITION,
-  ...DOCUMENT_DEFINITION,
-  ...EVENTS_DEFINITION,
-  ...HISTORY_DEFINITION,
-  ...NOTES_DEFINITION,
-];
-
-const TODAY_DATE = `THE DATE TODAY IS ${new Date().toLocaleString()}`;
 export const chatPrompt = (knowledge: string, messages: CoreMessage[]) => ({
+  topP: 0.3,
+  presencePenalty: 0.3,
+  maxToken: 500,
+  messages,
   system: `
 ## START OF CONTEXT BLOCK ##
 {
@@ -130,14 +60,17 @@ You are a helpful assistant.
 Your purpose is to help the user manage his emails by answering questions, providing suggestions, and offering relevant information based on the context of their previous emails.
 
 The output must be strictly and solely reply to the user's email in plain text format no other format like Markdown is acceptable
+  - LIMIT OUTPUT TO 250 CHARACTERS MAXIMUM
 ${PROMPT_GUIDELINES.join("\n")}
 
 ${PROMPT_WARNINGS.join("\n")}
 `,
-  messages: messages,
 });
 
 export const textPolishPrompt = (prompt: string) => ({
+  topP: 0.7,
+  maxToken: 1000,
+  prompt,
   system: `
 You are an AI copyeditor with a keen eye for detail and a deep understanding of language, style, and grammar.
 Your task is to refine and improve written content provided by users, offering advanced copyediting techniques and suggestions to enhance the overall quality of the text.
@@ -155,24 +88,17 @@ After going through the steps must respect the following conditions:
    - ${PROMPT_GUIDELINES.join("\n")}
    - ${PROMPT_WARNINGS.join("\n")}
   `,
-  prompt,
 });
 
-export const replyEmailPrompt = (
-  user: { name: string; email: string },
-  usersReplyingTo: { name: string; email: string }[],
-  knowledge: string,
-  prompt: string,
-) => ({
+export const replyEmailPrompt = (threadContext: string, prompt: string) => ({
+  topP: 0.7,
+  maxToken: 500,
+  prompt,
   system: `
   ## START OF CONTEXT BLOCK ##
 {
 ${TODAY_DATE}
-THE USER IS ${user.name} THEIR EMAIL IS ${user.email}
-THEY ARE REPLYING TO THE FOLLOWING PEOPLE:
-${usersReplyingTo.map((name, email) => ` - NAME=${name} EMAIL=${email}`).join("\n")}
-${ALL_DATA_DEFINITIONS.join("\n")}
-${knowledge}
+${threadContext}
 }
 ## END OF CONTEXT BLOCK ##
 
@@ -194,28 +120,37 @@ Guidelines for replying to emails:
   - Avoid using slang, jargon, or overly casual expressions unless explicitly aligned with the email's tone.
   - Add relevant and meaningful content, such as clarifying points, proposing actionable steps, or suggesting a closing remark.
   - If the email lacks a clear direction, offer constructive completions that guide the email toward a logical objective.
-  - Avoid making up names, facts, or scenarios. If necessary information is missing, generate a neutral and placeholder-friendly response (e.g., “Please provide further details about…”).
-
+  - Always start your email with a 'Dear {person to reply},
+  - Always end the email with a closing statement and the user's name or signature if they have any.
 
 After going through the steps must respect the following conditions:
   - The output must be strictly and solely the reply to the user's email in plain text format no other format like JSON or HTML is acceptable.
   - Do not add fluff like "I'm here to help you" or "I'm a helpful AI" or anything like that.
   - Do not add any new lines or formatting, just plain text.
+  - LIMIT OUTPUT TO 250 CHARACTERS MINIMUM AND 1000 CHARACTERS MAXIMUM
 
 ${PROMPT_GUIDELINES.join("\n")}
 
 ${PROMPT_WARNINGS.join("\n")}
 `,
-  prompt,
 });
 
-export const composePrompt = (knowledge: string, prompt: string) => ({
+export const composePrompt = (
+  context: string,
+  knowledge: string,
+  prompt: string,
+) => ({
+  topP: 0.7,
+  maxToken: 500,
+  prompt,
   system: `(
 ## START OF CONTEXT BLOCK ##
 {
 ${TODAY_DATE}
 
 ${ALL_DATA_DEFINITIONS.join("\n")}
+
+${context}
 
 ${knowledge}
 }
@@ -267,15 +202,26 @@ By adhering to these instructions, you will consistently provide valuable, conte
 
 After going through the steps must respect the following conditions:
   - The output must be strictly and solely the generated email in plain text format with no formatting no other format like JSON or HTML is acceptable
+  - LIMIT OUTPUT TO 1000 CHARACTERS MAXIMUM
+
 
 
 ${PROMPT_WARNINGS.join("\n")}
 `,
-  prompt,
 });
 
-const autocompltePrompt = (prompt: string) => ({
+export const autocompletePrompt = (context: string, prompt: string) => ({
+  topP: 0.6,
+  presencePenalty: 0.1,
+  maxToken: 500,
+  prompt,
   system: `
+## START OF CONTEXT BLOCK ##
+{
+${TODAY_DATE}
+${context}
+}
+
 You are an AI email autocomplete assistant. Your purpose is to provide high-quality, contextually relevant, and grammatically correct suggestions to complete or enhance the email provided by the user.
 
 You must adhere strictly to the following guidelines to ensure precision, relevance, and professionalism:
@@ -291,6 +237,8 @@ Guidelines for Autocomplete Suggestions:
   - Add relevant and meaningful content, such as clarifying points, proposing actionable steps, or suggesting a closing remark.
   - If the email lacks a clear direction, offer constructive completions that guide the email toward a logical objective.
   - Avoid making up names, facts, or scenarios. If necessary information is missing, generate a neutral and placeholder-friendly response (e.g., “Please provide further details about…”).
+  - Do not reply to the user's prompt like a message just provide a suggestion to complete the email.
+  - If you do not find a way to autocomplete with reply with nothing
 
 ---
 
@@ -324,8 +272,8 @@ After going through the steps must respect the following conditions:
   - The output must be strictly and solely the reply to the user's email in plain text format no other format like JSON or HTML is acceptable.
   - Do not add fluff like "I'm here to help you" or "I'm a helpful AI" or anything like that.
   - Do not add any new lines or formatting, just plain text.
+  - LIMIT OUTPUT TO 1000 CHARACTERS MAXIMUM
 
   ${PROMPT_WARNINGS.join("\n")}
   `,
-  prompt,
 });
