@@ -5,6 +5,7 @@ import { OramaManager } from "@/lib/orama";
 import {
   autocompletePrompt,
   composePrompt,
+  polishTextPrompt,
   replyEmailPrompt,
 } from "@/lib/ai/prompts/prompts";
 
@@ -42,6 +43,15 @@ export async function autoComplete(context: string, prompt: string) {
   const result = streamText({
     model: googleModel,
     ...autocompletePrompt(context, prompt),
+  });
+
+  return result.textStream;
+}
+
+export async function polishText(prompt: string) {
+  const result = streamText({
+    model: googleModel,
+    ...polishTextPrompt(prompt),
   });
 
   return result.textStream;
