@@ -63,7 +63,6 @@ const AIComposeButton = (props: Props) => {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
               <Button
@@ -78,7 +77,6 @@ const AIComposeButton = (props: Props) => {
               <p>AI write</p>
             </TooltipContent>
           </Tooltip>
-        </TooltipProvider>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>

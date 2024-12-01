@@ -227,7 +227,6 @@ const EmailEditor = ({
             {editor && <TipTapMenuBar editor={editor} />}{" "}
           </span>
           <span className="inline-flex gap-2 py-1">
-            <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild>
                   <Button
@@ -242,7 +241,6 @@ const EmailEditor = ({
                   <p>AI reply</p>
                 </TooltipContent>
               </Tooltip>
-            </TooltipProvider>
             <AIComposeButton
               isComposing={defaultToolbarExpand}
               onGenerate={setGeneration}
