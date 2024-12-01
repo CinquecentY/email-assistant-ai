@@ -13,7 +13,7 @@ import TagInput from "./tag-input";
 import { Input } from "@/components/ui/input";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
 import AIComposeButton from "./ai-compose-button";
-import { generate } from "./action";
+import { composeEmail } from "./action";
 import { readStreamableValue } from "ai/rsc";
 import { cn } from "@/lib/utils";
 
@@ -58,7 +58,7 @@ const EmailEditor = ({
   const [generation, setGeneration] = React.useState("");
 
   const aiGenerate = async (prompt: string) => {
-    const { output } = await generate(prompt);
+    const { output } = await composeEmail(prompt, accountId);
 
     for await (const delta of readStreamableValue(output)) {
       if (delta) {
