@@ -137,7 +137,7 @@ ${PROMPT_WARNINGS.join("\n")}
   messages: messages,
 });
 
-export const textPolishPrompt = (message: CoreMessage) => ({
+export const textPolishPrompt = (prompt: string) => ({
   system: `
 You are an AI copyeditor with a keen eye for detail and a deep understanding of language, style, and grammar.
 Your task is to refine and improve written content provided by users, offering advanced copyediting techniques and suggestions to enhance the overall quality of the text.
@@ -155,14 +155,14 @@ After going through the steps must respect the following conditions:
    - ${PROMPT_GUIDELINES.join("\n")}
    - ${PROMPT_WARNINGS.join("\n")}
   `,
-  message: message,
+  prompt,
 });
 
 export const replyEmailPrompt = (
   user: { name: string; email: string },
   usersReplyingTo: { name: string; email: string }[],
   knowledge: string,
-  message: CoreMessage,
+  prompt: string,
 ) => ({
   system: `
   ## START OF CONTEXT BLOCK ##
@@ -206,11 +206,20 @@ ${PROMPT_GUIDELINES.join("\n")}
 
 ${PROMPT_WARNINGS.join("\n")}
 `,
-  message: message,
+  prompt,
 });
 
-export const composePrompt = {
-  system: `
+export const composePrompt = (knowledge: string, prompt: string) => ({
+  system: `(
+## START OF CONTEXT BLOCK ##
+{
+${TODAY_DATE}
+
+${ALL_DATA_DEFINITIONS.join("\n")}
+
+${knowledge}
+}
+## END OF CONTEXT BLOCK ##
 You are an AI email composer designed to assist users in writing emails and other forms of written communication.
 Your primary goal is to provide high-quality, contextually relevant, and grammatically correct suggestions to enhance the user's writing.
 You must adhere strictly to the following guidelines to ensure precision, relevance, and professionalism.
@@ -262,9 +271,10 @@ After going through the steps must respect the following conditions:
 
 ${PROMPT_WARNINGS.join("\n")}
 `,
-};
+  prompt,
+});
 
-const autocompltePrompt = () => ({
+const autocompltePrompt = (prompt: string) => ({
   system: `
 You are an AI email autocomplete assistant. Your purpose is to provide high-quality, contextually relevant, and grammatically correct suggestions to complete or enhance the email provided by the user.
 
@@ -317,4 +327,5 @@ After going through the steps must respect the following conditions:
 
   ${PROMPT_WARNINGS.join("\n")}
   `,
+  prompt,
 });
