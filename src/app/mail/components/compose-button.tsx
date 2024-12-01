@@ -2,15 +2,12 @@
 import { Button } from "@/components/ui/button";
 import {
   Drawer,
-  DrawerClose,
   DrawerContent,
-  DrawerDescription,
-  DrawerFooter,
   DrawerHeader,
   DrawerTitle,
   DrawerTrigger,
 } from "@/components/ui/drawer";
-import { Pencil, Plus } from "lucide-react";
+import { Plus } from "lucide-react";
 
 import React from "react";
 import EmailEditor from "./email-editor";
@@ -37,7 +34,7 @@ const ComposeButton = () => {
         event.key === "c" &&
         (event.ctrlKey || event.metaKey) &&
         !["INPUT", "TEXTAREA", "SELECT"].includes(
-          document.activeElement?.tagName || "",
+          document.activeElement?.tagName ?? "",
         )
       ) {
         event.preventDefault();
@@ -81,20 +78,7 @@ const ComposeButton = () => {
           toast.success("Email sent");
           setOpen(false);
         },
-        onError: (error: {
-          message:
-            | string
-            | number
-            | bigint
-            | boolean
-            | React.ReactElement<any, string | React.JSXElementConstructor<any>>
-            | Iterable<React.ReactNode>
-            | React.ReactPortal
-            | Promise<React.AwaitedReactNode>
-            | (() => React.ReactNode)
-            | null
-            | undefined;
-        }) => {
+        onError: (error: { message: string }) => {
           console.log(error);
           toast.error(error.message);
         },
