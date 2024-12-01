@@ -1,9 +1,10 @@
+import HomeLayout from "@/components/layout/home-layout";
 import React from "react";
 
 function Privacy() {
   return (
-    <div className="mx-auto max-w-7xl py-12 md:px-8">
-      <>
+    <HomeLayout>
+      <section className="mx-auto max-w-7xl rounded-xl bg-background py-12 md:px-8">
         <div className="mx-auto max-w-5xl px-4 md:px-8">
           <h1 className="mb-2 text-3xl font-semibold text-gray-700">
             Privacy Policy
@@ -13,13 +14,14 @@ function Privacy() {
             Introduction
           </h3>
           <p className="mb-10 mt-5 text-justify leading-relaxed">
-            Y.Ah, Inc (“Y.Ah, Inc,” “we,” “us,” or “our”) we value your privacy
-            and are committed to protecting and processing your personal
-            information responsibly. This Privacy Statement describes how we
-            collect, use, and share the personal information described in this
-            Privacy Statement, as well as the rights and choices individuals
-            have regarding such personal information. We may provide additional
-            data privacy information by using a supplementary privacy notice.
+            Y.Ah, (“Y.Ah, Inc,”, “Yassine A.”, “we,” “us,” or “our”) we
+            value your privacy and are committed to protecting and processing
+            your personal information responsibly. This Privacy Statement
+            describes how we collect, use, and share the personal information
+            described in this Privacy Statement, as well as the rights and
+            choices individuals have regarding such personal information. We may
+            provide additional data privacy information by using a supplementary
+            privacy notice.
           </p>
           <h3 className="mb-5 text-left text-2xl font-semibold">
             Personal Information We Collect and Use
@@ -143,7 +145,7 @@ function Privacy() {
               practices.
             </li>
             <li>
-              submit a complaint to Y.Ah, Inc if you are not satisfied with how
+              submit a complaint to Y.Ah, if you are not satisfied with how
               we are processing your personal information.
             </li>
           </ul>
@@ -158,8 +160,8 @@ function Privacy() {
             have read and understand the changes.
           </p>
         </div>
-      </>
-    </div>
+      </section>
+    </HomeLayout>
   );
 }
 

@@ -29,7 +29,7 @@ export default function RootLayout({
   return (
     <ClerkProvider>
       <html lang="en" className={cn(poppins.variable, GeistSans.variable)}>
-        <body className="bg-purple-100 dark:bg-[#121212]">
+        <body className="flex min-h-screen flex-col bg-purple-100 dark:bg-[#121212]">
           <ThemeProvider
             attribute="class"
             defaultTheme="system"
