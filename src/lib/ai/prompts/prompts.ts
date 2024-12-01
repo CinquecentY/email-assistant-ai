@@ -67,7 +67,7 @@ ${PROMPT_WARNINGS.join("\n")}
 `,
 });
 
-export const textPolishPrompt = (prompt: string) => ({
+export const polishTextPrompt = (prompt: string) => ({
   topP: 0.7,
   maxToken: 1000,
   prompt,
