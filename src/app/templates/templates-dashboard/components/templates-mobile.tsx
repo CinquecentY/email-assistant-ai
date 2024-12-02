@@ -16,21 +16,23 @@ import { cn } from "@/lib/utils";
 import { Tabs, TabsContent } from "@radix-ui/react-tabs";
 import { formatDistance, subDays } from "date-fns";
 import { useAtom } from "jotai";
-import { Trash2 } from "lucide-react";
+import { ArrowLeft, Trash2 } from "lucide-react";
 import React from "react";
+import TemplateEditor from "./template-editor";
 
 const TemplatesMobile = () => {
   const [tab, setTab] = React.useState("templates");
-  const [templateId] = React.useState("");
+  const [templateId, setTemplateId] = React.useState(0);
   const template = {
     name: "Template",
     date: formatDistance(subDays(new Date(), 3), new Date(), {
       addSuffix: true,
     }),
-    text: `Dear Man,
-    In quis massa sed nisi aliquam hendrerit. Donec mattis ex vel mauris sagittis, vehicula accumsan velit maximus.
-    Suspendisse vel mauris fermentum, aliquam ante id, ornare lacus. Etiam congue nunc et condimentum condimentum. Mauris eget sodales tortor.`,
-  };
+    text: `<p>Dear man,</p>
+    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+<p>Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+<p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+`};
   return (
     <ResizablePanel>
       <Tabs defaultValue="templates" value={tab} className="h-screen">
@@ -51,6 +53,7 @@ const TemplatesMobile = () => {
                   <span
                     className="flex flex-1 flex-col"
                     onClick={() => {
+                      setTemplateId(i + 1);
                       setTab("template");
                     }}
                   >
@@ -93,29 +96,40 @@ const TemplatesMobile = () => {
                     </Dialog>
                   </span>
                 </span>
-                <Separator />
-                <div
-                  className="line-clamp-3 w-full whitespace-pre-wrap break-words"
-                  onClick={() => {
-                    setTab("template");
-                  }}
-                >
-                  {template.text}
-                </div>
               </div>
             ))}
           </article>
         </TabsContent>
         <TabsContent value="template" className="h-screen w-full">
-          <div className="flex min-h-11 items-center p-2">
+          <div className="flex min-h-11 items-center p-2 pb-0">
             <Button
-              className={"h-7 md:hidden"}
+              className={"h-7 rounded-b-none rounded-t-lg shadow md:hidden"}
               variant={"outline"}
               onClick={() => setTab("templates")}
             >
-              <h1 className="text-lg font-bold">Templates</h1>
+              <ArrowLeft />
             </Button>
           </div>
+          <section className="h-full max-h-[calc(100vh-50px)] w-full bg-background">
+            {templateId ? (
+              <div className="h-full">
+                <TemplateEditor
+                  name={template.name}
+                  text={template.text}
+                  handleSave={(value) => {
+                    console.log(value);
+                  }}
+                  isSaving={false}
+                />
+              </div>
+            ) : (
+              <>
+                <div className="h-full bg-background p-8 text-center text-muted-foreground">
+                  No template selected
+                </div>
+              </>
+            )}
+          </section>
         </TabsContent>
       </Tabs>
     </ResizablePanel>
