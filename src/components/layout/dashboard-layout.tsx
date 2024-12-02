@@ -23,7 +23,7 @@ const DashboardLayout = ({
   return (
     <ResizablePanelGroup
       direction="horizontal"
-      className="h-full min-h-screen items-stretch"
+      className="min-h-screen items-stretch"
     >
       <ResizablePanel
         collapsedSize={isMobile ? 0 : 4}
@@ -44,6 +44,7 @@ const DashboardLayout = ({
           )}`;
         }}
         className={cn(
+          "flex flex-col h-screen",
           isCollapsed ||
             (isMobile &&
               "min-w-[50px] transition-all duration-300 ease-in-out"),
@@ -51,21 +52,18 @@ const DashboardLayout = ({
       >
         <div
           className={cn(
-            "flex h-full flex-1 flex-col",
-            isMobile && "border-r-2 border-solid",
+            "flex h-11 items-center justify-center",
+            isCollapsed || isMobile ? "h-11" : "px-2",
           )}
         >
-          <div
-            className={cn(
-              "flex h-11 items-center justify-center",
-              isCollapsed || isMobile ? "h-11" : "px-2",
-            )}
-          >
-            <AccountSwitch isCollapsed={isCollapsed || isMobile} />
-          </div>
-          <Separator />
-          <Sidebar isCollapsed={isCollapsed || isMobile} />
-          <div className="flex-1 bg-background"></div>
+          <AccountSwitch isCollapsed={isCollapsed || isMobile} />
+        </div>
+        <Separator />
+        <Sidebar
+          className="bg-background"
+          isCollapsed={isCollapsed || isMobile}
+        />
+        <div className="flex-1 bg-background flex justify-center items-end pb-20">
           <AskAI isCollapsed={isCollapsed || isMobile} />
         </div>
       </ResizablePanel>
