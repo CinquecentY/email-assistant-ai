@@ -13,7 +13,7 @@ import TagInput from "./tag-input";
 import { Input } from "@/components/ui/input";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
 import AIComposeButton from "./ai-compose-button";
-import { autoComplete, polishText, replyToEmail } from "./action";
+import { autoComplete, composeEmail, polishText, replyToEmail } from "./action";
 import { cn } from "@/lib/utils";
 import { useThread } from "../../use-thread";
 import useThreads from "../../use-threads";
@@ -24,7 +24,26 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { BookType, BotMessageSquare, MessageSquareReply } from "lucide-react";
+import {
+  BookType,
+  BotMessageSquare,
+  MessageSquareDiff,
+  MessageSquareQuote,
+  MessageSquareReply,
+  MessageSquareText,
+} from "lucide-react";
+import { useIsMobile } from "@/hooks/use-mobile";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Textarea } from "@/components/ui/textarea";
+import useIsClickOutside from "@/hooks/use-click-outside";
+import useOutsideClick from "@/hooks/use-click-outside";
 
 type EmailEditorProps = {
   toValues: { label: string; value: string }[];
@@ -110,6 +129,7 @@ const EmailEditor = ({
     }
   };
 
+  // TODO Handle MacOS
   const customText = Text.extend({
     addKeyboardShortcuts() {
       return {
@@ -137,12 +157,12 @@ const EmailEditor = ({
         placeholder: "Write your email here...",
       },
     },
-    onFocus: () => {
+    /*onFocus: () => {
       if (!defaultToolbarExpand) setExpanded(true);
     },
     onBlur: () => {
       if (!defaultToolbarExpand) setExpanded(false);
-    },
+    },*/
     onUpdate: ({ editor }) => {
       setValue(editor.getHTML());
     },
@@ -186,10 +206,49 @@ const EmailEditor = ({
     }
   }
 
+  const isMobile = useIsMobile();
+  const [prompt, setPrompt] = React.useState("");
+  const [open, setOpen] = React.useState(false);
+  const aiGenerate = async (prompt: string) => {
+    let context: string | undefined = "";
+    if (defaultToolbarExpand) {
+      context = thread?.emails
+        .map(
+          (m) =>
+            `Subject: ${m.subject}\nFrom: ${m.from.address}\n\n${turndown.turndown(m.body ?? m.bodySnippet ?? "")}`,
+        )
+        .join("\n");
+    }
+
+    const textStream = composeEmail(
+      [
+        context ?? "",
+        account &&
+          `user data is {name:${account.name}, email:${account.email}}`,
+      ].join("\n"),
+      prompt,
+      account!.id,
+    );
+    for await (const textPart of await textStream) {
+      if (textPart) {
+        setGeneration(textPart);
+      }
+    }
+  };
+  const handleClickOutside = () => {
+    if (!defaultToolbarExpand) setExpanded(false);
+  };
+  const clickOutsideRef = useOutsideClick(handleClickOutside);
   return (
-    <div className="px-2">
+    <div
+      ref={clickOutsideRef}
+      className="h-fit px-2"
+      onClick={() => {
+        if (!defaultToolbarExpand) setExpanded(true);
+      }}
+    >
       <div ref={ref} className="space-y-2 p-4">
-        {expanded && (
+        {(expanded || isMobile) && (
           <>
             <TagInput
               suggestions={suggestions?.map((s) => s.address) ?? []}
@@ -199,6 +258,7 @@ const EmailEditor = ({
               onChange={onToChange}
             />
             <TagInput
+              className="hidden md:flex"
               suggestions={suggestions?.map((s) => s.address) ?? []}
               value={ccValues}
               placeholder="Add tags"
@@ -223,31 +283,105 @@ const EmailEditor = ({
             !expanded && "[&_svg]:text-muted-foreground",
           )}
         >
-          <span className="flex-1">
+          <span className="hidden flex-1 items-center md:inline-flex">
             {editor && <TipTapMenuBar editor={editor} />}{" "}
           </span>
           <span className="inline-flex gap-2 py-1">
-              <Tooltip>
-                <TooltipTrigger asChild>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  onClick={() => autocompleteAI(editor?.getText() ?? "")}
+                  size="icon"
+                  variant={"outline"}
+                >
+                  <MessageSquareDiff className="size-5" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>AI autocomplete</p>
+              </TooltipContent>
+            </Tooltip>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  onClick={() => polishEmail(editor?.getText() ?? "")}
+                  size="icon"
+                  variant={"outline"}
+                >
+                  <MessageSquareText className="size-5" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>AI improve</p>
+              </TooltipContent>
+            </Tooltip>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  onClick={() => replyAI(editor?.getText() ?? "")}
+                  size="icon"
+                  variant={"outline"}
+                >
+                  <BotMessageSquare className="size-5" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>AI reply</p>
+              </TooltipContent>
+            </Tooltip>
+            <Dialog open={open} onOpenChange={setOpen}>
+              <DialogTrigger asChild>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      onClick={() => setOpen(true)}
+                      size="icon"
+                      variant={"outline"}
+                    >
+                      <MessageSquareQuote className="size-5" />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>AI write</p>
+                  </TooltipContent>
+                </Tooltip>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>AI Write</DialogTitle>
+                  <div className="h-2"></div>
+                  <Textarea
+                    placeholder="What would you like to write?"
+                    value={prompt}
+                    onChange={(e) => setPrompt(e.target.value)}
+                  />
+                  <div className="h-2"></div>
                   <Button
-                    onClick={() => replyAI(editor?.getText() ?? "")}
-                    size="icon"
-                    variant={"outline"}
+                    onClick={async () => {
+                      await aiGenerate(prompt);
+                      setOpen(false);
+                      setPrompt("");
+                    }}
                   >
-                    <BotMessageSquare className="size-5" />
+                    Generate
                   </Button>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>AI reply</p>
-                </TooltipContent>
-              </Tooltip>
-            <AIComposeButton
-              isComposing={defaultToolbarExpand}
-              onGenerate={setGeneration}
-            />
+                </DialogHeader>
+              </DialogContent>
+            </Dialog>
+          </span>
+          <span className="inline-flex flex-1 items-center justify-end md:hidden">
+            <Button
+              onClick={async () => {
+                editor?.commands.clearContent();
+                handleSend(value);
+              }}
+              disabled={isSending}
+            >
+              Send
+            </Button>
           </span>
         </div>
-        <div className="prose w-full px-4">
+        <div className="prose max-h-[25svh] w-full overflow-y-auto rounded-md border px-4 py-2">
           <EditorContent
             value={value}
             editor={editor}
@@ -256,8 +390,8 @@ const EmailEditor = ({
         </div>
       </div>
       <Separator />
-      <div className="flex items-center justify-between px-4 py-3">
-        <span className="flex gap-1">
+      <div className="hidden items-center justify-between px-4 py-3 md:flex">
+        <span className={"gap-1"}>
           <span className="text-sm">
             Tip: Press{" "}
             <kbd className="rounded-lg border border-gray-200 bg-gray-100 px-2 py-1.5 text-xs font-semibold text-gray-800">
