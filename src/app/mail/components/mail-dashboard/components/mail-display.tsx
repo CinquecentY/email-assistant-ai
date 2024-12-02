@@ -121,7 +121,7 @@ const MailDisplay = () => {
           ))}
         </article>
       </ResizablePanel>
-      <ResizableHandle withHandle />
+      <ResizableHandle  />
       <ResizablePanel defaultSize={48} minSize={30} className="h-screen w-full">
         <div className="flex min-h-11 items-center p-2"></div>
         <article className="flex h-full max-h-[calc(100vh-50px)] w-full flex-1 flex-col gap-2 bg-background p-4 pt-0">
