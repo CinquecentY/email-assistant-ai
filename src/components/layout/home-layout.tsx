@@ -11,7 +11,7 @@ const HomeLayout = ({ children }: Readonly<{ children: React.ReactNode }>) => {
             href="/"
             className="border-b-2 px-2 font-semibold lowercase md:text-2xl"
           >
-            Mail Assistant 🇦🇮
+            Mail Assistant ΛI
           </Link>
         </span>
       </nav>

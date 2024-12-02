@@ -19,7 +19,7 @@ const poppins = Poppins({
 });
 
 export const metadata: Metadata = {
-  title: "Mail Assistant 🇦🇮",
+  title: "Mail Assistant ΛI",
   description: "Concept by Yassine Annagrebah",
   icons: [{ rel: "icon", url: "/favicon.ico" }],
 };
