@@ -62,7 +62,7 @@ const Sidebar = ({ isCollapsed, className }: SidebarProps) => {
           {
             title: "Mail Templates",
             icon: Archive,
-            variant: tab === "template" ? "default" : "ghost",
+            variant: tab === "templates" ? "default" : "ghost",
           },
           {
             title: "Analytics",
