@@ -4,13 +4,13 @@ import { Nav } from "./nav";
 import { Inbox, Send, File, Archive, ChartNetwork } from "lucide-react";
 import { api } from "@/trpc/react";
 
-type SidebarProps = { isCollapsed: boolean };
+type SidebarProps = { isCollapsed: boolean; className?: string };
 
-const Sidebar = ({ isCollapsed }: SidebarProps) => {
+const Sidebar = ({ isCollapsed, className }: SidebarProps) => {
   const [tab] = useLocalStorage("email-assistant-ai-tab", "inbox");
   const [accountId] = useLocalStorage("accountId", "");
 
-  const refetchInterval = 60000;
+  const refetchInterval = 30000;
   const { data: inboxThreads } = api.mail.getNumThreads.useQuery(
     {
       accountId,
@@ -38,6 +38,7 @@ const Sidebar = ({ isCollapsed }: SidebarProps) => {
   return (
     <>
       <Nav
+        className={className}
         isCollapsed={isCollapsed}
         links={[
           {
