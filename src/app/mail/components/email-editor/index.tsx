@@ -152,17 +152,12 @@ const EmailEditor = ({
   const editor = useEditor({
     autofocus: false,
     extensions: [StarterKit, customText],
+    content:"<p>Write your email here...</p>",
     editorProps: {
       attributes: {
         placeholder: "Write your email here...",
       },
     },
-    /*onFocus: () => {
-      if (!defaultToolbarExpand) setExpanded(true);
-    },
-    onBlur: () => {
-      if (!defaultToolbarExpand) setExpanded(false);
-    },*/
     onUpdate: ({ editor }) => {
       setValue(editor.getHTML());
     },
