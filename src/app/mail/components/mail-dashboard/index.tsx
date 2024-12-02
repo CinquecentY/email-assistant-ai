@@ -12,7 +12,6 @@ const MailDashboard = () => {
   const [accountId, setAccountId] = useLocalStorage("accountId", "");
 
   React.useEffect(() => {
-    document.title = "Email Assistant AI";
     const accountIdParams = searchParams.get("accountId");
     if (accountIdParams && accountIdParams !== accountId) {
       setAccountId(accountIdParams);
