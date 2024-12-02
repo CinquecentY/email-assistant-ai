@@ -2,13 +2,13 @@
 import DOMPurify from "dompurify";
 import { useAtom } from "jotai";
 import React from "react";
-import { isSearchingAtom, searchValueAtom } from "./search-bar";
 import { api } from "@/trpc/react";
 import { useDebounceValue, useLocalStorage } from "usehooks-ts";
 import useThreads from "../use-threads";
 import { useThread } from "../use-thread";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
+import { isSearchingAtom, searchValueAtom, tabAtom } from "@/lib/atoms";
 
 const SearchDisplay = () => {
   const [searchValue, setSearchValue] = useAtom(searchValueAtom);
@@ -19,6 +19,7 @@ const SearchDisplay = () => {
   const [debouncedSearch] = useDebounceValue(searchValue, 500);
   const [accountId, setAccountId] = useLocalStorage("accountId", "");
 
+  const [tab, setTab] = useAtom(tabAtom);
   React.useEffect(() => {
     if (!debouncedSearch || !accountId) return;
     search.mutate({ accountId, query: debouncedSearch });
@@ -47,6 +48,7 @@ const SearchDisplay = () => {
                 }
                 setIsSearching(false);
                 setThreadId(hit.document.threadId);
+                setTab("threads");
               }}
               key={hit.id}
               className="cursor-pointer rounded-md border p-4 transition-all hover:bg-gray-100 dark:hover:bg-gray-900"

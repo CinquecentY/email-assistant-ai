@@ -20,7 +20,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import AskAI from "@/app/mail/components/ask-ai";
 import { cn } from "@/lib/utils";
 import { useAtom } from "jotai";
-import { isCollapsedAtom } from "./layout/dashboard-layout";
+import { isCollapsedAtom } from "@/lib/atoms";
 
 const HoverBar = () => {
   const { isSignedIn } = useAuth();

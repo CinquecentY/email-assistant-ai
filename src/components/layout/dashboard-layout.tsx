@@ -8,12 +8,11 @@ import {
   ResizableHandle,
 } from "../ui/resizable";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { TooltipProvider } from "../ui/tooltip";
 import { Separator } from "../ui/separator";
-import { atom, useAtom } from "jotai";
+import { useAtom } from "jotai";
 import Sidebar from "@/app/mail/components/sidebar";
+import { isCollapsedAtom } from "@/lib/atoms";
 
-export const isCollapsedAtom = atom(false);
 
 const DashboardLayout = ({
   children,

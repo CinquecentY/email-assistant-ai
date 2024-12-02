@@ -9,20 +9,20 @@ import { ResizablePanel } from "@/components/ui/resizable";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
-import SearchBar, { isSearchingAtom } from "../../search-bar";
+import SearchBar from "../../search-bar";
 import { api } from "@/trpc/react";
-import { useAtom } from "jotai";
+import { atom, useAtom } from "jotai";
 import { useLocalStorage } from "usehooks-ts";
 import EmailDisplay from "../../email-display";
 import ReplyBox from "../../reply-box";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { isCollapsedAtom } from "@/components/layout/dashboard-layout";
 import SearchDisplay from "../../search-display";
+import { isCollapsedAtom, isSearchingAtom, tabAtom } from "@/lib/atoms";
 
 const MailMobile = () => {
   const [isCollapsed, setIsCollapsed] = useAtom(isCollapsedAtom);
 
-  const [tab, setTab] = React.useState("inbox");
+  const [tab, setTab] = useAtom(tabAtom);
 
   const { threads } = useThreads();
 

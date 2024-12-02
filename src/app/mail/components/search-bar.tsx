@@ -4,9 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Search, X } from "lucide-react";
 import React from "react";
 import { atom, useAtom } from "jotai";
-
-export const isSearchingAtom = atom(false);
-export const searchValueAtom = atom("");
+import { isSearchingAtom, searchValueAtom } from "@/lib/atoms";
 
 const SearchBar = () => {
   const [searchValue, setSearchValue] = useAtom(searchValueAtom);
