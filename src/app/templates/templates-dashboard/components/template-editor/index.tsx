@@ -48,7 +48,7 @@ import { Label } from "@/components/ui/label";
 type TemplateEditorProps = {
   name: string;
   text: string;
-  handleSave: (value: string) => void;
+  handleSave: (nameValue: string, textValue: string) => void;
   isSaving: boolean;
   defaultToolbarExpand?: boolean;
 };
@@ -63,7 +63,7 @@ const TemplateEditor = ({
   const [ref] = useAutoAnimate();
   const { account, threads } = useThreads();
   const [accountId] = useLocalStorage("accountId", "");
-  const [nameValue,setNameValue] = React.useState(name); 
+  const [nameValue, setNameValue] = React.useState(name);
   const [textValue, setTextValue] = React.useState(text);
 
   const [generation, setGeneration] = React.useState("");
@@ -177,8 +177,13 @@ const TemplateEditor = ({
   return (
     <div className="flex h-full flex-col px-2">
       <div ref={ref} className="space-y-2 p-4">
-      <Label htmlFor="template-name">Template Name</Label>
-      <Input id="template-name" placeholder="Name" value={nameValue} onChange={e => setNameValue(e.target.value)} />
+        <Label htmlFor="template-name">Template Name</Label>
+        <Input
+          id="template-name"
+          placeholder="Name"
+          value={nameValue}
+          onChange={(e) => setNameValue(e.target.value)}
+        />
       </div>
       <div className="flex flex-1 flex-col rounded border p-2">
         <div className={cn("mb-2 flex border-b")}>
@@ -257,7 +262,7 @@ const TemplateEditor = ({
           <span className="inline-flex flex-1 items-center justify-end md:hidden">
             <Button
               onClick={async () => {
-                handleSave(textValue);
+                handleSave(nameValue,textValue);
               }}
               disabled={isSaving}
             >
@@ -288,8 +293,7 @@ const TemplateEditor = ({
         </span>
         <Button
           onClick={async () => {
-            editor?.commands.clearContent();
-            handleSave(textValue);
+            handleSave(nameValue,textValue);
           }}
           disabled={isSaving}
         >

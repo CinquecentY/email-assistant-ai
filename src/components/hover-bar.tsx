@@ -21,6 +21,7 @@ import AskAI from "@/app/mail/components/ask-ai";
 import { cn } from "@/lib/utils";
 import { useAtom } from "jotai";
 import { isCollapsedAtom } from "@/lib/atoms";
+import WriteTemplateButton from "@/app/templates/templates-dashboard/components/write-template-button";
 
 const HoverBar = () => {
   const { isSignedIn } = useAuth();
@@ -58,28 +59,33 @@ const HoverBar = () => {
         </Link>
       </Button>
       <ModeToggle />
-      {isSignedIn && isMobile && (
-        <Dialog>
-          <DialogTrigger asChild>
-            <Button variant={"ghost"} className="rounded-full p-1">
-              <Sparkles className="h-[1.2rem] w-[1.2rem]" />
-            </Button>
-          </DialogTrigger>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>Ask AI</DialogTitle>
-            </DialogHeader>
-            <AskAI isCollapsed={false} />
-          </DialogContent>
-        </Dialog>
-      )}
-      {isSignedIn && pathname === "/mail" && (
-        <span className="md:w-56">
-          <ComposeButton />
-        </span>
-      )}
       {isSignedIn && (
         <>
+          {isMobile && (
+            <Dialog>
+              <DialogTrigger asChild>
+                <Button variant={"ghost"} className="rounded-full p-1">
+                  <Sparkles className="h-[1.2rem] w-[1.2rem]" />
+                </Button>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>Ask AI</DialogTitle>
+                </DialogHeader>
+                <AskAI isCollapsed={false} />
+              </DialogContent>
+            </Dialog>
+          )}
+          {pathname === "/mail" && (
+            <span className="md:w-56">
+              <ComposeButton />
+            </span>
+          )}
+          {pathname === "/templates" && (
+            <span className="md:w-56">
+              <WriteTemplateButton />
+            </span>
+          )}
           {isFetching && (
             <Button
               variant={"ghost"}

@@ -23,16 +23,26 @@ import TemplateEditor from "./template-editor";
 const TemplatesMobile = () => {
   const [tab, setTab] = React.useState("templates");
   const [templateId, setTemplateId] = React.useState(0);
-  const template = {
-    name: "Template",
-    date: formatDistance(subDays(new Date(), 3), new Date(), {
-      addSuffix: true,
-    }),
-    text: `<p>Dear man,</p>
-    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-<p>Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-<p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
-`};
+
+  const [templates, setTemplates] = React.useState(
+    [...Array(20)].map((_, i) => ({
+      id: i + 1,
+      name: "Template " + i,
+      date: formatDistance(subDays(new Date(), 3), new Date(), {
+        addSuffix: true,
+      }),
+      text: `<p>Dear man,</p>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+    <p>Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+    <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+    `,
+    })),
+  );
+
+  function deleteTemplate(id: number) {
+    setTemplates(templates.filter((template) => template.id !== id));
+  }
+
   return (
     <ResizablePanel>
       <Tabs defaultValue="templates" value={tab} className="h-screen">
@@ -42,9 +52,9 @@ const TemplatesMobile = () => {
           </div>
           <Separator />
           <article className="flex h-full max-h-[calc(100vh-50px)] flex-1 flex-col gap-2 overflow-y-auto bg-background p-4 pt-2">
-            {[...Array(20)].map((_, i) => (
+            {templates.map((template) => (
               <div
-                key={i}
+                key={template.id}
                 className={cn(
                   "relative flex h-auto flex-col items-start gap-2 rounded-lg border p-3 text-left text-sm text-muted-foreground transition-all hover:text-accent-foreground",
                 )}
@@ -53,12 +63,12 @@ const TemplatesMobile = () => {
                   <span
                     className="flex flex-1 flex-col"
                     onClick={() => {
-                      setTemplateId(i + 1);
+                      setTemplateId(template.id);
                       setTab("template");
                     }}
                   >
                     <div className="w-fit cursor-pointer font-bold">
-                      {template.name} {i + 1}
+                      {template.name}
                     </div>
                     <div
                       className={cn(
@@ -87,7 +97,11 @@ const TemplatesMobile = () => {
                         </DialogHeader>
                         <DialogFooter>
                           <DialogClose asChild>
-                            <Button variant={"destructive"} type="submit">
+                            <Button
+                              variant={"destructive"}
+                              type="submit"
+                              onClick={() => deleteTemplate(template.id)}
+                            >
                               Confirm
                             </Button>
                           </DialogClose>
@@ -114,10 +128,23 @@ const TemplatesMobile = () => {
             {templateId ? (
               <div className="h-full">
                 <TemplateEditor
-                  name={template.name}
-                  text={template.text}
-                  handleSave={(value) => {
-                    console.log(value);
+                  name={templates.find((t) => t.id === templateId)?.name ?? ""}
+                  text={templates.find((t) => t.id === templateId)?.text ?? ""}
+                  handleSave={(name, value) => {
+                    console.log(name, value);
+                    setTemplates(
+                      templates.map((template) => {
+                        if (template.id === templateId) {
+                          return {
+                            ...template,
+                            name,
+                            text: value,
+                          };
+                        }
+                        return template;
+                      }),
+                    );
+                    setTab("templates");
                   }}
                   isSaving={false}
                 />
