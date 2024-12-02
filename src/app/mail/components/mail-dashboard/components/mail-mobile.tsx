@@ -163,7 +163,7 @@ const MailMobile = () => {
               ) : (
                 <>
                   <div className="h-full bg-background p-8 text-center text-muted-foreground">
-                    No message selected {threadId}
+                    No message selected
                   </div>
                 </>
               )}
