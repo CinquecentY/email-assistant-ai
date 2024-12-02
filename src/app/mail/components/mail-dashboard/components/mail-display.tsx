@@ -50,7 +50,7 @@ const MailDisplay = () => {
 
   return (
     <>
-      <ResizablePanel defaultSize={32} minSize={30}>
+      <ResizablePanel defaultSize={32} minSize={30} className="h-screen w-full">
         <div className="flex items-center gap-4 px-4 py-2">
           <h1 className="text-xl font-bold">Inbox</h1>
         </div>
@@ -122,7 +122,7 @@ const MailDisplay = () => {
         </article>
       </ResizablePanel>
       <ResizableHandle withHandle />
-      <ResizablePanel defaultSize={48} minSize={30}>
+      <ResizablePanel defaultSize={48} minSize={30} className="h-screen w-full">
         <div className="flex min-h-11 items-center p-2"></div>
         <article className="flex h-full max-h-[calc(100vh-50px)] w-full flex-1 flex-col gap-2 bg-background p-4 pt-0">
           {isSearching ? (
@@ -130,12 +130,12 @@ const MailDisplay = () => {
           ) : (
             <>
               {thread ? (
-                <div className="flex h-full flex-col bg-background">
+                <div className="flex h-full flex-col overflow-y-auto bg-background">
                   <div className="line-clamp-3 p-6 font-bold">
                     {thread.subject}
                   </div>
                   <Separator />
-                  <div className="flex flex-col overflow-auto">
+                  <div className="flex h-fit flex-1 flex-col overflow-auto">
                     <div className="flex flex-col gap-4 p-6">
                       {thread.emails.map((email) => {
                         return <EmailDisplay key={email.id} email={email} />;
@@ -147,7 +147,7 @@ const MailDisplay = () => {
                 </div>
               ) : (
                 <>
-                  <div className="flex-1 bg-background p-8 text-center text-muted-foreground">
+                  <div className="bg-background p-8 text-center text-muted-foreground">
                     No message selected {threadId}
                   </div>
                 </>

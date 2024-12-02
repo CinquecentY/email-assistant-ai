@@ -138,17 +138,17 @@ const MailMobile = () => {
             </article>
           )}
         </TabsContent>
-        <TabsContent value="threads" className="h-full w-full">
+        <TabsContent value="threads" className="h-screen w-full">
           <div className="flex min-h-11 items-center p-2">
             <Button
               className={"h-7 md:hidden"}
-              variant={"secondary"}
+              variant={"outline"}
               onClick={() => setTab("inbox")}
             >
-              <ArrowLeft />
+              <h1 className="text-lg font-bold">Inbox</h1>
             </Button>
           </div>
-          <article className="h-full w-full bg-background">
+          <article className="h-full max-h-[calc(100vh-50px)] w-full bg-background">
             <>
               {thread ? (
                 <div className="flex h-full max-h-full flex-col overflow-auto bg-background">
@@ -168,7 +168,7 @@ const MailMobile = () => {
                 </div>
               ) : (
                 <>
-                  <div className="flex-1 bg-background p-8 text-center text-muted-foreground">
+                  <div className="h-full bg-background p-8 text-center text-muted-foreground">
                     No message selected {threadId}
                   </div>
                 </>
