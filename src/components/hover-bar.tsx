@@ -32,7 +32,7 @@ const HoverBar = () => {
   return (
     <div
       className={cn(
-        "fixed bottom-1 left-1 z-10 flex flex-col items-center gap-3 rounded-xl bg-background p-2 shadow-md md:left-0 md:flex-row md:px-4",
+        "fixed bottom-1.5 left-1 z-10 flex flex-col items-center gap-3 rounded-xl bg-background p-2 shadow-md md:left-0 md:flex-row md:px-4",
         isCollapsed && isMobile && "hidden",
       )}
     >
