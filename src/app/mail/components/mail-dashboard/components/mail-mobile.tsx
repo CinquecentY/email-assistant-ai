@@ -17,6 +17,7 @@ import EmailDisplay from "../../email-display";
 import ReplyBox from "../../reply-box";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { isCollapsedAtom } from "@/components/layout/dashboard-layout";
+import SearchDisplay from "../../search-display";
 
 const MailMobile = () => {
   const [isCollapsed, setIsCollapsed] = useAtom(isCollapsedAtom);
@@ -65,71 +66,77 @@ const MailMobile = () => {
           </div>
           <Separator />
           <SearchBar />
-          <article className="flex h-full max-h-[calc(100vh-120px)] flex-1 flex-col gap-2 overflow-y-auto bg-background p-4 pt-0">
-            {threads?.length === 0 && (
-              <div className="flex h-full items-center justify-center">
-                <div className="text-muted-foreground">No threads found</div>
-              </div>
-            )}
-            {Object.entries(groupedThreads ?? {}).map(([date, threads]) => (
-              <React.Fragment key={date}>
-                <div className="mt-4 text-xs font-medium text-muted-foreground first:mt-0">
-                  {format(new Date(date), "MMMM d, yyyy")}
+          {isSearching ? (
+            <SearchDisplay />
+          ) : (
+            <article className="flex h-full max-h-[calc(100vh-120px)] flex-1 flex-col gap-2 overflow-y-auto bg-background p-4 pt-0">
+              {threads?.length === 0 && (
+                <div className="flex h-full items-center justify-center">
+                  <div className="text-muted-foreground">No threads found</div>
                 </div>
-                {threads.map((item) => (
-                  <button
-                    id={`thread-${item.id}`}
-                    key={item.id}
-                    className={cn(
-                      "relative flex h-auto flex-col items-start gap-2 rounded-lg border p-3 text-left text-sm transition-all",
-                    )}
-                    onClick={() => {
-                      setTab("threads");
-                      setThreadId(item.id);
-                    }}
-                  >
-                    <div className="flex w-full flex-col gap-1">
-                      <div className="flex items-center">
-                        <div className="flex items-center gap-2">
-                          <div className="font-semibold">
-                            {item.emails.at(-1)?.from?.name}
+              )}
+              {Object.entries(groupedThreads ?? {}).map(([date, threads]) => (
+                <React.Fragment key={date}>
+                  <div className="mt-4 text-xs font-medium text-muted-foreground first:mt-0">
+                    {format(new Date(date), "MMMM d, yyyy")}
+                  </div>
+                  {threads.map((item) => (
+                    <button
+                      id={`thread-${item.id}`}
+                      key={item.id}
+                      className={cn(
+                        "relative flex h-auto flex-col items-start gap-2 rounded-lg border p-3 text-left text-sm transition-all",
+                      )}
+                      onClick={() => {
+                        setTab("threads");
+                        setThreadId(item.id);
+                      }}
+                    >
+                      <div className="flex w-full flex-col gap-1">
+                        <div className="flex items-center">
+                          <div className="flex items-center gap-2">
+                            <div className="font-semibold">
+                              {item.emails.at(-1)?.from?.name}
+                            </div>
+                          </div>
+                          <div
+                            className={cn(
+                              "ml-auto text-xs",
+                              threadId === item.id
+                                ? "text-foreground"
+                                : "text-muted-foreground",
+                            )}
+                          >
+                            {formatDistanceToNow(
+                              item.emails.at(-1)?.sentAt ?? new Date(),
+                              {
+                                addSuffix: true,
+                              },
+                            )}
                           </div>
                         </div>
-                        <div
-                          className={cn(
-                            "ml-auto text-xs",
-                            threadId === item.id
-                              ? "text-foreground"
-                              : "text-muted-foreground",
-                          )}
-                        >
-                          {formatDistanceToNow(
-                            item.emails.at(-1)?.sentAt ?? new Date(),
-                            {
-                              addSuffix: true,
-                            },
-                          )}
+                        <div className="text-xs font-medium">
+                          {item.subject}
                         </div>
                       </div>
-                      <div className="text-xs font-medium">{item.subject}</div>
-                    </div>
-                    <div
-                      className="line-clamp-2 text-xs text-muted-foreground"
-                      dangerouslySetInnerHTML={{
-                        // HACK Dangerously sanitzed using DOMPurify
-                        __html: DOMPurify.sanitize(
-                          item.emails.at(-1)?.bodySnippet ?? "",
-                          {
-                            USE_PROFILES: { html: true },
-                          },
-                        ),
-                      }}
-                    ></div>
-                  </button>
-                ))}
-              </React.Fragment>
-            ))}
-          </article>
+                      <div
+                        className="line-clamp-2 text-xs text-muted-foreground"
+                        dangerouslySetInnerHTML={{
+                          // HACK Dangerously sanitzed using DOMPurify
+                          __html: DOMPurify.sanitize(
+                            item.emails.at(-1)?.bodySnippet ?? "",
+                            {
+                              USE_PROFILES: { html: true },
+                            },
+                          ),
+                        }}
+                      ></div>
+                    </button>
+                  ))}
+                </React.Fragment>
+              ))}
+            </article>
+          )}
         </TabsContent>
         <TabsContent value="threads" className="h-full w-full">
           <div className="flex min-h-11 items-center p-2">

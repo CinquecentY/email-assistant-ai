@@ -31,9 +31,9 @@ const SearchBar = () => {
           onBlur={handleBlur}
           autoComplete="search"
         />
-        <div className="absolute right-2 top-2.5 flex items-center gap-2">
+        <div className="absolute right-2 top-1 flex items-center gap-2">
           <button
-            className="rounded-sm hover:bg-gray-800"
+            className="rounded-full p-2 hover:bg-accent hover:text-accent-foreground"
             onClick={() => {
               setSearchValue("");
               setIsSearching(false);

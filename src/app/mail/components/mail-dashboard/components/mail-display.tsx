@@ -124,13 +124,13 @@ const MailDisplay = () => {
       <ResizableHandle withHandle />
       <ResizablePanel defaultSize={48} minSize={30}>
         <div className="flex min-h-11 items-center p-2"></div>
-        <article className="flex h-full max-h-[calc(100vh-50px)] w-full flex-1 flex-col gap-2 overflow-y-auto bg-background p-4 pt-0">
+        <article className="flex h-full max-h-[calc(100vh-50px)] w-full flex-1 flex-col gap-2 bg-background p-4 pt-0">
           {isSearching ? (
             <SearchDisplay />
           ) : (
             <>
               {thread ? (
-                <div className="flex h-full flex-col overflow-auto bg-background">
+                <div className="flex h-full flex-col bg-background">
                   <div className="line-clamp-3 p-6 font-bold">
                     {thread.subject}
                   </div>
