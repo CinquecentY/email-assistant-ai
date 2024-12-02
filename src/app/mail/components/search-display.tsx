@@ -25,7 +25,7 @@ const SearchDisplay = () => {
   }, [debouncedSearch, accountId]);
 
   return (
-    <div className="max-h-[calc(100vh-50px)] overflow-y-auto p-4">
+    <div className="max-h-[calc(100vh-50px)] overflow-y-auto bg-background p-4">
       <div className="mb-4 flex items-center gap-2">
         <h2 className="text-sm text-gray-600 dark:text-gray-400">
           Your search for "{searchValue}" came back with...
@@ -35,7 +35,7 @@ const SearchDisplay = () => {
         )}
       </div>
       {search.data?.hits.length === 0 ? (
-        <p>No results found.</p>
+        <div className="text-muted-foreground">No results found</div>
       ) : (
         <ul className="flex flex-col gap-2">
           {search.data?.hits.map((hit) => (

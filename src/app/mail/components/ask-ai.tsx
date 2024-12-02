@@ -39,8 +39,7 @@ const AskAI = ({ isCollapsed }: { isCollapsed: boolean }) => {
 
   if (isCollapsed) return null;
   return (
-    <div className="mb-14 bg-background p-4">
-      <div className="h-4"></div>
+    <div>
       <motion.div className="flex flex-1 flex-col items-end justify-end rounded-lg border bg-gray-100 p-4 pb-4 shadow-inner dark:bg-gray-900">
         <div
           className="flex max-h-[50vh] w-full flex-col gap-2 overflow-y-auto"
@@ -52,11 +51,11 @@ const AskAI = ({ isCollapsed }: { isCollapsed: boolean }) => {
                 key={message.id}
                 layout="position"
                 className={cn(
-                  "z-10 mt-2 max-w-[250px] break-words rounded-2xl bg-gray-200",
+                  "z-10 mt-2 max-w-[250px] break-words bg-gray-200",
                   {
-                    "self-end text-gray-900 dark:text-gray-100 dark:bg-gray-800":
+                    "self-end rounded-b-2xl rounded-l-2xl text-gray-900 dark:bg-gray-800 dark:text-gray-100":
                       message.role === "user",
-                    "self-start bg-blue-500 text-white dark:bg-blue-900":
+                    "self-start rounded-b-2xl rounded-r-2xl bg-blue-500 text-white dark:bg-blue-900":
                       message.role === "assistant",
                   },
                 )}
@@ -78,10 +77,10 @@ const AskAI = ({ isCollapsed }: { isCollapsed: boolean }) => {
                 <SparklesIcon className="size-6 text-gray-500" />
                 <div>
                   <p className="text-gray-900 dark:text-gray-100">
-                    Ask AI anything about your emails
+                    Ask AI all what you want
                   </p>
                   <p className="text-xs text-gray-500 dark:text-gray-400">
-                    Get answers to your questions about your emails
+                    Ask AI will help with your emails, your events...
                   </p>
                 </div>
               </div>
@@ -89,24 +88,34 @@ const AskAI = ({ isCollapsed }: { isCollapsed: boolean }) => {
               <div className="flex flex-wrap items-center gap-2">
                 <button
                   onClick={() => setInput("What can I ask?")}
-                  className="rounded-md bg-gray-800 px-2 py-1 text-xs text-gray-200"
+                  className="rounded-b-xl rounded-r-xl bg-gray-800 px-2 py-1 text-xs text-gray-200"
                 >
                   What can I ask?
                 </button>
+                <span className="inline-flex w-full justify-end">
+                  <button
+                    onClick={() =>
+                      setInput("What can you tell me about my emails?")
+                    }
+                    className="rounded-b-xl rounded-l-xl bg-gray-800 px-2 py-1 text-xs text-gray-200"
+                  >
+                    What can you tell me about my emails?
+                  </button>
+                </span>
                 <button
-                  onClick={() => setInput("When is my next meeting?")}
-                  className="rounded-md bg-gray-800 px-2 py-1 text-xs text-gray-200"
+                  onClick={() => setInput("Who are my clients?")}
+                  className="rounded-b-xl rounded-r-xl bg-gray-800 px-2 py-1 text-xs text-gray-200"
                 >
-                  When is my next meeting?
+                  Who are my clients?
                 </button>
-                <button
-                  onClick={() =>
-                    setInput("What can you tell me about my emails?")
-                  }
-                  className="rounded-md bg-gray-800 px-2 py-1 text-xs text-gray-200"
-                >
-                  What can you tell me about my emails?
-                </button>
+                <span className="inline-flex w-full justify-end md:block md:w-auto">
+                  <button
+                    onClick={() => setInput("When is my next meeting?")}
+                    className="rounded-b-xl rounded-l-xl bg-gray-800 px-2 py-1 text-xs text-gray-200"
+                  >
+                    When is my next meeting?
+                  </button>
+                </span>
               </div>
             </div>
           )}
@@ -117,7 +126,7 @@ const AskAI = ({ isCollapsed }: { isCollapsed: boolean }) => {
                 onChange={handleInputChange}
                 value={input}
                 className="py- relative h-9 flex-grow rounded-full border border-gray-200 bg-white px-3 text-[15px] outline-none placeholder:text-[13px] placeholder:text-gray-400 focus-visible:ring-0 focus-visible:ring-blue-500/20 focus-visible:ring-offset-1 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100 dark:placeholder-gray-400 dark:focus-visible:ring-blue-500/20 dark:focus-visible:ring-offset-1 dark:focus-visible:ring-offset-gray-700"
-                placeholder="Ask AI anything about your emails"
+                placeholder="Message Ask AI"
                 autoComplete="new-text"
               />
               <motion.div
@@ -145,7 +154,7 @@ const AskAI = ({ isCollapsed }: { isCollapsed: boolean }) => {
             </form>
           ) : (
             <div className="rounded border bg-muted p-2 text-muted-foreground">
-              You must add an account to use the bot.
+              You must add an account to use Ask AI.
             </div>
           )}
         </div>

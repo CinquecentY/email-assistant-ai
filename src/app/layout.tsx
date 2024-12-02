@@ -9,6 +9,8 @@ import { ThemeProvider } from "@/components/theme-provider";
 
 import { Poppins } from "next/font/google";
 import { cn } from "@/lib/utils";
+import HoverBar from "@/components/hover-bar";
+import { TooltipProvider } from "@/components/ui/tooltip";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -17,7 +19,7 @@ const poppins = Poppins({
 });
 
 export const metadata: Metadata = {
-  title: "Mail Assistant 🇦🇮",
+  title: "Mail Assistant ΛＩ",
   description: "Concept by Yassine Annagrebah",
   icons: [{ rel: "icon", url: "/favicon.ico" }],
 };
@@ -27,18 +29,23 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <ClerkProvider>
-      <html lang="en" className={cn(poppins.variable, GeistSans.variable)}>
-        <body className="bg-purple-100 dark:bg-[#121212]">
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
-          >
-            <TRPCReactProvider>{children}</TRPCReactProvider>
-          </ThemeProvider>
-        </body>
-      </html>
+      <TRPCReactProvider>
+        <html lang="en" className={cn(poppins.variable, GeistSans.variable)}>
+          <body className="flex min-h-screen flex-col bg-purple-100 dark:bg-[#121212]">
+            <ThemeProvider
+              attribute="class"
+              defaultTheme="system"
+              enableSystem
+              disableTransitionOnChange
+            >
+              <TooltipProvider delayDuration={0}>
+                <HoverBar />
+                {children}
+              </TooltipProvider>
+            </ThemeProvider>
+          </body>
+        </html>
+      </TRPCReactProvider>
     </ClerkProvider>
   );
 }
