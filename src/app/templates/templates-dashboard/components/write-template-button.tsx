@@ -9,10 +9,19 @@ import {
 import { Plus } from "lucide-react";
 import React from "react";
 import TemplateEditor from "./template-editor";
+import { useAtom } from "jotai";
+import { type Template } from "@/lib/types";
+import { templatesAtom } from "@/lib/atoms";
 
 const WriteTemplateButton = () => {
   const [open, setOpen] = React.useState(false);
+  const [, setTemplates] = useAtom<Template[]>(templatesAtom);
 
+  const addTemplate = (newTemplate: Template) => {
+    setTemplates((oldTemplates) => [...oldTemplates, newTemplate]);
+    setOpen(false);
+  };
+  // TODO Fixe Drawer
   return (
     <Drawer open={open} onOpenChange={setOpen}>
       <DrawerTrigger asChild>
@@ -21,16 +30,22 @@ const WriteTemplateButton = () => {
           <p className="hidden md:block">New Template</p>
         </Button>
       </DrawerTrigger>
-      <DrawerContent className="">
-        <DrawerHeader>
-          <DrawerTitle>New Template</DrawerTitle>
+      <DrawerContent>
+        <section className="h-fit max-h-[50svh]">
+          <DrawerHeader>
+            <DrawerTitle>New Template</DrawerTitle>
+          </DrawerHeader>
+          <div className="h-full">
           <TemplateEditor
             name=""
             text=""
-            handleSave={() => null}
+            handleSave={(name, text) =>
+              addTemplate({ name, text, date: new Date() })
+            }
             isSaving={false}
           />
-        </DrawerHeader>
+          </div>
+        </section>
       </DrawerContent>
     </Drawer>
   );
