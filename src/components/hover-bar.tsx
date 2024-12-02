@@ -18,15 +18,24 @@ import {
 } from "./ui/dialog";
 import { useIsMobile } from "@/hooks/use-mobile";
 import AskAI from "@/app/mail/components/ask-ai";
+import { cn } from "@/lib/utils";
+import { useAtom } from "jotai";
+import { isCollapsedAtom } from "./layout/dashboard-layout";
 
 const HoverBar = () => {
   const { isSignedIn } = useAuth();
   const pathname = usePathname();
   const { isFetching } = useThreads();
   const isMobile = useIsMobile();
+  const [isCollapsed, setIsCollapsed] = useAtom(isCollapsedAtom);
   // TODO arial-label all buttons
   return (
-    <div className="fixed bottom-1 left-1 z-10 flex flex-col items-center gap-3 rounded-xl bg-background p-2 shadow-md md:left-0 md:flex-row md:px-4">
+    <div
+      className={cn(
+        "fixed bottom-1 left-1 z-10 flex flex-col items-center gap-3 rounded-xl bg-background p-2 shadow-md md:left-0 md:flex-row md:px-4",
+        isCollapsed && isMobile && "hidden",
+      )}
+    >
       {isSignedIn && pathname === "/mail" && isFetching && (
         <Button
           variant={"ghost"}
