@@ -5,14 +5,22 @@ import useThreads from "@/app/mail/use-threads";
 import { cn } from "@/lib/utils";
 import { format, formatDistanceToNow } from "date-fns";
 import DOMPurify from "dompurify";
-import ThreadDisplay from "../../thread-display";
 import { ResizablePanel } from "@/components/ui/resizable";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
-import SearchBar from "../../search-bar";
+import SearchBar, { isSearchingAtom } from "../../search-bar";
+import { api } from "@/trpc/react";
+import { useAtom } from "jotai";
+import { useLocalStorage } from "usehooks-ts";
+import EmailDisplay from "../../email-display";
+import ReplyBox from "../../reply-box";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { isCollapsedAtom } from "@/components/layout/dashboard-layout";
 
 const MailMobile = () => {
+  const [isCollapsed, setIsCollapsed] = useAtom(isCollapsedAtom);
+
   const [tab, setTab] = React.useState("inbox");
 
   const { threads } = useThreads();
@@ -30,16 +38,39 @@ const MailMobile = () => {
     },
     {} as Record<string, typeof threads>,
   );
+
+  const _thread = threads?.find((t) => t.id === threadId);
+
+  const [accountId] = useLocalStorage("accountId", "");
+
+  const { data: foundThread } = api.mail.getThreadById.useQuery(
+    {
+      accountId: accountId,
+      threadId: threadId ?? "",
+    },
+    { enabled: !!!_thread && !!threadId },
+  );
+  const thread = _thread ?? foundThread;
+
+  const today = new Date();
+
+  const [isSearching, setIsSearching] = useAtom(isSearchingAtom);
+
   return (
     <ResizablePanel>
       <Tabs defaultValue="inbox" value={tab} className="h-screen">
-        <TabsContent value="inbox">
+        <TabsContent value="inbox" className="h-full">
           <div className="flex items-center gap-4 px-4 py-1">
             <h1 className="text-lg font-bold">Inbox</h1>
           </div>
           <Separator />
           <SearchBar />
-          <article className="flex max-h-[calc(100vh-120px)] flex-1 flex-col gap-2 overflow-y-auto bg-background p-4 pt-0">
+          <article className="flex h-full max-h-[calc(100vh-120px)] flex-1 flex-col gap-2 overflow-y-auto bg-background p-4 pt-0">
+            {threads?.length === 0 && (
+              <div className="flex h-full items-center justify-center">
+                <div className="text-muted-foreground">No threads found</div>
+              </div>
+            )}
             {Object.entries(groupedThreads ?? {}).map(([date, threads]) => (
               <React.Fragment key={date}>
                 <div className="mt-4 text-xs font-medium text-muted-foreground first:mt-0">
@@ -100,7 +131,7 @@ const MailMobile = () => {
             ))}
           </article>
         </TabsContent>
-        <TabsContent value="threads">
+        <TabsContent value="threads" className="h-full w-full">
           <div className="flex min-h-11 items-center p-2">
             <Button
               className={"h-7 md:hidden"}
@@ -110,8 +141,32 @@ const MailMobile = () => {
               <ArrowLeft />
             </Button>
           </div>
-          <article className="bg-background">
-            <ThreadDisplay />{" "}
+          <article className="h-full w-full bg-background">
+            <>
+              {thread ? (
+                <div className="flex h-full max-h-full flex-col overflow-auto bg-background">
+                  <div className="line-clamp-3 w-full p-4 font-bold">
+                    {thread.subject}
+                  </div>
+                  <Separator />
+                  <div className="flex flex-1 flex-col overflow-auto">
+                    <div className="flex flex-col gap-4">
+                      {thread.emails.map((email) => {
+                        return <EmailDisplay key={email.id} email={email} />;
+                      })}
+                    </div>
+                  </div>
+                  <Separator />
+                  <ReplyBox />
+                </div>
+              ) : (
+                <>
+                  <div className="flex-1 bg-background p-8 text-center text-muted-foreground">
+                    No message selected {threadId}
+                  </div>
+                </>
+              )}
+            </>
           </article>
         </TabsContent>
       </Tabs>
