@@ -67,9 +67,9 @@ const TemplateEditor = ({
   const [textValue, setTextValue] = React.useState(text);
 
   const [generation, setGeneration] = React.useState("");
-  const autocompleteAI = async (prompt: string) => {
+  const autocompleteAI = async (_prompt: string) => {
     const context = "";
-    const textStream = autoComplete(context ?? "", prompt);
+    const textStream = autoComplete(context ?? "", _prompt);
 
     for await (const textPart of await textStream) {
       if (textPart) {
@@ -82,14 +82,18 @@ const TemplateEditor = ({
     addKeyboardShortcuts() {
       return {
         "Alt-a": () => {
+          const _prompt = editor?.getText() ?? "";
+          editor?.commands.clearContent();
           (async () => {
-            await autocompleteAI(this.editor.getText());
+            await autocompleteAI(_prompt);
           })().catch((error: Error) => console.error("error", error.message));
           return true;
         },
         "Alt-p": () => {
+          const _prompt = editor?.getText() ?? "";
+          editor?.commands.clearContent();
           (async () => {
-            await polishEmail(this.editor.getText());
+            await polishEmail(_prompt);
           })().catch((error: Error) => console.error("error", error.message));
           return true;
         },
@@ -140,8 +144,8 @@ const TemplateEditor = ({
     editor.commands.insertContent(generation);
   }, [generation, editor]);
 
-  async function polishEmail(prompt: string) {
-    const textStream = polishText(prompt);
+  async function polishEmail(_prompt: string) {
+    const textStream = polishText(_prompt);
     for await (const textPart of await textStream) {
       if (textPart) {
         setGeneration(textPart);
@@ -152,7 +156,7 @@ const TemplateEditor = ({
   const isMobile = useIsMobile();
   const [prompt, setPrompt] = React.useState("");
   const [open, setOpen] = React.useState(false);
-  const aiGenerate = async (prompt: string) => {
+  const aiGenerate = async (_prompt: string) => {
     let context: string | undefined = "";
     if (defaultToolbarExpand) {
       context = "";
@@ -164,7 +168,7 @@ const TemplateEditor = ({
         account &&
           `user data is {name:${account.name}, email:${account.email}}`,
       ].join("\n"),
-      prompt,
+      _prompt,
       account!.id,
     );
     for await (const textPart of await textStream) {
@@ -208,7 +212,11 @@ const TemplateEditor = ({
             <Tooltip>
               <TooltipTrigger asChild>
                 <Button
-                  onClick={() => polishEmail(editor?.getText() ?? "")}
+                  onClick={async () => {
+                    const _prompt = editor?.getText() ?? "";
+                    editor?.commands.clearContent();
+                    await polishEmail(_prompt);
+                  }}
                   size="icon"
                   variant={"outline"}
                 >
@@ -262,7 +270,7 @@ const TemplateEditor = ({
           <span className="inline-flex flex-1 items-center justify-end md:hidden">
             <Button
               onClick={async () => {
-                handleSave(nameValue,textValue);
+                handleSave(nameValue, textValue);
               }}
               disabled={isSaving}
             >
@@ -293,7 +301,7 @@ const TemplateEditor = ({
         </span>
         <Button
           onClick={async () => {
-            handleSave(nameValue,textValue);
+            handleSave(nameValue, textValue);
           }}
           disabled={isSaving}
         >

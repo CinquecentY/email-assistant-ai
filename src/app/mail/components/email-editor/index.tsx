@@ -87,14 +87,14 @@ const EmailEditor = ({
   const [threadId] = useThread();
   const thread = threads?.find((t) => t.id === threadId);
 
-  const autocompleteAI = async (prompt: string) => {
+  const autocompleteAI = async (_prompt: string) => {
     const context = thread?.emails
       .map(
         (m) =>
           `Subject: ${m.subject}\nFrom: ${m.from.address}\n\n${turndown.turndown(m.body ?? m.bodySnippet ?? "")}`,
       )
       .join("\n");
-    const textStream = autoComplete(context ?? "", prompt);
+    const textStream = autoComplete(context ?? "", _prompt);
 
     for await (const textPart of await textStream) {
       if (textPart) {
@@ -103,7 +103,7 @@ const EmailEditor = ({
     }
   };
 
-  const replyAI = async (prompt: string) => {
+  const replyAI = async (_prompt: string) => {
     const context = thread?.emails
       .map(
         (m) =>
@@ -119,7 +119,7 @@ const EmailEditor = ({
             - email ${account.email}
       `,
       ].join("\n"),
-      prompt,
+      _prompt,
     );
 
     for await (const textPart of await textStream) {
@@ -152,7 +152,7 @@ const EmailEditor = ({
   const editor = useEditor({
     autofocus: false,
     extensions: [StarterKit, customText],
-    content:"<p>Write your email here...</p>",
+    content: "<p>Write your email here...</p>",
     editorProps: {
       attributes: {
         placeholder: "Write your email here...",
@@ -192,8 +192,8 @@ const EmailEditor = ({
     editor.commands.insertContent(generation);
   }, [generation, editor]);
 
-  async function polishEmail(prompt: string) {
-    const textStream = polishText(prompt);
+  async function polishEmail(_prompt: string) {
+    const textStream = polishText(_prompt);
     for await (const textPart of await textStream) {
       if (textPart) {
         setGeneration(textPart);
@@ -204,7 +204,7 @@ const EmailEditor = ({
   const isMobile = useIsMobile();
   const [prompt, setPrompt] = React.useState("");
   const [open, setOpen] = React.useState(false);
-  const aiGenerate = async (prompt: string) => {
+  const aiGenerate = async (_prompt: string) => {
     let context: string | undefined = "";
     if (defaultToolbarExpand) {
       context = thread?.emails
@@ -221,7 +221,7 @@ const EmailEditor = ({
         account &&
           `user data is {name:${account.name}, email:${account.email}}`,
       ].join("\n"),
-      prompt,
+      _prompt,
       account!.id,
     );
     for await (const textPart of await textStream) {
@@ -299,7 +299,11 @@ const EmailEditor = ({
             <Tooltip>
               <TooltipTrigger asChild>
                 <Button
-                  onClick={() => polishEmail(editor?.getText() ?? "")}
+                  onClick={async () => {
+                    const _prompt = editor?.getText() ?? "";
+                    editor?.commands.clearContent();
+                    await polishEmail(_prompt);
+                  }}
                   size="icon"
                   variant={"outline"}
                 >
@@ -313,7 +317,11 @@ const EmailEditor = ({
             <Tooltip>
               <TooltipTrigger asChild>
                 <Button
-                  onClick={() => replyAI(editor?.getText() ?? "")}
+                  onClick={async () => {
+                    const _prompt = editor?.getText() ?? "";
+                    editor?.commands.clearContent();
+                    await replyAI(_prompt);
+                  }}
                   size="icon"
                   variant={"outline"}
                 >
@@ -353,9 +361,9 @@ const EmailEditor = ({
                   <div className="h-2"></div>
                   <Button
                     onClick={async () => {
-                      await aiGenerate(prompt);
                       setOpen(false);
                       setPrompt("");
+                      await aiGenerate(prompt);
                     }}
                   >
                     Generate
