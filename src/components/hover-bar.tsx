@@ -74,10 +74,12 @@ const HoverBar = () => {
         </Dialog>
       )}
       {isSignedIn && pathname === "/mail" && (
+        <span className="md:w-56">
+          <ComposeButton />
+        </span>
+      )}
+      {isSignedIn && (
         <>
-          <span className="md:w-56">
-            <ComposeButton />
-          </span>
           {isFetching && (
             <Button
               variant={"ghost"}
