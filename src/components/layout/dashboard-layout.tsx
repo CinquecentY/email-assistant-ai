@@ -63,7 +63,7 @@ const DashboardLayout = ({
           className="bg-background"
           isCollapsed={isCollapsed || isMobile}
         />
-        <div className="flex-1 bg-background flex justify-center items-end pb-20">
+        <div className="flex-1 bg-background flex justify-center items-end pb-20 px-2">
           <AskAI isCollapsed={isCollapsed || isMobile} />
         </div>
       </ResizablePanel>
