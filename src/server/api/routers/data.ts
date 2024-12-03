@@ -20,6 +20,13 @@ export const dataRouter = createTRPCRouter({
       where: {
         createdBy: ctx.auth.userId,
       },
+      include: {
+        Client: {
+          select: {
+            name: true,
+          },
+        },
+      },
     });
   }),
   getHistory: protectedProcedure.query(async ({ ctx }) => {
