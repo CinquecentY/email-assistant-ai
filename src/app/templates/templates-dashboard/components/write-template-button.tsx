@@ -12,13 +12,21 @@ import TemplateEditor from "./template-editor";
 import { useAtom } from "jotai";
 import { type Template } from "@/lib/types";
 import { templatesAtom } from "@/lib/atoms";
+import { api } from "@/trpc/react";
 
 const WriteTemplateButton = () => {
   const [open, setOpen] = React.useState(false);
   const [, setTemplates] = useAtom<Template[]>(templatesAtom);
-
+  const addTemplateMutation = api.template.addTemplate.useMutation();
   const addTemplate = (newTemplate: Template) => {
-    setTemplates((oldTemplates) => [...oldTemplates, newTemplate]);
+    addTemplateMutation.mutate(newTemplate, {
+      onSuccess: (data) => {
+        setTemplates((prev) => [...prev, data as Template]);
+      },
+      onError: (error) => {
+        console.error(error);
+      },
+    });
     setOpen(false);
   };
   // TODO Fixe Drawer
@@ -36,14 +44,14 @@ const WriteTemplateButton = () => {
             <DrawerTitle>New Template</DrawerTitle>
           </DrawerHeader>
           <div className="h-full">
-          <TemplateEditor
-            name=""
-            text=""
-            handleSave={(name, text) =>
-              addTemplate({ name, text, date: new Date() })
-            }
-            isSaving={false}
-          />
+            <TemplateEditor
+              name=""
+              text=""
+              handleSave={(name, text) =>
+                addTemplate({ name, text, date: new Date() })
+              }
+              isSaving={false}
+            />
           </div>
         </section>
       </DrawerContent>

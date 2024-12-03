@@ -17,7 +17,7 @@ import { Tabs, TabsContent } from "@radix-ui/react-tabs";
 import { formatDistance, subDays } from "date-fns";
 import { useAtom } from "jotai";
 import { ArrowLeft, Trash2 } from "lucide-react";
-import React from "react";
+import React, { useEffect } from "react";
 import TemplateEditor from "./template-editor";
 import { type Template } from "@/lib/types";
 import { api } from "@/trpc/react";
@@ -27,11 +27,52 @@ const TemplatesMobile = () => {
   const [templateId, setTemplateId] = React.useState("");
 
   const [templates, setTemplates] = useAtom<Template[]>(templatesAtom);
-  const { data: fetchedTemplates } = api.template.getTemplates.useQuery();
-  console.log(fetchedTemplates);
-  function deleteTemplate(id: string) {
-    setTemplates(templates.filter((template) => template.id !== id));
+
+  const {
+    data: fetchedTemplates,
+    isLoading,
+    error,
+  } = api.template.getTemplates.useQuery<Template[]>();
+
+  const updateTemplateMutation = api.template.updateTemplate.useMutation();
+  function updateTemplate(template: Template) {
+    updateTemplateMutation.mutate(
+      { ...template },
+      {
+        onError: (error) => {
+          console.error(error);
+        },
+        onSuccess: (data) => {
+          setTemplates(
+            templates.map((t) => (t.id === template.id ? template : t)),
+          );
+          setTab("templates");
+        },
+      },
+    );
   }
+
+  const deleteTemplateMutation = api.template.deleteTemplate.useMutation();
+  function deleteTemplate(id: string) {
+    deleteTemplateMutation.mutate(
+      { id },
+      {
+        onError: (error) => {
+          console.error(error);
+        },
+        onSuccess: (data) => {
+          setTemplates(templates.filter((template) => template.id !== id));
+          console.log(data);
+        },
+      },
+    );
+  }
+
+  useEffect(() => {
+    if (fetchedTemplates) {
+      setTemplates(fetchedTemplates);
+    }
+  }, [fetchedTemplates, setTemplates]);
 
   return (
     <ResizablePanel>
@@ -62,7 +103,7 @@ const TemplatesMobile = () => {
                     <span
                       className="flex flex-1 flex-col"
                       onClick={() => {
-                        setTemplateId(template.id!);
+                        setTemplateId(template.id);
                         setTab("template");
                       }}
                     >
@@ -77,7 +118,7 @@ const TemplatesMobile = () => {
                             : "text-muted-foreground",
                         )}
                       >
-                        {formatDistance(subDays(template.date, 3), new Date(), {
+                        {formatDistance(template.updatedDate, new Date(), {
                           addSuffix: true,
                         })}
                       </div>
@@ -101,7 +142,7 @@ const TemplatesMobile = () => {
                               <Button
                                 variant={"destructive"}
                                 type="submit"
-                                onClick={() => deleteTemplate(template.id!)}
+                                onClick={() => deleteTemplate(template.id)}
                               >
                                 Confirm
                               </Button>
@@ -132,21 +173,13 @@ const TemplatesMobile = () => {
                 <TemplateEditor
                   name={templates.find((t) => t.id === templateId)?.name ?? ""}
                   text={templates.find((t) => t.id === templateId)?.text ?? ""}
-                  handleSave={(name, value) => {
-                    console.log(name, value);
-                    setTemplates(
-                      templates.map((template) => {
-                        if (template.id === templateId) {
-                          return {
-                            ...template,
-                            name,
-                            text: value,
-                          };
-                        }
-                        return template;
-                      }),
-                    );
-                    setTab("templates");
+                  handleSave={(name, text) => {
+                    updateTemplate({
+                      id: templateId,
+                      name,
+                      text,
+                      updatedDate: new Date(),
+                    });
                   }}
                   isSaving={false}
                 />
