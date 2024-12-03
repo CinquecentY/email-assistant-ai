@@ -10,14 +10,16 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import Link from "next/link";
 import { useLocalStorage } from "usehooks-ts";
+import { redirect, usePathname, useRouter } from "next/navigation";
+import Link from "next/link";
 
 interface NavProps {
   className?: string;
   isCollapsed: boolean;
   links: {
     title: string;
+    path: string;
     label?: string;
     icon: LucideIcon;
     variant: "default" | "ghost";
@@ -26,6 +28,11 @@ interface NavProps {
 
 export function Nav({ links, isCollapsed, className }: NavProps) {
   const [_, setTab] = useLocalStorage("email-assistant-ai-tab", "inbox");
+  const router = useRouter();
+  function handleNavigation(tab: string, path: string) {
+    setTab(tab);
+    router.push(`${path}`);
+  }
 
   return (
     <div
@@ -40,8 +47,9 @@ export function Nav({ links, isCollapsed, className }: NavProps) {
           isCollapsed ? (
             <Tooltip key={index}>
               <TooltipTrigger asChild>
-                <span
-                  onClick={() => setTab(link.title.toLowerCase())}
+                <Link
+                  onClick={() => setTab(link.title.toLocaleLowerCase())}
+                  href={link.path}
                   className={cn(
                     buttonVariants({ variant: link.variant, size: "icon" }),
                     "h-9 w-9 cursor-pointer",
@@ -51,7 +59,7 @@ export function Nav({ links, isCollapsed, className }: NavProps) {
                 >
                   <link.icon className="h-4 w-4" />
                   <span className="sr-only">{link.title}</span>
-                </span>
+                </Link>
               </TooltipTrigger>
               <TooltipContent side="right" className="flex items-center gap-4">
                 {link.title}
@@ -63,9 +71,10 @@ export function Nav({ links, isCollapsed, className }: NavProps) {
               </TooltipContent>
             </Tooltip>
           ) : (
-            <span
+            <Link
               key={index}
-              onClick={() => setTab(link.title.toLowerCase())}
+              onClick={() => setTab(link.title.toLocaleLowerCase())}
+              href={link.path}
               className={cn(
                 buttonVariants({ variant: link.variant, size: "sm" }),
                 link.variant === "default" &&
@@ -86,7 +95,7 @@ export function Nav({ links, isCollapsed, className }: NavProps) {
                   {link.label}
                 </span>
               )}
-            </span>
+            </Link>
           ),
         )}
       </nav>

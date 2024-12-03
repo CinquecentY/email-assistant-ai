@@ -43,29 +43,34 @@ const Sidebar = ({ isCollapsed, className }: SidebarProps) => {
         links={[
           {
             title: "Inbox",
+            path: "/mail",
             label: inboxThreads?.toString() ?? "0",
             icon: Inbox,
             variant: tab === "inbox" ? "default" : "ghost",
           },
           {
             title: "Drafts",
+            path: "/mail",
             label: draftsThreads?.toString() ?? "0",
             icon: File,
             variant: tab === "drafts" ? "default" : "ghost",
           },
           {
             title: "Sent",
+            path: "/mail",
             label: sentThreads?.toString() ?? "0",
             icon: Send,
             variant: tab === "sent" ? "default" : "ghost",
           },
           {
             title: "Mail Templates",
+            path: "/templates",
             icon: Archive,
-            variant: tab === "templates" ? "default" : "ghost",
+            variant: tab === "mail templates" ? "default" : "ghost",
           },
           {
             title: "Analytics",
+            path: "/analytics",
             icon: ChartNetwork,
             variant: tab === "analytics" ? "default" : "ghost",
           },
