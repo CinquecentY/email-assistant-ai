@@ -26,7 +26,8 @@ import WriteTemplateButton from "@/app/templates/templates-dashboard/components/
 const HoverBar = () => {
   const { isSignedIn } = useAuth();
   const pathname = usePathname();
-  const { isFetching } = useThreads();
+  //const { isFetching } = useThreads();
+  // FIXME 
   const isMobile = useIsMobile();
   const [isCollapsed, setIsCollapsed] = useAtom(isCollapsedAtom);
   // TODO arial-label all buttons
@@ -37,7 +38,7 @@ const HoverBar = () => {
         isCollapsed && isMobile && "hidden",
       )}
     >
-      {isSignedIn && pathname === "/mail" && isFetching && (
+      {/*isSignedIn && pathname === "/mail" && isFetching && (
         <Button
           variant={"ghost"}
           className="rounded-full p-2 md:hidden"
@@ -47,7 +48,7 @@ const HoverBar = () => {
             <Loader2 className="h-[1.2rem] w-[1.2rem] animate-spin" />
           </span>
         </Button>
-      )}
+      )*/}
       {isSignedIn && (
         <Button variant={"ghost"} className="rounded-full p-1">
           <UserButton />
@@ -86,7 +87,7 @@ const HoverBar = () => {
               <WriteTemplateButton />
             </span>
           )}
-          {isFetching && (
+          {/*isFetching && (
             <Button
               variant={"ghost"}
               className="hidden rounded-full p-2 md:block"
@@ -96,7 +97,7 @@ const HoverBar = () => {
                 <Loader2 className="h-[1.2rem] w-[1.2rem] animate-spin" />
               </span>
             </Button>
-          )}
+          )*/}
         </>
       )}
     </div>
