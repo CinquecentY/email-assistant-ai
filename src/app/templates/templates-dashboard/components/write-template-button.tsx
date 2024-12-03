@@ -2,7 +2,6 @@ import { Button } from "@/components/ui/button";
 import {
   Drawer,
   DrawerContent,
-  DrawerFooter,
   DrawerHeader,
   DrawerTitle,
   DrawerTrigger,
@@ -49,7 +48,7 @@ const WriteTemplateButton = () => {
               name=""
               text=""
               handleSave={(name, text) =>
-                addTemplate({ name, text, date: new Date() })
+                addTemplate({ id: "", name, text, updatedDate: new Date() })
               }
               isSaving={false}
             />
