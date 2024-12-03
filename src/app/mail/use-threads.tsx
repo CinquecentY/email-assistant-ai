@@ -16,6 +16,7 @@ const useThreads = () => {
     data: threads,
     isFetching,
     refetch,
+    error,
   } = api.mail.getThreads.useQuery(
     {
       accountId,
@@ -37,6 +38,7 @@ const useThreads = () => {
     accounts,
     queryKey,
     accountId,
+    error,
   };
 };
 

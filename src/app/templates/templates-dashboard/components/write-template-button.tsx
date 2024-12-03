@@ -29,7 +29,6 @@ const WriteTemplateButton = () => {
     });
     setOpen(false);
   };
-  // TODO Fixe Drawer
   return (
     <Drawer open={open} onOpenChange={setOpen}>
       <DrawerTrigger asChild>

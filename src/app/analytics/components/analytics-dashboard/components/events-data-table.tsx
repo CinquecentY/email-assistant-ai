@@ -8,97 +8,72 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { api } from "@/trpc/react";
 import { format } from "date-fns";
-import React from "react";
-
-const events = [
-  {
-    clientId: 1,
-    name: "Remote Meeting",
-    description: "Initial meeting to discuss project scope",
-    date: "2024-12-24T09:00:00.000Z",
-  },
-  {
-    clientId: 10,
-    name: "Remote Meeting",
-    description: "Discussion of AI implementation",
-    date: "2025-03-27T15:00:00.000Z",
-  },
-  {
-    clientId: 2,
-    name: "Physical Meeting",
-    description: "Review of technical specifications",
-    date: "2024-12-04T14:00:00.000Z",
-  },
-  {
-    clientId: 3,
-    name: "Call",
-    description: "Review of contract terms",
-    date: "2025-01-06T10:00:00.000Z",
-  },
-  {
-    clientId: 4,
-    name: "Remote Meeting",
-    description: "Product demonstration",
-    date: "2024-12-02T15:00:00.000Z",
-  },
-  {
-    clientId: 5,
-    name: "Call",
-    description: "Marketing strategy discussion",
-    date: "2024-12-08T11:00:00.000Z",
-  },
-  {
-    clientId: 6,
-    name: "Physical Meeting",
-    description: "Quarterly service review",
-    date: "2025-02-06T13:00:00.000Z",
-  },
-  {
-    clientId: 7,
-    name: "Call",
-    description: "Project scope discussion",
-    date: "2024-12-04T09:30:00.000Z",
-  },
-  {
-    clientId: 8,
-    name: "Physical Meeting",
-    description: "Mobile app design review",
-    date: "2024-12-01T14:30:00.000Z",
-  },
-  {
-    clientId: 9,
-    name: "Remote Meeting",
-    description: "Website redesign planning",
-    date: "2025-01-12T10:00:00.000Z",
-  },
-];
+import { Loader2 } from "lucide-react";
+import React, { useEffect } from "react";
 
 const EventsDataTable = () => {
+  const {
+    data: fetchedEvents,
+    isLoading,
+    error,
+  } = api.data.getEvents.useQuery();
+  const [events, setEvents] = React.useState<
+    {
+      Client: { name: string };
+      name: string;
+      description: string;
+      startingAt: Date;
+    }[]
+  >([]);
+  useEffect(() => {
+    if (fetchedEvents) {
+      setEvents(fetchedEvents);
+    }
+  }, [fetchedEvents]);
   return (
     <div className="flex flex-1 flex-col gap-2 bg-background p-4">
       <h1 className="text-lg font-bold">Events</h1>
-      <Card className="max-h-96 overflow-auto">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Client</TableHead>
-              <TableHead>Name</TableHead>
-              <TableHead>Description</TableHead>
-              <TableHead>Date</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {events.map((event, index) => (
-              <TableRow key={index}>
-                <TableCell>{event.clientId}</TableCell>
-                <TableCell>{event.name}</TableCell>
-                <TableCell>{event.description}</TableCell>
-                <TableCell>{format(event.date, "Pp")}</TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+      <Card className="max-h-96 h-96 overflow-auto">
+        {isLoading ? (
+          <div className="flex h-full items-center justify-center">
+            <Loader2 className="text-muted-foreground size-8 animate-spin" />
+          </div>
+        ) : error ? (
+          <div className="flex h-full items-center justify-center">
+            <div className="text-muted-foreground">Error</div>
+          </div>
+        ) : events.length === 0 ? (
+          <div className="flex h-full items-center justify-center">
+            <div className="text-muted-foreground">No data</div>
+          </div>
+        ) : (
+          <>
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Client</TableHead>
+                  <TableHead>Name</TableHead>
+                  <TableHead>Description</TableHead>
+                  <TableHead>Starting At</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {events.map((event, index) => (
+                  <TableRow key={index}>
+                    <TableCell>{event.Client.name}</TableCell>
+                    <TableCell>{event.name}</TableCell>
+                    <TableCell>{event.description}</TableCell>
+                    <TableCell>
+                      {format(event.startingAt, "MMM d, yyyy")}
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </>
+        )}
       </Card>
     </div>
   );

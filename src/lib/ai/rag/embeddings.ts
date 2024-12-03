@@ -18,7 +18,7 @@ export const generateEmbeddings = async (
     values: chunks,
   });
   return embeddings.map((e, i) => ({
-    content: chunks[i] as string,
+    content: chunks[i]!,
     embedding: e as number[],
   }));
 };
@@ -32,12 +32,3 @@ export const generateEmbedding = async (value: string): Promise<number[]> => {
   return embedding;
 };
 
-export const findRelevantContent = async (userQuery: string) => {
-  // TODO get accountID
-  /*const oramaManager = new OramaManager(accountId);
-  await oramaManager.initialize();
-  const { hits } = await oramaManager.vectorSearch({
-    prompt: userQuery,
-  });
-  return hits;*/
-};

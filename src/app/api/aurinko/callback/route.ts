@@ -1,8 +1,8 @@
 import { getAccountDetails, getAurinkoToken } from "@/lib/aurinko";
 import { db } from "@/server/db";
 import { auth } from "@clerk/nextjs/server";
-import axios from "axios";
-import { NextRequest, NextResponse } from "next/server";
+import axios, { type AxiosError } from "axios";
+import { type NextRequest, NextResponse } from "next/server";
 import { waitUntil } from "@vercel/functions";
 
 export const GET = async (req: NextRequest) => {
@@ -19,7 +19,7 @@ export const GET = async (req: NextRequest) => {
     );
 
   const code = params.get("code");
-  const token = await getAurinkoToken(code as string);
+  const token = await getAurinkoToken(code!);
   if (!token)
     return NextResponse.json(
       { error: "Failed to fetch token" },
@@ -50,8 +50,8 @@ export const GET = async (req: NextRequest) => {
       .then((res) => {
         console.log(res.data);
       })
-      .catch((err) => {
-        console.log(err.response.data);
+      .catch((err: AxiosError) => {
+        if (err.response) console.log(err.response.data);
       }),
   );
 

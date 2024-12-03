@@ -26,7 +26,6 @@ const AskAI = ({ isCollapsed }: { isCollapsed: boolean }) => {
       },
       initialMessages: [],
     });
-  // TODO Disable AI when not linked to account
   React.useEffect(() => {
     const messageContainer = document.getElementById("message-container");
     if (messageContainer) {
