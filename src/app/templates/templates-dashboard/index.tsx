@@ -4,7 +4,7 @@ import TemplatesMobile from "./components/templates-mobile";
 import { useIsMobile } from "@/hooks/use-mobile";
 import dynamic from "next/dynamic";
 import { Loader2 } from "lucide-react";
-import TemplatesDisplay from "./components/templates-display";
+import TemplatesDesktop from "./components/templates-desktop";
 
 const DashboardLayout = dynamic(
   () => import("@/components/layout/dashboard-layout"),
@@ -22,7 +22,7 @@ const TemplatesDashboard = () => {
   const isMobile = useIsMobile();
   return (
     <DashboardLayout>
-      {isMobile ? <TemplatesMobile /> : <TemplatesDisplay />}
+      {isMobile ? <TemplatesMobile /> : <TemplatesDesktop />}
     </DashboardLayout>
   );
 };
