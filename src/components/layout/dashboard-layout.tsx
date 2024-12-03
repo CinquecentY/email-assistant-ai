@@ -22,7 +22,7 @@ const DashboardLayout = ({
   return (
     <ResizablePanelGroup
       direction="horizontal"
-      className="min-h-screen items-stretch"
+      className="min-h-screen"
     >
       <ResizablePanel
         collapsedSize={isMobile ? 0 : 4}
