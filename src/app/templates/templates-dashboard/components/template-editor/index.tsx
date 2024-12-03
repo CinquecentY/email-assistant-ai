@@ -88,14 +88,6 @@ const TemplateEditor = ({
           })().catch((error: Error) => console.error("error", error.message));
           return true;
         },
-        "Alt-p": () => {
-          const _prompt = editor?.getText() ?? "";
-          editor?.commands.clearContent();
-          (async () => {
-            await polishEmail(_prompt);
-          })().catch((error: Error) => console.error("error", error.message));
-          return true;
-        },
       };
     },
   });
@@ -142,13 +134,12 @@ const TemplateEditor = ({
     if (!generation || !editor) return;
     editor.commands.insertContent(generation);
   }, [generation, editor]);
-
   React.useEffect(() => {
     if (!editor) return;
     setNameValue(name);
     setTextValue(text);
-    editor.commands.setContent(textValue);
-  }, [editor, name, text, textValue]);
+    editor.commands.setContent(text);
+  }, [text, name, editor]);
 
   async function polishEmail(_prompt: string) {
     const textStream = polishText(_prompt);
@@ -194,7 +185,7 @@ const TemplateEditor = ({
           onChange={(e) => setNameValue(e.target.value)}
         />
       </div>
-      <div className="flex flex-1 flex-col rounded border p-2">
+      <div className="flex max-h-full overflow-y-auto flex-1 flex-col rounded border p-2">
         <div className={cn("mb-2 flex border-b")}>
           <span className="hidden flex-1 items-center md:inline-flex">
             {editor && <TipTapMenuBar editor={editor} />}{" "}
@@ -283,7 +274,7 @@ const TemplateEditor = ({
             </Button>
           </span>
         </div>
-        <div className="prose max-h-full w-full flex-1 overflow-y-auto rounded-md border px-4 py-2">
+        <div className="prose flex-1 overflow-y-auto rounded-md border px-4 py-2">
           <EditorContent value={textValue} editor={editor} />
         </div>
       </div>
@@ -296,12 +287,6 @@ const TemplateEditor = ({
               Alt + A
             </kbd>{" "}
             for AI autocomplete
-          </span>
-          <span className="text-sm">
-            <kbd className="rounded-lg border border-gray-200 bg-gray-100 px-2 py-1.5 text-xs font-semibold text-gray-800">
-              Alt + P
-            </kbd>{" "}
-            for AI to improve written content
           </span>
         </span>
         <Button
