@@ -20,14 +20,16 @@ import { ArrowLeft, Trash2 } from "lucide-react";
 import React from "react";
 import TemplateEditor from "./template-editor";
 import { type Template } from "@/lib/types";
+import { api } from "@/trpc/react";
 
 const TemplatesMobile = () => {
   const [tab, setTab] = React.useState("templates");
-  const [templateId, setTemplateId] = React.useState(0);
+  const [templateId, setTemplateId] = React.useState("");
 
   const [templates, setTemplates] = useAtom<Template[]>(templatesAtom);
-
-  function deleteTemplate(id: number) {
+  const { data: fetchedTemplates } = api.template.getTemplates.useQuery();
+  console.log(fetchedTemplates);
+  function deleteTemplate(id: string) {
     setTemplates(templates.filter((template) => template.id !== id));
   }
 
