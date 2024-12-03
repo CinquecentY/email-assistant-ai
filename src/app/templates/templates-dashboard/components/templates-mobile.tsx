@@ -16,6 +16,10 @@ const TemplatesMobile = () => {
     setTab("template");
   }
 
+  function deleteTemplate() {
+    setTemplateId("");
+  }
+
   function updateTemplate() {
     setTab("templates");
   }
@@ -28,7 +32,10 @@ const TemplatesMobile = () => {
             <h1 className="text-lg font-bold">Mail Templates</h1>
           </div>
           <Separator />
-          <TemplateList selectTemplateHandle={selectTemplate} />
+          <TemplateList
+            selectTemplateHandle={selectTemplate}
+            deleteTemplateHandle={deleteTemplate}
+          />
         </TabsContent>
         <TabsContent value="template" className="h-screen w-full">
           <div className="flex min-h-11 items-center p-2 pb-0">

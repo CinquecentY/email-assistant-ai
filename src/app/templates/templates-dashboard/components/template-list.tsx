@@ -1,14 +1,15 @@
-import { DialogHeader, DialogFooter } from "@/components/ui/dialog";
+import {
+  DialogHeader,
+  DialogFooter,
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
 import { api } from "@/trpc/react";
-import {
-  Dialog,
-  DialogTrigger,
-  DialogContent,
-  DialogTitle,
-  DialogDescription,
-  DialogClose,
-} from "@radix-ui/react-dialog";
 import { formatDistance } from "date-fns";
 import { useAtom } from "jotai";
 import { Trash2 } from "lucide-react";
@@ -19,9 +20,13 @@ import { type Template } from "@/lib/types";
 
 interface TemplateListProps {
   selectTemplateHandle: (templateId: string) => void;
+  deleteTemplateHandle?: () => void;
 }
 
-const TemplateList = ({ selectTemplateHandle }: TemplateListProps) => {
+const TemplateList = ({
+  selectTemplateHandle,
+  deleteTemplateHandle,
+}: TemplateListProps) => {
   const [templates, setTemplates] = useAtom<Template[]>(templatesAtom);
 
   const {
@@ -40,7 +45,7 @@ const TemplateList = ({ selectTemplateHandle }: TemplateListProps) => {
         },
         onSuccess: (data) => {
           setTemplates(templates.filter((template) => template.id !== id));
-          console.log(data);
+          if (deleteTemplateHandle) deleteTemplateHandle();
         },
       },
     );

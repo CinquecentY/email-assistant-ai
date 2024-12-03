@@ -61,8 +61,7 @@ const TemplateEditor = ({
   defaultToolbarExpand,
 }: TemplateEditorProps) => {
   const [ref] = useAutoAnimate();
-  const { account, threads } = useThreads();
-  const [accountId] = useLocalStorage("accountId", "");
+  const { account } = useThreads();
   const [nameValue, setNameValue] = React.useState(name);
   const [textValue, setTextValue] = React.useState(text);
 
@@ -104,7 +103,7 @@ const TemplateEditor = ({
   const editor = useEditor({
     autofocus: false,
     extensions: [StarterKit, customText],
-    content: text,
+    content: textValue,
     editorProps: {
       attributes: {
         placeholder: "Write your template here...",
@@ -144,6 +143,13 @@ const TemplateEditor = ({
     editor.commands.insertContent(generation);
   }, [generation, editor]);
 
+  React.useEffect(() => {
+    if (!editor) return;
+    setNameValue(name);
+    setTextValue(text);
+    editor.commands.setContent(textValue);
+  }, [editor, name, text, textValue]);
+
   async function polishEmail(_prompt: string) {
     const textStream = polishText(_prompt);
     for await (const textPart of await textStream) {
@@ -153,7 +159,6 @@ const TemplateEditor = ({
     }
   }
 
-  const isMobile = useIsMobile();
   const [prompt, setPrompt] = React.useState("");
   const [open, setOpen] = React.useState(false);
   const aiGenerate = async (_prompt: string) => {
