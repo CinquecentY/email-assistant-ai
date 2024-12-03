@@ -24,18 +24,21 @@ interface NavProps {
   }[];
 }
 
-export function Nav({ links, isCollapsed,className }: NavProps) {
+export function Nav({ links, isCollapsed, className }: NavProps) {
   const [_, setTab] = useLocalStorage("email-assistant-ai-tab", "inbox");
 
   return (
     <div
       data-collapsed={isCollapsed}
-      className={cn("group flex flex-col gap-4 py-2 data-[collapsed=true]:py-2",className)}
+      className={cn(
+        "group flex flex-col gap-4 py-2 data-[collapsed=true]:py-2",
+        className,
+      )}
     >
       <nav className="grid gap-1 px-2 group-[[data-collapsed=true]]:justify-center group-[[data-collapsed=true]]:px-2">
         {links.map((link, index) =>
           isCollapsed ? (
-            <Tooltip key={index} delayDuration={0}>
+            <Tooltip key={index}>
               <TooltipTrigger asChild>
                 <span
                   onClick={() => setTab(link.title.toLowerCase())}
