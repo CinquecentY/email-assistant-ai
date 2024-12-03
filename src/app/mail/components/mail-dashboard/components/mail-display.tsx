@@ -57,7 +57,7 @@ const MailDisplay = () => {
         </div>
         <Separator />
         <SearchBar />
-        <article className="flex h-full max-h-[calc(100vh-120px)] flex-1 flex-col gap-2 overflow-y-auto bg-background p-4 pt-0">
+        <article className="flex h-full max-h-[calc(100vh-50px)] flex-1 flex-col gap-2 overflow-y-auto bg-background p-4 pt-0">
           {threads?.length === 0 && (
             <div className="flex h-full items-center justify-center">
               <div className="text-muted-foreground">No threads found</div>

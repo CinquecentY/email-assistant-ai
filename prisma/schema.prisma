@@ -89,6 +89,8 @@ model Users {
   Notes     Notes[]
 
   Account Accounts[]
+
+  Template Template[]
 }
 
 model Accounts {
@@ -209,6 +211,16 @@ model EmailAttachment {
   contentLocation String?
   Email           Email   @relation(fields: [emailId], references: [id], onDelete: Cascade)
   emailId         String
+}
+
+model Template {
+  id          String   @id @default(cuid())
+  name        String
+  text        String
+  createdDate DateTime @default(now())
+  updatedDate DateTime @updatedAt
+  createdBy   String
+  User        Users    @relation(fields: [createdBy], references: [id], onDelete: Cascade)
 }
 
 enum Sensitivity {

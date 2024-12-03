@@ -21,11 +21,13 @@ import AskAI from "@/app/mail/components/ask-ai";
 import { cn } from "@/lib/utils";
 import { useAtom } from "jotai";
 import { isCollapsedAtom } from "@/lib/atoms";
+import WriteTemplateButton from "@/app/templates/templates-dashboard/components/write-template-button";
 
 const HoverBar = () => {
   const { isSignedIn } = useAuth();
   const pathname = usePathname();
-  const { isFetching } = useThreads();
+  //const { isFetching } = useThreads();
+  // FIXME 
   const isMobile = useIsMobile();
   const [isCollapsed, setIsCollapsed] = useAtom(isCollapsedAtom);
   // TODO arial-label all buttons
@@ -36,7 +38,7 @@ const HoverBar = () => {
         isCollapsed && isMobile && "hidden",
       )}
     >
-      {isSignedIn && pathname === "/mail" && isFetching && (
+      {/*isSignedIn && pathname === "/mail" && isFetching && (
         <Button
           variant={"ghost"}
           className="rounded-full p-2 md:hidden"
@@ -46,7 +48,7 @@ const HoverBar = () => {
             <Loader2 className="h-[1.2rem] w-[1.2rem] animate-spin" />
           </span>
         </Button>
-      )}
+      )*/}
       {isSignedIn && (
         <Button variant={"ghost"} className="rounded-full p-1">
           <UserButton />
@@ -58,27 +60,34 @@ const HoverBar = () => {
         </Link>
       </Button>
       <ModeToggle />
-      {isSignedIn && isMobile && (
-        <Dialog>
-          <DialogTrigger asChild>
-            <Button variant={"ghost"} className="rounded-full p-1">
-              <Sparkles className="h-[1.2rem] w-[1.2rem]" />
-            </Button>
-          </DialogTrigger>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>Ask AI</DialogTitle>
-            </DialogHeader>
-            <AskAI isCollapsed={false} />
-          </DialogContent>
-        </Dialog>
-      )}
-      {isSignedIn && pathname === "/mail" && (
+      {isSignedIn && (
         <>
-          <span className="md:w-56">
-            <ComposeButton />
-          </span>
-          {isFetching && (
+          {isMobile && (
+            <Dialog>
+              <DialogTrigger asChild>
+                <Button variant={"ghost"} className="rounded-full p-1">
+                  <Sparkles className="h-[1.2rem] w-[1.2rem]" />
+                </Button>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>Ask AI</DialogTitle>
+                </DialogHeader>
+                <AskAI isCollapsed={false} />
+              </DialogContent>
+            </Dialog>
+          )}
+          {pathname === "/mail" && (
+            <span className="md:w-56">
+              <ComposeButton />
+            </span>
+          )}
+          {pathname === "/templates" && (
+            <span className="md:w-56">
+              <WriteTemplateButton />
+            </span>
+          )}
+          {/*isFetching && (
             <Button
               variant={"ghost"}
               className="hidden rounded-full p-2 md:block"
@@ -88,7 +97,7 @@ const HoverBar = () => {
                 <Loader2 className="h-[1.2rem] w-[1.2rem] animate-spin" />
               </span>
             </Button>
-          )}
+          )*/}
         </>
       )}
     </div>

@@ -7,21 +7,17 @@ import { format, formatDistanceToNow } from "date-fns";
 import DOMPurify from "dompurify";
 import { ResizablePanel } from "@/components/ui/resizable";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import SearchBar from "../../search-bar";
 import { api } from "@/trpc/react";
-import { atom, useAtom } from "jotai";
+import { useAtom } from "jotai";
 import { useLocalStorage } from "usehooks-ts";
 import EmailDisplay from "../../email-display";
 import ReplyBox from "../../reply-box";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import SearchDisplay from "../../search-display";
-import { isCollapsedAtom, isSearchingAtom, tabAtom } from "@/lib/atoms";
+import { isSearchingAtom, tabAtom } from "@/lib/atoms";
 
 const MailMobile = () => {
-  const [isCollapsed, setIsCollapsed] = useAtom(isCollapsedAtom);
-
   const [tab, setTab] = useAtom(tabAtom);
 
   const { threads } = useThreads();
@@ -53,9 +49,7 @@ const MailMobile = () => {
   );
   const thread = _thread ?? foundThread;
 
-  const today = new Date();
-
-  const [isSearching, setIsSearching] = useAtom(isSearchingAtom);
+  const [isSearching] = useAtom(isSearchingAtom);
 
   return (
     <ResizablePanel>
@@ -69,7 +63,7 @@ const MailMobile = () => {
           {isSearching ? (
             <SearchDisplay />
           ) : (
-            <article className="flex h-full max-h-[calc(100vh-120px)] flex-1 flex-col gap-2 overflow-y-auto bg-background p-4 pt-0">
+            <article className="flex h-full max-h-[calc(100vh-50px)] flex-1 flex-col gap-2 overflow-y-auto bg-background p-4 pt-0">
               {threads?.length === 0 && (
                 <div className="flex h-full items-center justify-center">
                   <div className="text-muted-foreground">No threads found</div>
@@ -169,7 +163,7 @@ const MailMobile = () => {
               ) : (
                 <>
                   <div className="h-full bg-background p-8 text-center text-muted-foreground">
-                    No message selected {threadId}
+                    No message selected
                   </div>
                 </>
               )}

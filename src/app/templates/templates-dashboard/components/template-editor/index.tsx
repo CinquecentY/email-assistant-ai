@@ -1,23 +1,15 @@
 "use client";
 
-import { api } from "@/trpc/react";
-import React, { useEffect } from "react";
+import React from "react";
 import { useLocalStorage } from "usehooks-ts";
 import { EditorContent, useEditor } from "@tiptap/react";
 import { StarterKit } from "@tiptap/starter-kit";
 import Text from "@tiptap/extension-text";
-import TipTapMenuBar from "./menu-bar";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
-import TagInput from "./tag-input";
 import { Input } from "@/components/ui/input";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
-import AIComposeButton from "./ai-compose-button";
-import { autoComplete, composeEmail, polishText, replyToEmail } from "./action";
 import { cn } from "@/lib/utils";
-import { useThread } from "../../use-thread";
-import useThreads from "../../use-threads";
-import { turndown } from "@/lib/turndown";
 import {
   Tooltip,
   TooltipContent,
@@ -45,65 +37,37 @@ import { Textarea } from "@/components/ui/textarea";
 import useIsClickOutside from "@/hooks/use-click-outside";
 import useOutsideClick from "@/hooks/use-click-outside";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { useAtom } from "jotai";
-import { templatesAtom } from "@/lib/atoms";
-import { Template } from "@/lib/types";
+  autoComplete,
+  polishText,
+  composeEmail,
+} from "@/app/mail/components/email-editor/action";
+import TipTapMenuBar from "@/app/mail/components/email-editor/menu-bar";
+import useThreads from "@/app/mail/use-threads";
+import { Label } from "@/components/ui/label";
 
-type EmailEditorProps = {
-  toValues: { label: string; value: string }[];
-  ccValues: { label: string; value: string }[];
-
-  subject: string;
-  setSubject: (subject: string) => void;
-  to: string[];
-  handleSend: (value: string) => void;
-  isSending: boolean;
-
-  onToChange: (values: { label: string; value: string }[]) => void;
-  onCcChange: (values: { label: string; value: string }[]) => void;
-
+type TemplateEditorProps = {
+  name: string;
+  text: string;
+  handleSave: (nameValue: string, textValue: string) => void;
+  isSaving: boolean;
   defaultToolbarExpand?: boolean;
 };
 
-const EmailEditor = ({
-  toValues,
-  ccValues,
-  subject,
-  setSubject,
-  handleSend,
-  isSending,
-  onToChange,
-  onCcChange,
+const TemplateEditor = ({
+  name,
+  text,
+  handleSave,
+  isSaving,
   defaultToolbarExpand,
-}: EmailEditorProps) => {
+}: TemplateEditorProps) => {
   const [ref] = useAutoAnimate();
-  const [accountId] = useLocalStorage("accountId", "");
-  const { data: suggestions } = api.mail.getEmailSuggestions.useQuery(
-    { accountId: accountId, query: "" },
-    { enabled: !!accountId },
-  );
-  const [value, setValue] = React.useState("");
-
-  const [expanded, setExpanded] = React.useState(defaultToolbarExpand ?? false);
+  const { account } = useThreads();
+  const [nameValue, setNameValue] = React.useState(name);
+  const [textValue, setTextValue] = React.useState(text);
 
   const [generation, setGeneration] = React.useState("");
-  const { threads, account } = useThreads();
-  const [threadId] = useThread();
-  const thread = threads?.find((t) => t.id === threadId);
-
   const autocompleteAI = async (_prompt: string) => {
-    const context = thread?.emails
-      .map(
-        (m) =>
-          `Subject: ${m.subject}\nFrom: ${m.from.address}\n\n${turndown.turndown(m.body ?? m.bodySnippet ?? "")}`,
-      )
-      .join("\n");
+    const context = "";
     const textStream = autoComplete(context ?? "", _prompt);
 
     for await (const textPart of await textStream) {
@@ -113,39 +77,14 @@ const EmailEditor = ({
     }
   };
 
-  const replyAI = async (_prompt: string) => {
-    const context = thread?.emails
-      .map(
-        (m) =>
-          `Subject: ${m.subject}\nFrom: ${m.from.address}\n\n${turndown.turndown(m.body ?? m.bodySnippet ?? "")}`,
-      )
-      .join("\n");
-    const textStream = replyToEmail(
-      [
-        context ?? "",
-        account &&
-          `user's data is:
-            - name ${account.name}
-            - email ${account.email}
-      `,
-      ].join("\n"),
-      _prompt,
-    );
-
-    for await (const textPart of await textStream) {
-      if (textPart) {
-        setGeneration(textPart);
-      }
-    }
-  };
-
-  // TODO Handle MacOS
   const customText = Text.extend({
     addKeyboardShortcuts() {
       return {
         "Alt-a": () => {
+          const _prompt = editor?.getText() ?? "";
+          editor?.commands.clearContent();
           (async () => {
-            await autocompleteAI(this.editor.getText());
+            await autocompleteAI(_prompt);
           })().catch((error: Error) => console.error("error", error.message));
           return true;
         },
@@ -156,14 +95,14 @@ const EmailEditor = ({
   const editor = useEditor({
     autofocus: false,
     extensions: [StarterKit, customText],
-    content: "",
+    content: textValue,
     editorProps: {
       attributes: {
-        placeholder: "Write your text here, if you need help use the AI tools",
+        placeholder: "Write your template here...",
       },
     },
     onUpdate: ({ editor }) => {
-      setValue(editor.getHTML());
+      setTextValue(editor.getHTML());
     },
   });
 
@@ -195,6 +134,12 @@ const EmailEditor = ({
     if (!generation || !editor) return;
     editor.commands.insertContent(generation);
   }, [generation, editor]);
+  React.useEffect(() => {
+    if (!editor) return;
+    setNameValue(name);
+    setTextValue(text);
+    editor.commands.setContent(text);
+  }, [text, name, editor]);
 
   async function polishEmail(_prompt: string) {
     const textStream = polishText(_prompt);
@@ -205,18 +150,12 @@ const EmailEditor = ({
     }
   }
 
-  const isMobile = useIsMobile();
   const [prompt, setPrompt] = React.useState("");
   const [open, setOpen] = React.useState(false);
   const aiGenerate = async (_prompt: string) => {
     let context: string | undefined = "";
     if (defaultToolbarExpand) {
-      context = thread?.emails
-        .map(
-          (m) =>
-            `Subject: ${m.subject}\nFrom: ${m.from.address}\n\n${turndown.turndown(m.body ?? m.bodySnippet ?? "")}`,
-        )
-        .join("\n");
+      context = "";
     }
 
     const textStream = composeEmail(
@@ -234,66 +173,20 @@ const EmailEditor = ({
       }
     }
   };
-  const handleClickOutside = () => {
-    if (!defaultToolbarExpand) setExpanded(false);
-  };
-  const clickOutsideRef = useOutsideClick(handleClickOutside);
 
-  const [templates, setTemplates] = useAtom(templatesAtom);
-  const {
-    data: fetchedTemplates,
-    isLoading,
-    error,
-  } = api.template.getTemplates.useQuery<Template[]>();
-  useEffect(() => {
-    if (fetchedTemplates) {
-      setTemplates(fetchedTemplates);
-    }
-  }, [fetchedTemplates, setTemplates]);
   return (
-    <div
-      ref={clickOutsideRef}
-      className="h-fit px-2"
-      onClick={() => {
-        if (!defaultToolbarExpand) setExpanded(true);
-      }}
-    >
+    <div className="flex h-full flex-col px-2">
       <div ref={ref} className="space-y-2 p-4">
-        {(expanded || isMobile) && (
-          <>
-            <TagInput
-              suggestions={suggestions?.map((s) => s.address) ?? []}
-              value={toValues}
-              placeholder="Add tags"
-              label="To"
-              onChange={onToChange}
-            />
-            <TagInput
-              className="hidden md:flex"
-              suggestions={suggestions?.map((s) => s.address) ?? []}
-              value={ccValues}
-              placeholder="Add tags"
-              label="Cc"
-              onChange={onCcChange}
-            />
-            <Input
-              id="subject"
-              className="w-full"
-              placeholder="Subject"
-              value={subject}
-              onChange={(e) => setSubject(e.target.value)}
-              autoComplete="message-subject"
-            />
-          </>
-        )}
+        <Label htmlFor="template-name">Template Name</Label>
+        <Input
+          id="template-name"
+          placeholder="Name"
+          value={nameValue}
+          onChange={(e) => setNameValue(e.target.value)}
+        />
       </div>
-      <div className="rounded border p-2">
-        <div
-          className={cn(
-            "mb-2 flex border-b",
-            !expanded && "[&_svg]:text-muted-foreground",
-          )}
-        >
+      <div className="flex max-h-full overflow-y-auto flex-1 flex-col rounded border p-2">
+        <div className={cn("mb-2 flex border-b")}>
           <span className="hidden flex-1 items-center md:inline-flex">
             {editor && <TipTapMenuBar editor={editor} />}{" "}
           </span>
@@ -330,24 +223,6 @@ const EmailEditor = ({
                 <p>AI improve</p>
               </TooltipContent>
             </Tooltip>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button
-                  onClick={async () => {
-                    const _prompt = editor?.getText() ?? "";
-                    editor?.commands.clearContent();
-                    await replyAI(_prompt);
-                  }}
-                  size="icon"
-                  variant={"outline"}
-                >
-                  <BotMessageSquare className="size-5" />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>AI reply</p>
-              </TooltipContent>
-            </Tooltip>
             <Dialog open={open} onOpenChange={setOpen}>
               <DialogTrigger asChild>
                 <Tooltip>
@@ -377,9 +252,9 @@ const EmailEditor = ({
                   <div className="h-2"></div>
                   <Button
                     onClick={async () => {
+                      await aiGenerate(prompt);
                       setOpen(false);
                       setPrompt("");
-                      await aiGenerate(prompt);
                     }}
                   >
                     Generate
@@ -388,44 +263,19 @@ const EmailEditor = ({
               </DialogContent>
             </Dialog>
           </span>
-          <span className="ml-2 hidden w-1/5 self-center md:block">
-            <Select>
-              <SelectTrigger>
-                <SelectValue placeholder="Mail Templates" />
-              </SelectTrigger>
-              <SelectContent>
-                {templates.map((t) => (
-                  <SelectItem
-                    key={t.id}
-                    value={t.id}
-                    onClick={() => {
-                      editor?.commands.setContent(t.text);
-                    }}
-                  >
-                    {t.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </span>
           <span className="inline-flex flex-1 items-center justify-end md:hidden">
             <Button
               onClick={async () => {
-                editor?.commands.clearContent();
-                handleSend(value);
+                handleSave(nameValue, textValue);
               }}
-              disabled={isSending}
+              disabled={isSaving}
             >
-              Send
+              Save
             </Button>
           </span>
         </div>
-        <div className="prose max-h-[25svh] w-full overflow-y-auto rounded-md border px-4 py-2">
-          <EditorContent
-            value={value}
-            editor={editor}
-            placeholder="Write your email here..."
-          />
+        <div className="prose flex-1 overflow-y-auto rounded-md border px-4 py-2">
+          <EditorContent value={textValue} editor={editor} />
         </div>
       </div>
       <Separator />
@@ -441,16 +291,15 @@ const EmailEditor = ({
         </span>
         <Button
           onClick={async () => {
-            editor?.commands.clearContent();
-            handleSend(value);
+            handleSave(nameValue, textValue);
           }}
-          disabled={isSending}
+          disabled={isSaving}
         >
-          Send
+          Save
         </Button>
       </div>
     </div>
   );
 };
 
-export default EmailEditor;
+export default TemplateEditor;
