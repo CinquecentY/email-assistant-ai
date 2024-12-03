@@ -1,7 +1,7 @@
 "use client";
 
 import { api } from "@/trpc/react";
-import React from "react";
+import React, { useEffect } from "react";
 import { useLocalStorage } from "usehooks-ts";
 import { EditorContent, useEditor } from "@tiptap/react";
 import { StarterKit } from "@tiptap/starter-kit";
@@ -44,6 +44,16 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import useIsClickOutside from "@/hooks/use-click-outside";
 import useOutsideClick from "@/hooks/use-click-outside";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { useAtom } from "jotai";
+import { templatesAtom } from "@/lib/atoms";
+import { Template } from "@/lib/types";
 
 type EmailEditorProps = {
   toValues: { label: string; value: string }[];
@@ -139,12 +149,6 @@ const EmailEditor = ({
           })().catch((error: Error) => console.error("error", error.message));
           return true;
         },
-        "Alt-p": () => {
-          (async () => {
-            await polishEmail(this.editor.getText());
-          })().catch((error: Error) => console.error("error", error.message));
-          return true;
-        },
       };
     },
   });
@@ -152,10 +156,10 @@ const EmailEditor = ({
   const editor = useEditor({
     autofocus: false,
     extensions: [StarterKit, customText],
-    content: "<p>Write your email here...</p>",
+    content: "",
     editorProps: {
       attributes: {
-        placeholder: "Write your email here...",
+        placeholder: "Write your text here, if you need help use the AI tools",
       },
     },
     onUpdate: ({ editor }) => {
@@ -234,6 +238,18 @@ const EmailEditor = ({
     if (!defaultToolbarExpand) setExpanded(false);
   };
   const clickOutsideRef = useOutsideClick(handleClickOutside);
+
+  const [templates, setTemplates] = useAtom(templatesAtom);
+  const {
+    data: fetchedTemplates,
+    isLoading,
+    error,
+  } = api.template.getTemplates.useQuery<Template[]>();
+  useEffect(() => {
+    if (fetchedTemplates) {
+      setTemplates(fetchedTemplates);
+    }
+  }, [fetchedTemplates, setTemplates]);
   return (
     <div
       ref={clickOutsideRef}
@@ -372,6 +388,26 @@ const EmailEditor = ({
               </DialogContent>
             </Dialog>
           </span>
+          <span className="ml-2 hidden w-1/5 self-center md:block">
+            <Select>
+              <SelectTrigger>
+                <SelectValue placeholder="Mail Templates" />
+              </SelectTrigger>
+              <SelectContent>
+                {templates.map((t) => (
+                  <SelectItem
+                    key={t.id}
+                    value={t.id}
+                    onClick={() => {
+                      editor?.commands.insertContent(t.text);
+                    }}
+                  >
+                    {t.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </span>
           <span className="inline-flex flex-1 items-center justify-end md:hidden">
             <Button
               onClick={async () => {
@@ -401,12 +437,6 @@ const EmailEditor = ({
               Alt + A
             </kbd>{" "}
             for AI autocomplete
-          </span>
-          <span className="text-sm">
-            <kbd className="rounded-lg border border-gray-200 bg-gray-100 px-2 py-1.5 text-xs font-semibold text-gray-800">
-              Alt + P
-            </kbd>{" "}
-            for AI to improve written content
           </span>
         </span>
         <Button
