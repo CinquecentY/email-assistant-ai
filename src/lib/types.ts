@@ -84,7 +84,7 @@ export interface EmailHeader {
 }
 
 export interface Template {
-  id?: number;
+  id?: string;
   name: string;
   date: Date;
   text: string;
