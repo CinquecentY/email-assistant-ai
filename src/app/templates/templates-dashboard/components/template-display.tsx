@@ -15,8 +15,11 @@ const TemplateDisplay = ({
   templateId,
 }: TemplateDisplayProps) => {
   const [templates, setTemplates] = useAtom<Template[]>(templatesAtom);
-  const [template, setTemplate] = useState(
-    templates.find((t) => t.id === templateId),
+  const [nameValue, setNameValue] = useState<string>(
+    templates.find((t) => t.id === templateId)?.name ?? "",
+  );
+  const [textValue, setTextValue] = useState<string>(
+    templates.find((t) => t.id === templateId)?.text ?? "",
   );
   const updateTemplateMutation = api.template.updateTemplate.useMutation();
   function updateTemplate(template: Template) {
@@ -36,18 +39,19 @@ const TemplateDisplay = ({
     );
   }
   useEffect(() => {
-    setTemplate(templates.find((t) => t.id === templateId));
+    setNameValue(templates.find((t) => t.id === templateId)?.name ?? "");
+    setTextValue(templates.find((t) => t.id === templateId)?.text ?? "");
   }, [templateId, templates]);
   return (
-    <section className="h-full max-h-[calc(100vh-50px)] w-full bg-background">
-      {template ? (
+    <section className="size-full max-h-[calc(100vh-50px)] bg-background">
+      {templateId ? (
         <div className="h-full">
           <TemplateEditor
-            name={template.name}
-            text={template.text}
+            name={nameValue}
+            text={textValue}
             handleSave={(name, text) => {
               updateTemplate({
-                id: template.id,
+                id: templateId,
                 name,
                 text,
                 updatedDate: new Date(),
