@@ -12,11 +12,12 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
+import { Loader2 } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { Pie, Label, PieChart } from "recharts";
 
 const EmailsPie = () => {
-  const { threads, isFetching } = useThreads();
+  const { threads, isFetching, error } = useThreads();
   const [chartData, setChartData] = useState<
     { name: string; emails: number; fill: string }[]
   >([]);
@@ -52,6 +53,7 @@ const EmailsPie = () => {
         ...prevConfig,
         names: {
           ...prevConfig.names,
+          //@ts-expect-error
           dataKey: "name",
         } satisfies ChartConfig,
       }));
@@ -59,7 +61,15 @@ const EmailsPie = () => {
   }, [threads]);
   return (
     <Card className="flex flex-1 flex-col">
-      {chartData.length === 0 ? (
+      {isFetching ? (
+        <div className="flex flex-1 h-full items-center justify-center">
+          <Loader2 className="size-8 animate-spin text-muted-foreground" />
+        </div>
+      ) : error ? (
+        <div className="flex h-full items-center justify-center">
+          <div className="text-muted-foreground">Error</div>
+        </div>
+      ) : chartData.length === 0 ? (
         <div className="flex h-full items-center justify-center">
           <div className="text-muted-foreground">No data</div>
         </div>

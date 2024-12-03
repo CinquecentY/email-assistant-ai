@@ -9,6 +9,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { api } from "@/trpc/react";
+import { Loader2 } from "lucide-react";
 import React, { useEffect } from "react";
 
 const ClientsDataTable = () => {
@@ -34,8 +35,16 @@ const ClientsDataTable = () => {
   return (
     <div className="flex flex-1 flex-col gap-2 bg-background p-4">
       <h1 className="text-lg font-bold">Clients</h1>
-      <Card className="max-h-96 overflow-auto">
-        {clients.length === 0 ? (
+      <Card className="h-96 max-h-96 overflow-auto">
+        {isLoading ? (
+          <div className="flex h-full items-center justify-center">
+            <Loader2 className="size-8 animate-spin text-muted-foreground" />
+          </div>
+        ) : error ? (
+          <div className="flex h-full items-center justify-center">
+            <div className="text-muted-foreground">Error</div>
+          </div>
+        ) : clients.length === 0 ? (
           <div className="flex h-full items-center justify-center">
             <div className="text-muted-foreground">No data</div>
           </div>
