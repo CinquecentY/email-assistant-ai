@@ -101,7 +101,7 @@ model Accounts {
 
   token    String @unique
   provider String
-  email    String
+  email    String @unique
   name     String
 
   nextDeltaToken String?
