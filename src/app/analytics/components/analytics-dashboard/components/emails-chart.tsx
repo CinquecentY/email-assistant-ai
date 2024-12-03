@@ -1,3 +1,4 @@
+import useThreads from "@/app/mail/use-threads";
 import {
   Card,
   CardHeader,
@@ -11,16 +12,9 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
-import React from "react";
+import React, { useEffect } from "react";
 import { CartesianGrid, XAxis, Bar, BarChart } from "recharts";
 
-const chartData = [
-  { date: "2024-11-28", emails: 10 },
-  { date: "2024-11-29", emails: 8 },
-  { date: "2024-11-30", emails: 6 },
-  { date: "2024-12-01", emails: 5 },
-  { date: "2024-12-02", emails: 5 },
-];
 const chartConfig = {
   views: {
     label: "Page Views",
@@ -32,6 +26,33 @@ const chartConfig = {
 } satisfies ChartConfig;
 
 const EmailsChart = () => {
+  const { threads } = useThreads();
+  const [chartData, setChartData] = React.useState<
+    { date: string; emails: number }[]
+  >([]);
+  useEffect(() => {
+    if (threads) {
+      const emails = threads.reduce(
+        (acc, thread) => {
+          const date = new Date(
+            thread.emails.at(-1)?.sentAt ?? new Date(),
+          ).toLocaleDateString("en-US", {
+            month: "short",
+            day: "numeric",
+          });
+          const existingDate = acc.find((item) => item.date === date);
+          if (existingDate) {
+            existingDate.emails++;
+          } else {
+            acc.push({ date, emails: 1 });
+          }
+          return acc;
+        },
+        [] as { date: string; emails: number }[],
+      );
+      setChartData(emails);
+    }
+  }, [threads]);
   return (
     <Card className="flex-1">
       <CardHeader className="flex flex-col items-stretch space-y-0 border-b p-0 sm:flex-row">
@@ -63,7 +84,7 @@ const EmailsChart = () => {
               tickMargin={8}
               minTickGap={32}
               tickFormatter={(value) => {
-                const date = new Date(value);
+                const date = new Date(value as string);
                 return date.toLocaleDateString("en-US", {
                   month: "short",
                   day: "numeric",
@@ -76,7 +97,7 @@ const EmailsChart = () => {
                   className="w-[150px]"
                   nameKey="views"
                   labelFormatter={(value) => {
-                    return new Date(value).toLocaleDateString("en-US", {
+                    return new Date(value as string).toLocaleDateString("en-US", {
                       month: "short",
                       day: "numeric",
                       year: "numeric",
