@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import {
   Drawer,
   DrawerContent,
+  DrawerFooter,
   DrawerHeader,
   DrawerTitle,
   DrawerTrigger,
@@ -38,8 +39,8 @@ const WriteTemplateButton = () => {
           <p className="hidden md:block">New Template</p>
         </Button>
       </DrawerTrigger>
-      <DrawerContent>
-        <section className="h-fit max-h-[50svh]">
+      <DrawerContent className="h-[60svh]">
+        <section className="max-h-[50svh]">
           <DrawerHeader>
             <DrawerTitle>New Template</DrawerTitle>
           </DrawerHeader>
