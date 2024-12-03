@@ -108,6 +108,7 @@ const TemplateList = ({
                         <Button
                           variant={"destructive"}
                           type="submit"
+                          className="hover:bg-destructive"
                           onClick={() => deleteTemplate(template.id)}
                         >
                           Confirm
