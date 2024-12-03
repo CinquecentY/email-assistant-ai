@@ -399,7 +399,7 @@ const EmailEditor = ({
                     key={t.id}
                     value={t.id}
                     onClick={() => {
-                      editor?.commands.insertContent(t.text);
+                      editor?.commands.setContent(t.text);
                     }}
                   >
                     {t.name}
