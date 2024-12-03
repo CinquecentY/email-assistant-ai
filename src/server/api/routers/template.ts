@@ -6,12 +6,15 @@ import { NextResponse } from "next/server";
 
 export const templateRouter = createTRPCRouter({
   getTemplates: protectedProcedure.query(async ({ ctx }) => {
-    const { userId } = await auth();
-    if (!userId)
-      return NextResponse.json({ error: "UNAUTHORIZED" }, { status: 401 });
     return await ctx.db.template.findMany({
       where: {
-        createdBy: userId,
+        createdBy: ctx.auth.userId,
+      },
+      select: {
+        id: true,
+        name: true,
+        text: true,
+        updatedDate: true,
       },
     });
     /*return [...Array].map((_, i) => ({
