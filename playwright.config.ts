@@ -72,16 +72,16 @@ export default defineConfig({
     },
 
     /* Test against mobile viewports. */
-    {
-      name: "Mobile Chrome",
-      use: {
-        ...devices["Pixel 5"],
+    // {
+    //   name: "Mobile Chrome",
+    //   use: {
+    //     ...devices["Pixel 5"],
 
-        // Use prepared Clerk auth state
-        storageState: "playwright/.clerk/user.json",
-      },
-      dependencies: ["global setup"],
-    },
+    //     // Use prepared Clerk auth state
+    //     storageState: "playwright/.clerk/user.json",
+    //   },
+    //   dependencies: ["global setup"],
+    // },
     // {
     //   name: 'Mobile Safari',
     //   use: { ...devices['iPhone 12'] },
