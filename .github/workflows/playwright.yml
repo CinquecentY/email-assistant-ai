@@ -1,11 +1,11 @@
 name: Playwright Tests
+env:
+  DATABASE_URL: ${{DATABASE_URL}}
 on:
   push:
     branches: [main, master]
   pull_request:
     branches: [main, master]
-env:
-  DATABASE_URL: ${{DATABASE_URL}}
 jobs:
   test:
     timeout-minutes: 60
