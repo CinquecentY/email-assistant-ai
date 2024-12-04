@@ -4,9 +4,9 @@ import { defineConfig, devices } from "@playwright/test";
  * Read environment variables from file.
  * https://github.com/motdotla/dotenv
  */
-// import dotenv from 'dotenv';
-// import path from 'path';
-// dotenv.config({ path: path.resolve(__dirname, '.env') });
+import dotenv from "dotenv";
+import path from "path";
+dotenv.config({ path: path.resolve(".env") });
 
 /**
  * See https://playwright.dev/docs/test-configuration.
@@ -27,43 +27,48 @@ export default defineConfig({
   use: {
     /* Base URL to use in actions like `await page.goto('/')`. */
     // baseURL: 'http://127.0.0.1:3000',
-    baseURL: process.env.NEXT_PUBLIC_URL,
+    baseURL: process.env.NEXT_PUBLIC_URL ?? "http://127.0.0.1:3000",
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: "on-first-retry",
   },
 
   /* Configure projects for major browsers */
   projects: [
-    // Authentication Setup
-    { name: "setup", testMatch: /.*\.setup\.ts/ },
+    {
+      name: "global setup",
+      testMatch: /global\.setup\.ts/,
+    },
     {
       name: "chromium",
       use: {
         ...devices["Desktop Chrome"],
-        // Use prepared auth state.
-        storageState: "playwright/.auth/user.json",
+
+        // Use prepared Clerk auth state
+        storageState: "playwright/.clerk/user.json",
       },
-      dependencies: ["setup"],
+      dependencies: ["global setup"],
     },
 
     {
       name: "firefox",
       use: {
         ...devices["Desktop Firefox"],
-        // Use prepared auth state.
-        storageState: "playwright/.auth/user.json",
+
+        // Use prepared Clerk auth state
+        storageState: "playwright/.clerk/user.json",
       },
-      dependencies: ["setup"],
+      dependencies: ["global setup"],
     },
 
     {
       name: "webkit",
       use: {
         ...devices["Desktop Safari"],
-        // Use prepared auth state.
-        storageState: "playwright/.auth/user.json",
+
+        // Use prepared Clerk auth state
+        storageState: "playwright/.clerk/user.json",
       },
-      dependencies: ["setup"],
+      dependencies: ["global setup"],
     },
 
     /* Test against mobile viewports. */
@@ -71,10 +76,11 @@ export default defineConfig({
       name: "Mobile Chrome",
       use: {
         ...devices["Pixel 5"],
-        // Use prepared auth state.
-        storageState: "playwright/.auth/user.json",
+
+        // Use prepared Clerk auth state
+        storageState: "playwright/.clerk/user.json",
       },
-      dependencies: ["setup"],
+      dependencies: ["global setup"],
     },
     // {
     //   name: 'Mobile Safari',
@@ -94,8 +100,8 @@ export default defineConfig({
 
   /* Run your local dev server before starting the tests */
   // webServer: {
-  //   command: 'npm run start',
-  //   url: 'http://127.0.0.1:3000',
+  //   command: "npm run start",
+  //   url: "http://127.0.0.1:3000",
   //   reuseExistingServer: !process.env.CI,
   // },
 });
