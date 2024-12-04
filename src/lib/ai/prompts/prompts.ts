@@ -1,4 +1,4 @@
-import { CoreMessage } from "ai";
+import { type CoreMessage } from "ai";
 import { ALL_DATA_DEFINITIONS } from "./definitions/definitions";
 import { TODAY_DATE } from "./utils/utils";
 
@@ -84,7 +84,8 @@ Guidelines for the AI copyeditor:
   - Finally at the end, output a fully edited version that takes into account all your suggestions.
 
 After going through the steps must respect the following conditions:
-   - The output must be strictly and solely reply to the user's email in plain text format no other format like JSON or HTML is acceptable
+   - The output must be strictly and solely the reply to the user's email in plain text format no other format like JSON or HTML is acceptable
+   - Do not add anything but the polished text, do not add fluff, your opinion or anything else besides the polished text 
    - ${PROMPT_GUIDELINES.join("\n")}
    - ${PROMPT_WARNINGS.join("\n")}
   `,
