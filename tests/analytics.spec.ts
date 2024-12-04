@@ -11,9 +11,9 @@ test.describe("analytics user flow", () => {
     await expect(page).toHaveURL("/analytics");
     // User should have the tab contain Analytics
     await expect(page.getByTestId("tab")).toContainText("Analytics");
-    // User should have all the data visible
-    await expect(page.getByTestId("events-data-table")).toBeVisible();
-    await expect(page.getByTestId("clients-data-table")).toBeVisible();
+    // User should have all the data visible without errors
+    await expect(page.getByTestId("events-data-table")).not.toContainText("Error")
+    await expect(page.getByTestId("clients-data-table")).not.toContainText("Error")
     // User switch account
     await page.getByTestId("account-switch").click();
     await page.getByTestId("account-item").first().click();

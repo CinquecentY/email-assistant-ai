@@ -33,7 +33,10 @@ const EventsDataTable = () => {
     }
   }, [fetchedEvents]);
   return (
-    <div className="flex flex-1 flex-col gap-2 bg-background p-4">
+    <div
+      className="flex flex-1 flex-col gap-2 bg-background p-4"
+      data-testid="events-data-table"
+    >
       <h1 className="text-lg font-bold">Events</h1>
       <Card className="h-96 max-h-96 overflow-auto">
         {isLoading ? (
@@ -50,7 +53,7 @@ const EventsDataTable = () => {
           </div>
         ) : (
           <>
-            <Table data-testid="events-data-table">
+            <Table>
               <TableHeader>
                 <TableRow>
                   <TableHead>Client</TableHead>

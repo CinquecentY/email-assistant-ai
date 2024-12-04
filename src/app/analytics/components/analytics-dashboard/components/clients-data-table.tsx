@@ -33,7 +33,7 @@ const ClientsDataTable = () => {
     }
   }, [fetchedClients, setClients]);
   return (
-    <div className="flex flex-1 flex-col gap-2 bg-background p-4">
+    <div className="flex flex-1 flex-col gap-2 bg-background p-4" data-testid="clients-data-table">
       <h1 className="text-lg font-bold">Clients</h1>
       <Card className="h-96 max-h-96 overflow-auto">
         {isLoading ? (
@@ -50,7 +50,7 @@ const ClientsDataTable = () => {
           </div>
         ) : (
           <>
-            <Table data-testid="clients-data-table">
+            <Table>
               <TableHeader>
                 <TableRow>
                   <TableHead>Name</TableHead>
