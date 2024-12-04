@@ -34,7 +34,7 @@ export function AccountSwitch({ isCollapsed }: AccountSwitcherProps) {
       >
         <SelectTrigger
           className={cn(
-            "bg-background/50 flex w-full flex-1 items-center gap-2 [&>span]:line-clamp-1 [&>span]:flex [&>span]:w-full [&>span]:items-center [&>span]:gap-1 [&>span]:truncate [&_svg]:h-4 [&_svg]:w-4 [&_svg]:shrink-0",
+            "flex w-full flex-1 items-center gap-2 bg-background/50 [&>span]:line-clamp-1 [&>span]:flex [&>span]:w-full [&>span]:items-center [&>span]:gap-1 [&>span]:truncate [&_svg]:h-4 [&_svg]:w-4 [&_svg]:shrink-0",
             isCollapsed &&
               "flex h-full w-9 shrink-0 items-center justify-center p-0 [&>span]:w-auto [&>svg]:hidden",
           )}
@@ -45,20 +45,28 @@ export function AccountSwitch({ isCollapsed }: AccountSwitcherProps) {
               isCollapsed && "hover:bg-accent hover:text-accent-foreground",
             )}
             placeholder="Select an account"
+            data-testid="account-switch"
           >
             <span
               className={cn({ hidden: !isCollapsed }, "font-bold uppercase")}
             >
               {data.find((account) => account.id === accountId)?.email[0]}
             </span>
-            <span className={cn("ml-2", isCollapsed && "hidden")}>
+            <span
+              className={cn("ml-2", isCollapsed && "hidden")}
+              data-testid="account-switch"
+            >
               {data.find((account) => account.id === accountId)?.email}
             </span>
           </SelectValue>
         </SelectTrigger>
         <SelectContent>
           {data.map((account) => (
-            <SelectItem key={account.id} value={account.id}>
+            <SelectItem
+              key={account.id}
+              value={account.id}
+              data-testid="account-item"
+            >
               {account.email}
             </SelectItem>
           ))}
