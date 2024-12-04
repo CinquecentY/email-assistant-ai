@@ -79,6 +79,7 @@ const EmailDisplay = ({ email }: Props) => {
       <Separator />
       <section className="w-full overflow-auto">
         <Letter
+          data-testid="letter"
           className="rounded-md bg-white p-2 text-black"
           html={email?.body ?? ""}
         />
