@@ -1,4 +1,5 @@
 name: Playwright Tests
+
 env:
       DATABASE_URL: ${{vars.DATABASE_URL}}
       NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: ${{vars.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}}
@@ -12,6 +13,7 @@ env:
       GOOGLE_GENERATIVE_AI_API_KEY: ${{secrets.GOOGLE_GENERATIVE_AI_API_KEY}}
       E2E_CLERK_USER_USERNAME: ${{vars.E2E_CLERK_USER_USERNAME}}
       E2E_CLERK_USER_PASSWORD: ${{vars.E2E_CLERK_USER_PASSWORD}}
+
 on:
   push:
     branches: [main, master]
