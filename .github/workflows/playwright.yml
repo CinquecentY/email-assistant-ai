@@ -1,4 +1,6 @@
 name: Playwright Tests
+env:
+  DATABASE_URL: ${{secrets.DATABASE_URL}}
 on:
   push:
     branches: [main, master]
