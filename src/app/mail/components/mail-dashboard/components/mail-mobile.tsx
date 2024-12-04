@@ -56,7 +56,9 @@ const MailMobile = () => {
       <Tabs defaultValue="inbox" value={tab} className="h-screen">
         <TabsContent value="inbox" className="h-full">
           <div className="flex items-center gap-4 px-4 py-1">
-            <h1 className="text-lg font-bold">Mail</h1>
+            <h1 data-testid="tab" className="text-lg font-bold">
+              Mail
+            </h1>
           </div>
           <Separator />
           <SearchBar />
@@ -78,6 +80,7 @@ const MailMobile = () => {
                     <button
                       id={`thread-${item.id}`}
                       key={item.id}
+                      data-testid="show-thread-button"
                       className={cn(
                         "relative flex h-auto flex-col items-start gap-2 rounded-lg border p-3 text-left text-sm transition-all",
                       )}
@@ -135,6 +138,7 @@ const MailMobile = () => {
         <TabsContent value="threads" className="h-screen w-full">
           <div className="flex min-h-11 items-center p-2">
             <Button
+              data-testid="switch-tab"
               className={"h-7 md:hidden"}
               variant={"outline"}
               onClick={() => setTab("inbox")}
@@ -145,8 +149,14 @@ const MailMobile = () => {
           <article className="h-full max-h-[calc(100vh-50px)] w-full bg-background">
             <>
               {thread ? (
-                <div className="flex h-full max-h-full flex-col overflow-auto bg-background">
-                  <div className="line-clamp-3 w-full p-4 font-bold">
+                <div
+                  data-testid="thread"
+                  className="flex h-full max-h-full flex-col overflow-auto bg-background"
+                >
+                  <div
+                    data-testid="thread-subject"
+                    className="line-clamp-3 w-full p-4 font-bold"
+                  >
                     {thread.subject}
                   </div>
                   <Separator />

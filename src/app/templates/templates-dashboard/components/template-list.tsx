@@ -69,6 +69,7 @@ const TemplateList = ({
         templates.map((template) => (
           <div
             key={template.id}
+            data-testid="template-item"
             className={cn(
               "relative flex h-auto flex-col items-start gap-2 rounded-lg border p-3 text-left text-sm text-muted-foreground transition-all hover:text-accent-foreground",
             )}
@@ -92,11 +93,11 @@ const TemplateList = ({
               <span>
                 <Dialog>
                   <DialogTrigger asChild>
-                    <Button className="rounded-full bg-transparent text-foreground hover:bg-destructive hover:text-destructive-foreground">
+                    <Button data-testid="delete-template-button" size="icon" variant="ghost" className="rounded-full bg-transparent text-foreground hover:bg-destructive hover:text-destructive-foreground">
                       <Trash2 />
                     </Button>
                   </DialogTrigger>
-                  <DialogContent className="rounded-xl">
+                  <DialogContent data-testid="delete-template-dialog" className="rounded-xl">
                     <DialogHeader>
                       <DialogTitle>Delete Template?</DialogTitle>
                       <DialogDescription>
@@ -110,6 +111,7 @@ const TemplateList = ({
                           type="submit"
                           className="hover:bg-destructive"
                           onClick={() => deleteTemplate(template.id)}
+                          data-testid="delete-template-button-confirm"
                         >
                           Confirm
                         </Button>

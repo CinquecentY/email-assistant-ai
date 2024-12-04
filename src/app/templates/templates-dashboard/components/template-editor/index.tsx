@@ -175,17 +175,18 @@ const TemplateEditor = ({
   };
 
   return (
-    <div className="flex h-full flex-col px-2">
+    <div className="flex h-full flex-col px-2" data-testid="template-editor">
       <div ref={ref} className="space-y-2 p-4">
         <Label htmlFor="template-name">Template Name</Label>
         <Input
           id="template-name"
+          data-testid="template-editor-name"
           placeholder="Name"
           value={nameValue}
           onChange={(e) => setNameValue(e.target.value)}
         />
       </div>
-      <div className="flex max-h-full overflow-y-auto flex-1 flex-col rounded border p-2">
+      <div className="flex max-h-full flex-1 flex-col overflow-y-auto rounded border p-2">
         <div className={cn("mb-2 flex border-b")}>
           <span className="hidden flex-1 items-center md:inline-flex">
             {editor && <TipTapMenuBar editor={editor} />}{" "}
@@ -274,7 +275,10 @@ const TemplateEditor = ({
             </Button>
           </span>
         </div>
-        <div className="prose flex-1 overflow-y-auto rounded-md border px-4 py-2">
+        <div
+          data-testid="template-editor-text"
+          className="prose flex-1 overflow-y-auto rounded-md border px-4 py-2"
+        >
           <EditorContent value={textValue} editor={editor} />
         </div>
       </div>
@@ -294,6 +298,7 @@ const TemplateEditor = ({
             handleSave(nameValue, textValue);
           }}
           disabled={isSaving}
+          data-testid="template-editor-save-button"
         >
           Save
         </Button>
