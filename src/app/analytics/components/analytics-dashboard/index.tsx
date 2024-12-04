@@ -21,7 +21,7 @@ const AnalyticsDashboard = () => {
     <DashboardLayout>
       <ResizablePanel>
         <div className="flex items-center gap-4 px-4 py-2">
-          <h1 className="text-xl font-bold">Analytics</h1>
+          <h1 data-testid="tab" className="text-xl font-bold">Analytics</h1>
         </div>
         <Separator />
         <section className="flex h-full max-h-[calc(100vh-50px)] flex-col flex-nowrap gap-2 overflow-y-auto bg-background p-4">
