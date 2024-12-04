@@ -57,4 +57,4 @@ node_modules/
 /playwright/.cache/
 
 # playwright
-playwright/.auth
+playwright/.clerk
