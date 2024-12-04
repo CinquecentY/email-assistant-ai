@@ -24,7 +24,7 @@ setup("authenticate and save state to storage", async ({ page }) => {
   await page.goto("/mail");
   // Ensure the user has successfully accessed the protected page
   // by checking an element on the page that only the authenticated user can access
-  await page.waitForSelector("h1:has-text('Inbox')");
+  await page.waitForSelector("h1:has-text('Mail')");
 
   await page.context().storageState({ path: authFile });
 });
