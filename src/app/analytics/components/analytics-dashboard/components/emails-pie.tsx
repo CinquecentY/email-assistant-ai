@@ -62,7 +62,7 @@ const EmailsPie = () => {
   return (
     <Card className="flex flex-1 flex-col">
       {isFetching ? (
-        <div className="flex flex-1 h-full items-center justify-center">
+        <div className="flex h-full flex-1 items-center justify-center">
           <Loader2 className="size-8 animate-spin text-muted-foreground" />
         </div>
       ) : error ? (
@@ -85,6 +85,7 @@ const EmailsPie = () => {
             <ChartContainer
               config={chartConfig}
               className="mx-auto aspect-square max-h-[250px]"
+              data-testid="emails-pie"
             >
               <PieChart>
                 <ChartTooltip

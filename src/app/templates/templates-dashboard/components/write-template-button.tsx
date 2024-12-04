@@ -32,12 +32,12 @@ const WriteTemplateButton = () => {
   return (
     <Drawer open={open} onOpenChange={setOpen}>
       <DrawerTrigger asChild>
-        <Button className="w-full p-3">
+        <Button className="w-full p-3" data-testid="new-template-button">
           <Plus className="md:mr-1" />
           <p className="hidden md:block">New Template</p>
         </Button>
       </DrawerTrigger>
-      <DrawerContent className="h-[60svh]">
+      <DrawerContent className="h-[60svh]" data-testid="new-template-drawer">
         <section className="max-h-[50svh]">
           <DrawerHeader>
             <DrawerTitle>New Template</DrawerTitle>

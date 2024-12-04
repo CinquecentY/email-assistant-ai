@@ -45,7 +45,7 @@ const TemplateDisplay = ({
   return (
     <section className="size-full max-h-[calc(100vh-50px)] bg-background">
       {templateId ? (
-        <div className="h-full">
+        <div className="h-full" data-testid="template-display">
           <TemplateEditor
             name={nameValue}
             text={textValue}

@@ -33,12 +33,15 @@ const EventsDataTable = () => {
     }
   }, [fetchedEvents]);
   return (
-    <div className="flex flex-1 flex-col gap-2 bg-background p-4">
+    <div
+      className="flex flex-1 flex-col gap-2 bg-background p-4"
+      data-testid="events-data-table"
+    >
       <h1 className="text-lg font-bold">Events</h1>
-      <Card className="max-h-96 h-96 overflow-auto">
+      <Card className="h-96 max-h-96 overflow-auto">
         {isLoading ? (
           <div className="flex h-full items-center justify-center">
-            <Loader2 className="text-muted-foreground size-8 animate-spin" />
+            <Loader2 className="size-8 animate-spin text-muted-foreground" />
           </div>
         ) : error ? (
           <div className="flex h-full items-center justify-center">
@@ -56,7 +59,7 @@ const EventsDataTable = () => {
                   <TableHead>Client</TableHead>
                   <TableHead>Name</TableHead>
                   <TableHead>Description</TableHead>
-                  <TableHead>Starting At</TableHead>
+                  <TableHead>Date</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>

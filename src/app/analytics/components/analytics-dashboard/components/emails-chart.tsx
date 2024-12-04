@@ -81,6 +81,7 @@ const EmailsChart = () => {
           </CardHeader>
           <CardContent className="px-2 sm:p-6">
             <ChartContainer
+              data-testid="emails-chart"
               config={chartConfig}
               className="aspect-auto h-[250px] w-full"
             >

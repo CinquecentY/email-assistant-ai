@@ -18,7 +18,9 @@ const TemplatesDesktop = () => {
     <>
       <ResizablePanel defaultSize={32} minSize={30} className="h-screen w-full">
         <div className="flex items-center gap-4 px-4 py-2">
-          <h1 className="text-xl font-bold">Inbox</h1>
+          <h1 className="text-xl font-bold" data-testid="tab">
+            Mail Templates
+          </h1>
         </div>
         <Separator />
         <TemplateList

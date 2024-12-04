@@ -53,7 +53,7 @@ const MailDisplay = () => {
     <>
       <ResizablePanel defaultSize={32} minSize={30} className="h-screen w-full">
         <div className="flex items-center gap-4 px-4 py-2">
-          <h1 className="text-xl font-bold">Inbox</h1>
+          <h1 data-testid="tab" className="text-xl font-bold">Mail</h1>
         </div>
         <Separator />
         <SearchBar />
@@ -71,6 +71,7 @@ const MailDisplay = () => {
               {threads.map((item) => (
                 <button
                   id={`thread-${item.id}`}
+                  data-testid="show-thread-button"
                   key={item.id}
                   className={cn(
                     "relative flex h-auto flex-col items-start gap-2 rounded-lg border p-3 text-left text-sm transition-all",
@@ -131,15 +132,15 @@ const MailDisplay = () => {
           ) : (
             <>
               {thread ? (
-                <div className="flex h-full flex-col overflow-y-auto bg-background">
-                  <div className="line-clamp-3 p-6 font-bold">
+                <div data-testid="thread" className="flex h-full flex-col overflow-y-auto bg-background">
+                  <div data-testid="thread-subject" className="line-clamp-3 p-6 font-bold">
                     {thread.subject}
                   </div>
                   <Separator />
                   <div className="flex h-fit flex-1 flex-col overflow-auto">
                     <div className="flex flex-col gap-4 p-6">
                       {thread.emails.map((email) => {
-                        return <EmailDisplay key={email.id} email={email} />;
+                        return <EmailDisplay key={email.id} email={email} data-testid="email-display" />;
                       })}
                     </div>
                   </div>

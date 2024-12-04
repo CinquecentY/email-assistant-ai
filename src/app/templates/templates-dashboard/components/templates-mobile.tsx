@@ -29,7 +29,9 @@ const TemplatesMobile = () => {
       <Tabs defaultValue="templates" value={tab} className="h-screen">
         <TabsContent value="templates" className="h-full">
           <div className="flex h-11 items-center gap-4 px-4 py-1">
-            <h1 className="text-lg font-bold">Mail Templates</h1>
+            <h1 className="text-lg font-bold" data-testid="tab">
+              Mail Templates
+            </h1>
           </div>
           <Separator />
           <TemplateList
@@ -40,6 +42,7 @@ const TemplatesMobile = () => {
         <TabsContent value="template" className="h-screen w-full">
           <div className="flex min-h-11 items-center p-2 pb-0">
             <Button
+              data-testid="switch-tab"
               className={
                 "h-7 rounded-b-none rounded-t-lg font-bold shadow md:hidden"
               }
