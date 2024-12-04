@@ -56,7 +56,7 @@ const MailMobile = () => {
       <Tabs defaultValue="inbox" value={tab} className="h-screen">
         <TabsContent value="inbox" className="h-full">
           <div className="flex items-center gap-4 px-4 py-1">
-            <h1 className="text-lg font-bold">Inbox</h1>
+            <h1 className="text-lg font-bold">Mail</h1>
           </div>
           <Separator />
           <SearchBar />
