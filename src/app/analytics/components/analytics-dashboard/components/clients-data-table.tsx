@@ -50,7 +50,7 @@ const ClientsDataTable = () => {
           </div>
         ) : (
           <>
-            <Table>
+            <Table data-testid="clients-data-table">
               <TableHeader>
                 <TableRow>
                   <TableHead>Name</TableHead>
