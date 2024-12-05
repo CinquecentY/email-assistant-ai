@@ -6,12 +6,10 @@ import ComposeButton from "@/app/mail/components/compose-button";
 import { useAuth, UserButton } from "@clerk/nextjs";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
-import { House, Loader2, Sparkle, Sparkles } from "lucide-react";
-import useThreads from "@/app/mail/use-threads";
+import { House, Loader2, Sparkles } from "lucide-react";
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,

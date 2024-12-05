@@ -1,10 +1,15 @@
 import Account from "@/lib/account";
 import { syncEmailsToDatabase } from "@/lib/sync-to-db";
 import { db } from "@/server/db";
-import { NextRequest, NextResponse } from "next/server";
+import { type NextRequest, NextResponse } from "next/server";
+
+interface RequestBody {
+  accountId: string;
+  userId: string;
+}
 
 export const POST = async (req: NextRequest) => {
-  const body = await req.json();
+  const body = (await req.json()) as RequestBody;
   const { accountId, userId } = body;
   if (!accountId || !userId)
     return NextResponse.json(
@@ -14,7 +19,7 @@ export const POST = async (req: NextRequest) => {
       },
       { status: 400 },
     );
-// TODO add messages to errors
+  // TODO add messages to errors
   const dbAccount = await db.accounts.findUnique({
     where: {
       id: accountId,

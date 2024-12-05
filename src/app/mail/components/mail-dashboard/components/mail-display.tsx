@@ -45,9 +45,8 @@ const MailDisplay = () => {
   );
   const thread = _thread ?? foundThread;
 
-  const today = new Date();
 
-  const [isSearching, setIsSearching] = useAtom(isSearchingAtom);
+  const [isSearching] = useAtom(isSearchingAtom);
 
   return (
     <>

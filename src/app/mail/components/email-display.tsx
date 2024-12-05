@@ -1,7 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { RouterOutputs } from "@/trpc/react";
+import { type RouterOutputs } from "@/trpc/react";
 import { formatDistanceToNow } from "date-fns";
 import React from "react";
 import useThreads from "../use-threads";

@@ -1,7 +1,6 @@
 "use client";
 
 import React from "react";
-import { useLocalStorage } from "usehooks-ts";
 import { EditorContent, useEditor } from "@tiptap/react";
 import { StarterKit } from "@tiptap/starter-kit";
 import Text from "@tiptap/extension-text";
@@ -13,29 +12,21 @@ import { cn } from "@/lib/utils";
 import {
   Tooltip,
   TooltipContent,
-  TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import {
-  BookType,
-  BotMessageSquare,
   MessageSquareDiff,
   MessageSquareQuote,
-  MessageSquareReply,
   MessageSquareText,
 } from "lucide-react";
-import { useIsMobile } from "@/hooks/use-mobile";
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
-import useIsClickOutside from "@/hooks/use-click-outside";
-import useOutsideClick from "@/hooks/use-click-outside";
 import {
   autoComplete,
   polishText,

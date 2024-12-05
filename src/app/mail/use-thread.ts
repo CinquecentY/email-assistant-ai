@@ -1,5 +1,5 @@
 import { configAtom } from "@/lib/atoms";
-import { atom, useAtom } from "jotai";
+import { useAtom } from "jotai";
 
 
 export function useThread() {

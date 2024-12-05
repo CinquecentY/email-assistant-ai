@@ -71,7 +71,7 @@ export function AccountSwitch({ isCollapsed }: AccountSwitcherProps) {
             </SelectItem>
           ))}
           <div
-            onClick={async (e) => {
+            onClick={async () => {
               try {
                 const url = await getAurinkoAuthorizationUrl("Google");
                 window.location.href = url;

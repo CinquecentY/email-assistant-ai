@@ -1,5 +1,5 @@
 import { atom } from "jotai";
-import { Template } from "./types";
+import { type Template } from "./types";
 
 export const configAtom = atom<string | null>(null);
 export const isSearchingAtom = atom(false);

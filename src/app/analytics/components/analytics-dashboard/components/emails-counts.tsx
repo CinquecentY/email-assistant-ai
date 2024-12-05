@@ -6,7 +6,7 @@ import { useLocalStorage } from "usehooks-ts";
 
 const EmailsCounts = () => {
   const [accountId] = useLocalStorage("accountId", "");
-  const refetchInterval = 30000;
+  const refetchInterval = 12000;
   const {
     data: inboxThreads,
     isLoading,

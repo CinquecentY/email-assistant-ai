@@ -12,7 +12,6 @@ import { Button } from "@/components/ui/button";
 import TagInput from "./tag-input";
 import { Input } from "@/components/ui/input";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
-import AIComposeButton from "./ai-compose-button";
 import { autoComplete, composeEmail, polishText, replyToEmail } from "./action";
 import { cn } from "@/lib/utils";
 import { useThread } from "../../use-thread";
@@ -21,28 +20,23 @@ import { turndown } from "@/lib/turndown";
 import {
   Tooltip,
   TooltipContent,
-  TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import {
-  BookType,
   BotMessageSquare,
   MessageSquareDiff,
   MessageSquareQuote,
-  MessageSquareReply,
   MessageSquareText,
 } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
-import useIsClickOutside from "@/hooks/use-click-outside";
 import useOutsideClick from "@/hooks/use-click-outside";
 import {
   Select,
@@ -53,7 +47,7 @@ import {
 } from "@/components/ui/select";
 import { useAtom } from "jotai";
 import { templatesAtom } from "@/lib/atoms";
-import { Template } from "@/lib/types";
+import { type Template } from "@/lib/types";
 
 type EmailEditorProps = {
   toValues: { label: string; value: string }[];
@@ -242,8 +236,6 @@ const EmailEditor = ({
   const [templates, setTemplates] = useAtom(templatesAtom);
   const {
     data: fetchedTemplates,
-    isLoading,
-    error,
   } = api.template.getTemplates.useQuery<Template[]>();
   useEffect(() => {
     if (fetchedTemplates) {
