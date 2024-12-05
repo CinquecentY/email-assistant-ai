@@ -2,35 +2,32 @@
 import React from "react";
 import { Button } from "./ui/button";
 import { ModeToggle } from "./theme-toggle";
-import ComposeButton from "@/app/mail/components/compose-button";
+import WriteMailButton from "@/app/mail/components/write-mail-button";
 import { useAuth, UserButton } from "@clerk/nextjs";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
-import { House, Loader2, Sparkle, Sparkles } from "lucide-react";
-import useThreads from "@/app/mail/use-threads";
+import { House, Loader2, Sparkles } from "lucide-react";
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from "./ui/dialog";
 import { useIsMobile } from "@/hooks/use-mobile";
-import AskAI from "@/app/mail/components/ask-ai";
+import AskAI from "@/components/ask-ai";
 import { cn } from "@/lib/utils";
 import { useAtom } from "jotai";
 import { isCollapsedAtom } from "@/lib/atoms";
 import WriteTemplateButton from "@/app/templates/templates-dashboard/components/write-template-button";
+import useThreads from "@/app/mail/use-threads";
 
 const HoverBar = () => {
   const { isSignedIn } = useAuth();
   const pathname = usePathname();
-  //const { isFetching } = useThreads();
-  // FIXME 
+  const { isFetching, accountId } = useThreads();
   const isMobile = useIsMobile();
   const [isCollapsed, setIsCollapsed] = useAtom(isCollapsedAtom);
-  // TODO arial-label all buttons
   return (
     <div
       className={cn(
@@ -38,7 +35,7 @@ const HoverBar = () => {
         isCollapsed && isMobile && "hidden",
       )}
     >
-      {/*isSignedIn && pathname === "/mail" && isFetching && (
+      {isSignedIn && pathname === "/mail" && accountId && isFetching && (
         <Button
           variant={"ghost"}
           className="rounded-full p-2 md:hidden"
@@ -48,9 +45,13 @@ const HoverBar = () => {
             <Loader2 className="h-[1.2rem] w-[1.2rem] animate-spin" />
           </span>
         </Button>
-      )*/}
+      )}
       {isSignedIn && (
-        <Button variant={"ghost"} className="rounded-full p-1">
+        <Button
+          aria-label="user-button"
+          variant={"ghost"}
+          className="rounded-full p-1"
+        >
           <UserButton />
         </Button>
       )}
@@ -65,7 +66,11 @@ const HoverBar = () => {
           {isMobile && (
             <Dialog>
               <DialogTrigger asChild>
-                <Button variant={"ghost"} className="rounded-full p-1">
+                <Button
+                  aria-label="ask-ai"
+                  variant={"ghost"}
+                  className="rounded-full p-1"
+                >
                   <Sparkles className="h-[1.2rem] w-[1.2rem]" />
                 </Button>
               </DialogTrigger>
@@ -79,7 +84,7 @@ const HoverBar = () => {
           )}
           {pathname === "/mail" && (
             <span className="md:w-56">
-              <ComposeButton />
+              <WriteMailButton />
             </span>
           )}
           {pathname === "/templates" && (
@@ -87,7 +92,7 @@ const HoverBar = () => {
               <WriteTemplateButton />
             </span>
           )}
-          {/*isFetching && (
+          {accountId && isFetching && (
             <Button
               variant={"ghost"}
               className="hidden rounded-full p-2 md:block"
@@ -97,7 +102,7 @@ const HoverBar = () => {
                 <Loader2 className="h-[1.2rem] w-[1.2rem] animate-spin" />
               </span>
             </Button>
-          )*/}
+          )}
         </>
       )}
     </div>

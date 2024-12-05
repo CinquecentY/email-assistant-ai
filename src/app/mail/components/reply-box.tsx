@@ -12,7 +12,7 @@ const ReplyBox = () => {
   const { accountId } = useThreads();
   const { data: replyDetails } = api.mail.getReplyDetails.useQuery({
     accountId: accountId,
-    threadId: threadId || "",
+    threadId: threadId ?? "",
     replyType: "reply",
   });
   if (!replyDetails) return <></>;
@@ -36,7 +36,7 @@ const Component = ({
   const [toValues, setToValues] = React.useState<
     { label: string; value: string }[]
   >(
-    replyDetails.to.map((to: { address: any; name: any }) => ({
+    replyDetails.to.map((to: { address: string; name: string | null }) => ({
       label: to.address ?? to.name,
       value: to.address,
     })) || [],
@@ -44,7 +44,7 @@ const Component = ({
   const [ccValues, setCcValues] = React.useState<
     { label: string; value: string }[]
   >(
-    replyDetails.cc.map((cc: { address: any; name: any }) => ({
+    replyDetails.cc.map((cc: { address: string; name: string | null }) => ({
       label: cc.address ?? cc.name,
       value: cc.address,
     })) || [],
@@ -58,13 +58,13 @@ const Component = ({
       setSubject(`Re: ${replyDetails.subject}`);
     }
     setToValues(
-      replyDetails.to.map((to: { address: any; name: any }) => ({
+      replyDetails.to.map((to: { address: string; name: string | null }) => ({
         label: to.address ?? to.name,
         value: to.address,
       })),
     );
     setCcValues(
-      replyDetails.cc.map((cc: { address: any; name: any }) => ({
+      replyDetails.cc.map((cc: { address: string; name: string | null }) => ({
         label: cc.address ?? cc.name,
         value: cc.address,
       })),
@@ -80,14 +80,18 @@ const Component = ({
         body: value,
         subject,
         from: replyDetails.from,
-        to: replyDetails.to.map((to: { name: any; address: any }) => ({
-          name: to.name ?? to.address,
-          address: to.address,
-        })),
-        cc: replyDetails.cc.map((cc: { name: any; address: any }) => ({
-          name: cc.name ?? cc.address,
-          address: cc.address,
-        })),
+        to: replyDetails.to.map(
+          (to: { name: string | null; address: string }) => ({
+            name: to.name ?? to.address,
+            address: to.address,
+          }),
+        ),
+        cc: replyDetails.cc.map(
+          (cc: { name: string | null; address: string }) => ({
+            name: cc.name ?? cc.address,
+            address: cc.address,
+          }),
+        ),
         replyTo: replyDetails.from,
         inReplyTo: replyDetails.id,
       },
@@ -115,6 +119,7 @@ const Component = ({
       to={toValues.map((to) => to.value)}
       handleSend={handleSend}
       isSending={sendEmail.isPending}
+      isReplyBox={true}
     />
   );
 };

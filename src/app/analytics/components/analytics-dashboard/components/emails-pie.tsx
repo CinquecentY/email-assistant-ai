@@ -48,15 +48,16 @@ const EmailsPie = () => {
         };
       });
       setChartData(data);
-      //@ts-expect-error
-      setChartConfig((prevConfig) => ({
-        ...prevConfig,
-        names: {
-          ...prevConfig.names,
-          //@ts-expect-error
-          dataKey: "name",
-        } satisfies ChartConfig,
-      }));
+      setChartConfig(
+        (prevConfig: ChartConfig): ChartConfig => ({
+          ...prevConfig,
+          names: {
+            ...prevConfig.names,
+            // @ts-expect-error - dataKey is not in the type definition
+            dataKey: "name",
+          },
+        }),
+      );
     }
   }, [threads]);
   return (

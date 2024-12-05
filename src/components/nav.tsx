@@ -11,7 +11,6 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { useLocalStorage } from "usehooks-ts";
-import { redirect, usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
 
 interface NavProps {
@@ -27,12 +26,7 @@ interface NavProps {
 }
 
 export function Nav({ links, isCollapsed, className }: NavProps) {
-  const [_, setTab] = useLocalStorage("email-assistant-ai-tab", "inbox");
-  const router = useRouter();
-  function handleNavigation(tab: string, path: string) {
-    setTab(tab);
-    router.push(`${path}`);
-  }
+  const [, setTab] = useLocalStorage("email-assistant-ai-tab", "inbox");
 
   return (
     <div

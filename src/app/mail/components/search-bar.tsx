@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import { Input } from "@/components/ui/input";
 import { Search, X } from "lucide-react";
 import React from "react";
-import { atom, useAtom } from "jotai";
+import { useAtom } from "jotai";
 import { isSearchingAtom, searchValueAtom } from "@/lib/atoms";
 
 const SearchBar = () => {

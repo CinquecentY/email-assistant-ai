@@ -16,7 +16,7 @@ import { useLocalStorage } from "usehooks-ts";
 import { toast } from "sonner";
 import useThreads from "../use-threads";
 
-const ComposeButton = () => {
+const WriteMailButton = () => {
   const [open, setOpen] = React.useState(false);
   const [accountId] = useLocalStorage("accountId", "");
   const [toValues, setToValues] = React.useState<
@@ -68,12 +68,12 @@ const ComposeButton = () => {
   return (
     <Drawer open={open} onOpenChange={setOpen}>
       <DrawerTrigger asChild>
-        <Button className="w-full p-3">
+        <Button className="w-full p-3" aria-label="new-email">
           <Plus className="md:mr-1" />
           <p className="hidden md:block">New Email</p>
         </Button>
       </DrawerTrigger>
-      <DrawerContent className="">
+      <DrawerContent>
         <DrawerHeader>
           <DrawerTitle>New Email</DrawerTitle>
           <EmailEditor
@@ -98,4 +98,4 @@ const ComposeButton = () => {
   );
 };
 
-export default ComposeButton;
+export default WriteMailButton;

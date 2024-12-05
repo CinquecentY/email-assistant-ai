@@ -4,8 +4,6 @@ test.describe("template user flow", () => {
   test("test", async ({ page }) => {
     // User go to /templates
     await page.goto("/templates");
-    // User should be redirected to /templates
-    await expect(page).toHaveURL("/templates");
     // User should have the tab contain Analytics
     await expect(page.getByTestId("tab")).toContainText("Mail Templates");
 

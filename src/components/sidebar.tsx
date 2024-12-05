@@ -10,7 +10,7 @@ const Sidebar = ({ isCollapsed, className }: SidebarProps) => {
   const [tab] = useLocalStorage("email-assistant-ai-tab", "inbox");
   const [accountId] = useLocalStorage("accountId", "");
 
-  const refetchInterval = 30000;
+  const refetchInterval = 12000;
   const { data: inboxThreads } = api.mail.getNumThreads.useQuery(
     {
       accountId,

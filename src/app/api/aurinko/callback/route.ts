@@ -4,17 +4,21 @@ import { auth } from "@clerk/nextjs/server";
 import axios, { type AxiosError } from "axios";
 import { type NextRequest, NextResponse } from "next/server";
 import { waitUntil } from "@vercel/functions";
+import { error } from "console";
 
 export const GET = async (req: NextRequest) => {
   const { userId } = await auth();
   if (!userId)
-    return NextResponse.json({ error: "UNAUTHORIZED" }, { status: 401 });
+    return NextResponse.json(
+      { message: "User not logged in" },
+      { status: 401 },
+    );
 
   const params = req.nextUrl.searchParams;
   const status = params.get("status");
   if (status !== "success")
     return NextResponse.json(
-      { error: "Account connection failed" },
+      { message: "Account connection failed" },
       { status: 400 },
     );
 
@@ -22,7 +26,7 @@ export const GET = async (req: NextRequest) => {
   const token = await getAurinkoToken(code!);
   if (!token)
     return NextResponse.json(
-      { error: "Failed to fetch token" },
+      { message: "Failed to fetch token" },
       { status: 400 },
     );
   const accountDetails = await getAccountDetails(token.accessToken);

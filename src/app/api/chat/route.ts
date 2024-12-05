@@ -15,7 +15,10 @@ export async function POST(req: Request) {
   try {
     const { userId } = await auth();
     if (!userId) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      return NextResponse.json(
+        { messages: "User not logged in" },
+        { status: 401 },
+      );
     }
     const { messages, accountId }: RequestBody =
       (await req.json()) as RequestBody;
@@ -45,9 +48,14 @@ export async function POST(req: Request) {
       ),
     });
     return result.toDataStreamResponse();
-  } catch (error) {
-    console.log(error);
-    return NextResponse.json({ error: "error" }, { status: 500 });
+  } catch (error: unknown) {
+    console.error(error);
+    return NextResponse.json(
+      {
+        message: `Error getting chat response.`,
+      },
+      { status: 500 },
+    );
   }
 }
 

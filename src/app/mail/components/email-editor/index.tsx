@@ -1,59 +1,23 @@
 "use client";
 
-import { api } from "@/trpc/react";
-import React, { useEffect } from "react";
-import { useLocalStorage } from "usehooks-ts";
-import { EditorContent, useEditor } from "@tiptap/react";
+import React from "react";
+import { EditorContent, isMacOS, useEditor } from "@tiptap/react";
 import { StarterKit } from "@tiptap/starter-kit";
 import Text from "@tiptap/extension-text";
 import TipTapMenuBar from "./menu-bar";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
-import TagInput from "./tag-input";
-import { Input } from "@/components/ui/input";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
-import AIComposeButton from "./ai-compose-button";
-import { autoComplete, composeEmail, polishText, replyToEmail } from "./action";
+import { autoComplete } from "./action";
 import { cn } from "@/lib/utils";
 import { useThread } from "../../use-thread";
 import useThreads from "../../use-threads";
 import { turndown } from "@/lib/turndown";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
-import {
-  BookType,
-  BotMessageSquare,
-  MessageSquareDiff,
-  MessageSquareQuote,
-  MessageSquareReply,
-  MessageSquareText,
-} from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import { Textarea } from "@/components/ui/textarea";
-import useIsClickOutside from "@/hooks/use-click-outside";
 import useOutsideClick from "@/hooks/use-click-outside";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { useAtom } from "jotai";
-import { templatesAtom } from "@/lib/atoms";
-import { Template } from "@/lib/types";
+import SendInputs from "./send-inputs";
+import AIMenuBar from "../mail-dashboard/components/ai-menu-bar";
+import MailTemplatesSelect from "./mail-template-select";
 
 type EmailEditorProps = {
   toValues: { label: string; value: string }[];
@@ -69,6 +33,8 @@ type EmailEditorProps = {
   onCcChange: (values: { label: string; value: string }[]) => void;
 
   defaultToolbarExpand?: boolean;
+
+  isReplyBox?: boolean;
 };
 
 const EmailEditor = ({
@@ -81,19 +47,16 @@ const EmailEditor = ({
   onToChange,
   onCcChange,
   defaultToolbarExpand,
+  isReplyBox = false,
 }: EmailEditorProps) => {
   const [ref] = useAutoAnimate();
-  const [accountId] = useLocalStorage("accountId", "");
-  const { data: suggestions } = api.mail.getEmailSuggestions.useQuery(
-    { accountId: accountId, query: "" },
-    { enabled: !!accountId },
-  );
+
   const [value, setValue] = React.useState("");
 
   const [expanded, setExpanded] = React.useState(defaultToolbarExpand ?? false);
 
   const [generation, setGeneration] = React.useState("");
-  const { threads, account } = useThreads();
+  const { threads } = useThreads();
   const [threadId] = useThread();
   const thread = threads?.find((t) => t.id === threadId);
 
@@ -113,37 +76,16 @@ const EmailEditor = ({
     }
   };
 
-  const replyAI = async (_prompt: string) => {
-    const context = thread?.emails
-      .map(
-        (m) =>
-          `Subject: ${m.subject}\nFrom: ${m.from.address}\n\n${turndown.turndown(m.body ?? m.bodySnippet ?? "")}`,
-      )
-      .join("\n");
-    const textStream = replyToEmail(
-      [
-        context ?? "",
-        account &&
-          `user's data is:
-            - name ${account.name}
-            - email ${account.email}
-      `,
-      ].join("\n"),
-      _prompt,
-    );
-
-    for await (const textPart of await textStream) {
-      if (textPart) {
-        setGeneration(textPart);
-      }
-    }
-  };
-
-  // TODO Handle MacOS
   const customText = Text.extend({
     addKeyboardShortcuts() {
       return {
         "Alt-a": () => {
+          (async () => {
+            await autocompleteAI(this.editor.getText());
+          })().catch((error: Error) => console.error("error", error.message));
+          return true;
+        },
+        "Meta-a": () => {
           (async () => {
             await autocompleteAI(this.editor.getText());
           })().catch((error: Error) => console.error("error", error.message));
@@ -156,7 +98,6 @@ const EmailEditor = ({
   const editor = useEditor({
     autofocus: false,
     extensions: [StarterKit, customText],
-    content: "",
     editorProps: {
       attributes: {
         placeholder: "Write your text here, if you need help use the AI tools",
@@ -196,60 +137,13 @@ const EmailEditor = ({
     editor.commands.insertContent(generation);
   }, [generation, editor]);
 
-  async function polishEmail(_prompt: string) {
-    const textStream = polishText(_prompt);
-    for await (const textPart of await textStream) {
-      if (textPart) {
-        setGeneration(textPart);
-      }
-    }
-  }
-
   const isMobile = useIsMobile();
-  const [prompt, setPrompt] = React.useState("");
-  const [open, setOpen] = React.useState(false);
-  const aiGenerate = async (_prompt: string) => {
-    let context: string | undefined = "";
-    if (defaultToolbarExpand) {
-      context = thread?.emails
-        .map(
-          (m) =>
-            `Subject: ${m.subject}\nFrom: ${m.from.address}\n\n${turndown.turndown(m.body ?? m.bodySnippet ?? "")}`,
-        )
-        .join("\n");
-    }
 
-    const textStream = composeEmail(
-      [
-        context ?? "",
-        account &&
-          `user data is {name:${account.name}, email:${account.email}}`,
-      ].join("\n"),
-      _prompt,
-      account!.id,
-    );
-    for await (const textPart of await textStream) {
-      if (textPart) {
-        setGeneration(textPart);
-      }
-    }
-  };
   const handleClickOutside = () => {
     if (!defaultToolbarExpand) setExpanded(false);
   };
   const clickOutsideRef = useOutsideClick(handleClickOutside);
 
-  const [templates, setTemplates] = useAtom(templatesAtom);
-  const {
-    data: fetchedTemplates,
-    isLoading,
-    error,
-  } = api.template.getTemplates.useQuery<Template[]>();
-  useEffect(() => {
-    if (fetchedTemplates) {
-      setTemplates(fetchedTemplates);
-    }
-  }, [fetchedTemplates, setTemplates]);
   return (
     <div
       ref={clickOutsideRef}
@@ -260,31 +154,14 @@ const EmailEditor = ({
     >
       <div ref={ref} className="space-y-2 p-4">
         {(expanded || isMobile) && (
-          <>
-            <TagInput
-              suggestions={suggestions?.map((s) => s.address) ?? []}
-              value={toValues}
-              placeholder="Add tags"
-              label="To"
-              onChange={onToChange}
-            />
-            <TagInput
-              className="hidden md:flex"
-              suggestions={suggestions?.map((s) => s.address) ?? []}
-              value={ccValues}
-              placeholder="Add tags"
-              label="Cc"
-              onChange={onCcChange}
-            />
-            <Input
-              id="subject"
-              className="w-full"
-              placeholder="Subject"
-              value={subject}
-              onChange={(e) => setSubject(e.target.value)}
-              autoComplete="message-subject"
-            />
-          </>
+          <SendInputs
+            toValues={toValues}
+            ccValues={ccValues}
+            subject={subject}
+            setSubject={setSubject}
+            onToChange={onToChange}
+            onCcChange={onCcChange}
+          />
         )}
       </div>
       <div className="rounded border p-2">
@@ -295,121 +172,22 @@ const EmailEditor = ({
           )}
         >
           <span className="hidden flex-1 items-center md:inline-flex">
-            {editor && <TipTapMenuBar editor={editor} />}{" "}
+            {editor && <TipTapMenuBar editor={editor} />}
           </span>
           <span className="inline-flex gap-2 py-1">
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button
-                  onClick={() => autocompleteAI(editor?.getText() ?? "")}
-                  size="icon"
-                  variant={"outline"}
-                >
-                  <MessageSquareDiff className="size-5" />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>AI autocomplete</p>
-              </TooltipContent>
-            </Tooltip>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button
-                  onClick={async () => {
-                    const _prompt = editor?.getText() ?? "";
-                    editor?.commands.clearContent();
-                    await polishEmail(_prompt);
-                  }}
-                  size="icon"
-                  variant={"outline"}
-                >
-                  <MessageSquareText className="size-5" />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>AI improve</p>
-              </TooltipContent>
-            </Tooltip>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button
-                  onClick={async () => {
-                    const _prompt = editor?.getText() ?? "";
-                    editor?.commands.clearContent();
-                    await replyAI(_prompt);
-                  }}
-                  size="icon"
-                  variant={"outline"}
-                >
-                  <BotMessageSquare className="size-5" />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>AI reply</p>
-              </TooltipContent>
-            </Tooltip>
-            <Dialog open={open} onOpenChange={setOpen}>
-              <DialogTrigger asChild>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Button
-                      onClick={() => setOpen(true)}
-                      size="icon"
-                      variant={"outline"}
-                    >
-                      <MessageSquareQuote className="size-5" />
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>AI write</p>
-                  </TooltipContent>
-                </Tooltip>
-              </DialogTrigger>
-              <DialogContent>
-                <DialogHeader>
-                  <DialogTitle>AI Write</DialogTitle>
-                  <div className="h-2"></div>
-                  <Textarea
-                    placeholder="What would you like to write?"
-                    value={prompt}
-                    onChange={(e) => setPrompt(e.target.value)}
-                  />
-                  <div className="h-2"></div>
-                  <Button
-                    onClick={async () => {
-                      setOpen(false);
-                      setPrompt("");
-                      await aiGenerate(prompt);
-                    }}
-                  >
-                    Generate
-                  </Button>
-                </DialogHeader>
-              </DialogContent>
-            </Dialog>
+            <AIMenuBar
+              defaultToolbarExpand={defaultToolbarExpand}
+              editor={editor}
+              setGeneration={setGeneration}
+              isReplyBox={isReplyBox}
+            />
           </span>
-          <span className="ml-2 hidden w-1/5 self-center md:block">
-            <Select>
-              <SelectTrigger>
-                <SelectValue placeholder="Mail Templates" />
-              </SelectTrigger>
-              <SelectContent>
-                {templates.map((t) => (
-                  <SelectItem
-                    key={t.id}
-                    value={t.id}
-                    onClick={() => {
-                      editor?.commands.setContent(t.text);
-                    }}
-                  >
-                    {t.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+          <span className="ml-2 w-1/5 self-center">
+            <MailTemplatesSelect editor={editor} />
           </span>
           <span className="inline-flex flex-1 items-center justify-end md:hidden">
             <Button
+              aria-label="send"
               onClick={async () => {
                 editor?.commands.clearContent();
                 handleSend(value);
@@ -434,12 +212,13 @@ const EmailEditor = ({
           <span className="text-sm">
             Tip: Press{" "}
             <kbd className="rounded-lg border border-gray-200 bg-gray-100 px-2 py-1.5 text-xs font-semibold text-gray-800">
-              Alt + A
+              {`${isMacOS() ? "⌘" : "Alt"} + A`}
             </kbd>{" "}
             for AI autocomplete
           </span>
         </span>
         <Button
+          aria-label="send"
           onClick={async () => {
             editor?.commands.clearContent();
             handleSend(value);

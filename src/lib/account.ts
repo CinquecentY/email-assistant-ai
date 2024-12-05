@@ -1,6 +1,6 @@
 import { db } from "@/server/db";
 import axios from "axios";
-import { SyncResponse, EmailMessage, SyncUpdatedResponse } from "./types";
+import { type SyncResponse, type EmailMessage, type SyncUpdatedResponse } from "./types";
 import { syncEmailsToDatabase } from "./sync-to-db";
 
 const API_BASE_URL = "https://api.aurinko.io/v1";
@@ -80,7 +80,7 @@ class Account {
     pageToken?: string;
   }): Promise<SyncUpdatedResponse> {
     // console.log('getUpdatedEmails', { deltaToken, pageToken });
-    let params: Record<string, string> = {};
+    const params: Record<string, string> = {};
     if (deltaToken) {
       params.deltaToken = deltaToken;
     }

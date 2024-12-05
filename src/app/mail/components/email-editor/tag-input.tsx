@@ -39,14 +39,14 @@ const TagInput: React.FC<TagInputProps> = ({
       <span className="ml-3 text-sm text-gray-500">{label}</span>
       <Select
         value={value}
-        // @ts-expect-error
+        // @ts-expect-error the type 'MultiValue<{ label: string; value: string; }>' is 'readonly' and cannot be assigned to the mutable type '{ label: string; value: string; }[]'.
         onChange={onChange}
         className="w-full flex-1"
         isMulti
         onInputChange={setInput}
         defaultValue={defaultValues}
         placeholder={""}
-        // @ts-expect-error
+        // @ts-expect-error Types of property 'label' are incompatible. Because type 'Element' is not assignable to type 'string'.
         options={
           input
             ? options.concat({

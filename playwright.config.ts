@@ -8,7 +8,7 @@ import dotenv from "dotenv";
 import path from "path";
 dotenv.config({ path: path.resolve(".env") });
 
-const baseURL = process.env.NEXT_PUBLIC_URL ?? "http://127.0.0.1:3000";
+const baseURL = process.env.NEXT_PUBLIC_URL ?? "http://localhost:3000";
 
 /**
  * See https://playwright.dev/docs/test-configuration.

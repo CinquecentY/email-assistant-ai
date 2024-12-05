@@ -22,7 +22,10 @@ export const templateRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       const { userId } = await auth();
       if (!userId)
-        return NextResponse.json({ error: "UNAUTHORIZED" }, { status: 401 });
+        return NextResponse.json(
+          { message: "User not logged in" },
+          { status: 401 },
+        );
       return await ctx.db.template.create({
         data: {
           name: input.name,
@@ -36,7 +39,10 @@ export const templateRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       const { userId } = await auth();
       if (!userId)
-        return NextResponse.json({ error: "UNAUTHORIZED" }, { status: 401 });
+        return NextResponse.json(
+          { error: "User not logged in" },
+          { status: 401 },
+        );
       return await ctx.db.template.delete({
         where: {
           id: input.id,
@@ -49,7 +55,10 @@ export const templateRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       const { userId } = await auth();
       if (!userId)
-        return NextResponse.json({ error: "UNAUTHORIZED" }, { status: 401 });
+        return NextResponse.json(
+          { error: "User not logged in" },
+          { status: 401 },
+        );
       return await ctx.db.template.upsert({
         where: {
           id: input.id,
