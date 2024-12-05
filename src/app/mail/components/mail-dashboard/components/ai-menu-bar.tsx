@@ -15,14 +15,14 @@ import {
   MessageSquareQuote,
 } from "lucide-react";
 import React from "react";
-import { useThread } from "../../use-thread";
-import useThreads from "../../use-threads";
+import { useThread } from "../../../use-thread";
+import useThreads from "../../../use-threads";
 import {
   autoComplete,
   polishText,
   composeEmail,
   replyToEmail,
-} from "../email-editor/action";
+} from "../../email-editor/action";
 import {
   Tooltip,
   TooltipContent,

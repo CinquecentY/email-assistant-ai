@@ -3,49 +3,14 @@ import React, { Suspense } from "react";
 import SearchBar from "../../search-bar";
 import { Separator } from "@/components/ui/separator";
 import { useThread } from "@/app/mail/use-thread";
-import useThreads from "@/app/mail/use-threads";
-import { cn } from "@/lib/utils";
-import { format, formatDistanceToNow } from "date-fns";
-import DOMPurify from "dompurify";
-import EmailDisplay from "../../email-display";
-import ReplyBox from "../../reply-box";
-import { api } from "@/trpc/react";
 import { useAtom } from "jotai";
-import { useLocalStorage } from "usehooks-ts";
 import SearchDisplay from "../../search-display";
 import { isSearchingAtom } from "@/lib/atoms";
 import ThreadList from "./thread-list";
 import ThreadDisplay from "./thread-display";
 
 const MailDesktop = () => {
-  const { threads } = useThreads();
-
   const [threadId, setThreadId] = useThread();
-
-  const groupedThreads = threads?.reduce(
-    (acc, thread) => {
-      const date = format(thread.lastMessageDate ?? new Date(), "yyyy-MM-dd");
-      if (!acc[date]) {
-        acc[date] = [];
-      }
-      acc[date].push(thread);
-      return acc;
-    },
-    {} as Record<string, typeof threads>,
-  );
-
-  const _thread = threads?.find((t) => t.id === threadId);
-
-  const [accountId] = useLocalStorage("accountId", "");
-
-  const { data: foundThread } = api.mail.getThreadById.useQuery(
-    {
-      accountId: accountId,
-      threadId: threadId ?? "",
-    },
-    { enabled: !!!_thread && !!threadId },
-  );
-  const thread = _thread ?? foundThread;
 
   const [isSearching] = useAtom(isSearchingAtom);
 

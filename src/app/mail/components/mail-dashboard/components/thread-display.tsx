@@ -6,8 +6,7 @@ import EmailDisplay from "../../email-display";
 import { Separator } from "@/components/ui/separator";
 import dynamic from "next/dynamic";
 
-const ReplyBox = dynamic(() => import("../../reply-box"), {
-})
+const ReplyBox = dynamic(() => import("../../reply-box"), {});
 
 interface ThreadDisplayProps {
   threadId?: string;

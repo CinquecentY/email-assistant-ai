@@ -12,7 +12,7 @@ interface ThreadListProps {
 const ThreadList = ({ selectThreadHandle }: ThreadListProps) => {
   const { threads } = useThreads();
 
-  const [threadId, setThreadId] = useThread();
+  const [threadId] = useThread();
 
   const groupedThreads = threads?.reduce(
     (acc, thread) => {

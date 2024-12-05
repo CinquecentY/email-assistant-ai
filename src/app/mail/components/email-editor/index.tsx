@@ -28,7 +28,7 @@ import { useAtom } from "jotai";
 import { templatesAtom } from "@/lib/atoms";
 import { type Template } from "@/lib/types";
 import SendInputs from "./send-inputs";
-import AIMenuBar from "../mail-dashboard/ai-menu-bar";
+import AIMenuBar from "../mail-dashboard/components/ai-menu-bar";
 import MailTemplatesSelect from "./mail-template-select";
 
 type EmailEditorProps = {
