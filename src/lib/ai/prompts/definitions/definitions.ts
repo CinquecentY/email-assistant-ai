@@ -10,14 +10,6 @@ export const CLIENT_DEFINITION = [
         - client          Is currently a client
         - lead            Is currently a lead client
         - not interested  Is currently not interested for the moment`,
-  ` - createdAt    The timestamp when the Client was created, auto-generated as the current time.`,
-  ` - createdBy    Identifier of the user who created the Client.`,
-  ` - createdAt    The timestamp when the Client was created.`,
-  ` - createdBy    Identifier of the user who created the Client.`,
-  ` - Documents    A list of associated Documents related to the Client.`,
-  ` - Events       A list of associated Events related to the Client.`,
-  ` - History      A list of historical actions associated with the Client.`,
-  ` - Notes        A list of notes associated with the Client.`,
 ];
 
 export const DOCUMENT_DEFINITION = [
@@ -37,8 +29,6 @@ export const DOCUMENT_DEFINITION = [
         - sent    Document was send
         - draft   Document is in draft 
         - unpaid  Document is not paid `,
-  ` - createdAt  The timestamp when the Document was created, in DateTime format.`,
-  ` - createdBy  Identifier of the user who created the Document.`,
 ];
 
 export const EVENTS_DEFINITION = [

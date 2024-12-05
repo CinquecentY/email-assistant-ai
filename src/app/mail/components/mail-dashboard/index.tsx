@@ -25,13 +25,13 @@ const MailDashboard = () => {
   const [accountId, setAccountId] = useLocalStorage("accountId", "");
   const isMobile = useIsMobile();
 
-  React.useEffect(() => {
+ /* React.useEffect(() => {
     const accountIdParams = searchParams.get("accountId");
     if (accountIdParams && accountIdParams !== accountId) {
       setAccountId(accountIdParams);
       redirect("/mail");
     }
-  }, [accountId, searchParams, setAccountId]);
+  }, [accountId, searchParams, setAccountId]);*/
   return (
     <DashboardLayout>
       {isMobile ? <MailMobile /> : <MailDisplay />}

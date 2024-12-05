@@ -27,9 +27,9 @@ export class OramaManager {
     if (!account) throw new Error("Account not found");
 
     if (account.binaryIndex) {
-      this.orama = await restore("json", account.binaryIndex as any);
+      this.orama = await restore("json", account.binaryIndex as string);
     } else {
-      this.orama = await create({
+      this.orama = create({
         schema: {
           subject: "string",
           body: "string",
@@ -73,12 +73,7 @@ export class OramaManager {
       },
       similarity: 0.8,
       limit: numResults,
-      // hybridWeights: {
-      //     text: 0.8,
-      //     vector: 0.2,
-      // }
     });
-    // console.log(results.hits.map(hit => hit.document))
     return results;
   }
 
