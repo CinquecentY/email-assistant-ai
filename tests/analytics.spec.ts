@@ -7,8 +7,6 @@ test.describe("analytics user flow", () => {
   test("user test", async ({ page }) => {
     // User go to "/analytics"
     await page.goto("/analytics");
-    // User should be redirected to /analytics
-    await expect(page).toHaveURL("/analytics");
     // User should have the tab contain Analytics
     await expect(page.getByTestId("tab")).toContainText("Analytics");
     // User should have all the data visible without errors

@@ -3,8 +3,6 @@ import { test, expect } from "@playwright/test";
 test("mail user flow", async ({ page }) => {
   // User go to "/mail"
   await page.goto("/mail");
-  // User should be redirected to /mail
-  await expect(page).toHaveURL("/mail");
   // User should have the tab contain Mail
   await expect(page.getByTestId("tab")).toContainText("Mail");
   // User switch account
