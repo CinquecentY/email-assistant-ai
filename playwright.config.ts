@@ -101,9 +101,9 @@ export default defineConfig({
   ],
 
   /* Run your local dev server before starting the tests */
-  // webServer: {
-  //   command: "npm run start",
-  //   url: baseURL,
-  //   reuseExistingServer: !process.env.CI,
-  // },
+  webServer: {
+    command: "npx next start",
+    url: baseURL,
+    reuseExistingServer: !process.env.CI,
+  },
 });
