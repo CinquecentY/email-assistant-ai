@@ -9,10 +9,10 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
 import { cn } from "@/lib/utils";
-import { autoComplete } from "@/app/mail/components/email-editor/action";
-import TipTapMenuBar from "@/app/mail/components/email-editor/menu-bar";
+import { autoComplete } from "@/lib/ai/action";
+import TipTapMenuBar from "@/components/menu-bar";
 import { Label } from "@/components/ui/label";
-import AIMenuBar from "@/app/mail/components/mail-dashboard/components/ai-menu-bar";
+import AIMenuBar from "@/components/ai-menu-bar";
 
 type TemplateEditorProps = {
   name: string;

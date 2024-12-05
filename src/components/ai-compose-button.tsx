@@ -11,10 +11,10 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { MessageSquareQuote } from "lucide-react";
 import React from "react";
-import { useThread } from "../../use-thread";
-import useThreads from "../../use-threads";
+import { useThread } from "../app/mail/use-thread";
+import useThreads from "../app/mail/use-threads";
 import { Button } from "@/components/ui/button";
-import { composeEmail } from "./action";
+import { composeEmail } from "../lib/ai/action";
 import { turndown } from "@/lib/turndown";
 import {
   Tooltip,

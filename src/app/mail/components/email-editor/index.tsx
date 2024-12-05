@@ -4,11 +4,11 @@ import React from "react";
 import { EditorContent, isMacOS, useEditor } from "@tiptap/react";
 import { StarterKit } from "@tiptap/starter-kit";
 import Text from "@tiptap/extension-text";
-import TipTapMenuBar from "./menu-bar";
+import TipTapMenuBar from "../../../../components/menu-bar";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
-import { autoComplete } from "./action";
+import { autoComplete } from "../../../../lib/ai/action";
 import { cn } from "@/lib/utils";
 import { useThread } from "../../use-thread";
 import useThreads from "../../use-threads";
@@ -16,7 +16,7 @@ import { turndown } from "@/lib/turndown";
 import { useIsMobile } from "@/hooks/use-mobile";
 import useOutsideClick from "@/hooks/use-click-outside";
 import SendInputs from "./send-inputs";
-import AIMenuBar from "../mail-dashboard/components/ai-menu-bar";
+import AIMenuBar from "../../../../components/ai-menu-bar";
 import MailTemplatesSelect from "./mail-template-select";
 
 type EmailEditorProps = {
