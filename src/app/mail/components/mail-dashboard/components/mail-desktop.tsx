@@ -49,7 +49,7 @@ const MailDesktop = () => {
 
   const [isSearching] = useAtom(isSearchingAtom);
 
-  function selectThreadeHandle(id: string) {
+  function selectThreadHandle(id: string) {
     setThreadId(id);
   }
 
@@ -63,7 +63,7 @@ const MailDesktop = () => {
         </div>
         <Separator />
         <SearchBar />
-        <ThreadList selectThreadeHandle={selectThreadeHandle} />
+        <ThreadList selectThreadHandle={selectThreadHandle} />
       </ResizablePanel>
       <ResizableHandle />
       <ResizablePanel defaultSize={48} minSize={30} className="h-screen w-full">

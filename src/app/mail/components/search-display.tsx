@@ -7,7 +7,7 @@ import { useDebounceValue, useLocalStorage } from "usehooks-ts";
 import { useThread } from "../use-thread";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
-import { isSearchingAtom, searchValueAtom, tabAtom } from "@/lib/atoms";
+import { isSearchingAtom, mailTabAtom, searchValueAtom } from "@/lib/atoms";
 
 const SearchDisplay = () => {
   const [searchValue] = useAtom(searchValueAtom);
@@ -18,11 +18,11 @@ const SearchDisplay = () => {
   const [debouncedSearch] = useDebounceValue(searchValue, 500);
   const [accountId] = useLocalStorage("accountId", "");
 
-  const [, setTab] = useAtom(tabAtom);
+  const [, setTab] = useAtom(mailTabAtom);
   React.useEffect(() => {
     if (!debouncedSearch || !accountId) return;
     search.mutate({ accountId, query: debouncedSearch });
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debouncedSearch, accountId]);
 
   return (

@@ -2,9 +2,7 @@ import { Tabs, TabsContent } from "@/components/ui/tabs";
 import React, { Suspense } from "react";
 import { useThread } from "@/app/mail/use-thread";
 import useThreads from "@/app/mail/use-threads";
-import { cn } from "@/lib/utils";
-import { format, formatDistanceToNow } from "date-fns";
-import DOMPurify from "dompurify";
+import { format } from "date-fns";
 import { ResizablePanel } from "@/components/ui/resizable";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
@@ -12,15 +10,14 @@ import SearchBar from "../../search-bar";
 import { api } from "@/trpc/react";
 import { useAtom } from "jotai";
 import { useLocalStorage } from "usehooks-ts";
-import EmailDisplay from "../../email-display";
-import ReplyBox from "../../reply-box";
 import SearchDisplay from "../../search-display";
-import { isSearchingAtom, tabAtom } from "@/lib/atoms";
+import { isSearchingAtom, mailTabAtom } from "@/lib/atoms";
 import ThreadList from "./thread-list";
 import ThreadDisplay from "./thread-display";
+import { ArrowLeft } from "lucide-react";
 
 const MailMobile = () => {
-  const [tab, setTab] = useAtom(tabAtom);
+  const [tab, setTab] = useAtom(mailTabAtom);
 
   const { threads } = useThreads();
 
@@ -53,15 +50,15 @@ const MailMobile = () => {
 
   const [isSearching] = useAtom(isSearchingAtom);
 
-  function selectThreadeHandle(id: string) {
+  function selectThreadHandle(id: string) {
     setThreadId(id);
     setTab("threads");
   }
 
   return (
     <ResizablePanel>
-      <Tabs defaultValue="inbox" value={tab} className="h-screen">
-        <TabsContent value="inbox" className="h-full">
+      <Tabs defaultValue="mail" value={tab} className="h-screen">
+        <TabsContent value="mail" className="h-full">
           <div className="flex items-center gap-4 px-4 py-1">
             <h1 data-testid="tab" className="text-lg font-bold">
               Mail
@@ -72,18 +69,20 @@ const MailMobile = () => {
           {isSearching ? (
             <SearchDisplay />
           ) : (
-            <ThreadList selectThreadeHandle={selectThreadeHandle} />
+            <ThreadList selectThreadHandle={selectThreadHandle} />
           )}
         </TabsContent>
         <TabsContent value="threads" className="h-screen w-full">
-          <div className="flex min-h-11 items-center p-2">
+          <div className="flex min-h-11 items-center p-2 pb-0">
             <Button
               data-testid="switch-tab"
-              className={"h-7 md:hidden"}
+              className={
+                "h-7 rounded-b-none rounded-t-lg font-bold shadow md:hidden"
+              }
               variant={"outline"}
-              onClick={() => setTab("inbox")}
+              onClick={() => setTab("mail")}
             >
-              <h1 className="text-lg font-bold">Inbox</h1>
+              <ArrowLeft /> Mail
             </Button>
           </div>
           <Suspense>

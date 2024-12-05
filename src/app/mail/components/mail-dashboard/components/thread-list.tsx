@@ -6,10 +6,10 @@ import { format, formatDistanceToNow } from "date-fns";
 import DOMPurify from "dompurify";
 
 interface ThreadListProps {
-  selectThreadeHandle: (threadId: string) => void;
+  selectThreadHandle: (threadId: string) => void;
 }
 
-const ThreadList = ({ selectThreadeHandle }: ThreadListProps) => {
+const ThreadList = ({ selectThreadHandle }: ThreadListProps) => {
   const { threads } = useThreads();
 
   const [threadId, setThreadId] = useThread();
@@ -47,7 +47,7 @@ const ThreadList = ({ selectThreadeHandle }: ThreadListProps) => {
                 "relative flex h-auto flex-col items-start gap-2 rounded-lg border p-3 text-left text-sm transition-all",
               )}
               onClick={() => {
-                selectThreadeHandle(thread.id);
+                selectThreadHandle(thread.id);
               }}
             >
               <div className="flex w-full flex-col gap-1">
