@@ -44,37 +44,26 @@ const EmailDisplay = ({ email }: Props) => {
       ref={letterRef}
     >
       <div className="mb-4 flex w-full items-center justify-between gap-2">
-        {isMobile ? (
-          <div className="flex flex-col gap-2">
-            <div className="font-medium">{isMe ? "Me" : email.from.name}</div>
-            <div className="font-medium">{email.from.address}</div>
-          </div>
-        ) : (
-          <>
-            <span className="inline-flex gap-2">
-              <Avatar
-                name={email.from.name ?? email.from.address}
-                email={email.from.address}
-                size="35"
-                textSizeRatio={2}
-                round={true}
-              />
-              <span>
-                <div className="line-clamp-1 font-medium">
-                  {isMe ? "Me" : email.from.name}
-                </div>
-                <div className="line-clamp-1 font-medium">
-                  {email.from.address}
-                </div>
-              </span>
-            </span>
-            <span className="text-xs text-muted-foreground">
-              {formatDistanceToNow(email.sentAt ?? new Date(), {
-                addSuffix: true,
-              })}
-            </span>
-          </>
-        )}
+        <span className="inline-flex max-w-[55%] gap-2">
+          <Avatar
+            name={email.from.name ?? email.from.address}
+            email={email.from.address}
+            size={"35"}
+            textSizeRatio={2}
+            round={true}
+          />
+          <span className="max-w-full">
+            <div className="truncate font-medium">
+              {isMe ? "Me" : email.from.name}
+            </div>
+            <div className="truncate font-medium">{email.from.address}</div>
+          </span>
+        </span>
+        <span className="text-xs text-muted-foreground">
+          {formatDistanceToNow(email.sentAt ?? new Date(), {
+            addSuffix: true,
+          })}
+        </span>
       </div>
       <Separator />
       <section className="w-full overflow-auto">
