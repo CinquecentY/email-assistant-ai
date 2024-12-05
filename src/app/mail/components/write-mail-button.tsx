@@ -16,7 +16,7 @@ import { useLocalStorage } from "usehooks-ts";
 import { toast } from "sonner";
 import useThreads from "../use-threads";
 
-const ComposeButton = () => {
+const WriteMailButton = () => {
   const [open, setOpen] = React.useState(false);
   const [accountId] = useLocalStorage("accountId", "");
   const [toValues, setToValues] = React.useState<
@@ -98,4 +98,4 @@ const ComposeButton = () => {
   );
 };
 
-export default ComposeButton;
+export default WriteMailButton;

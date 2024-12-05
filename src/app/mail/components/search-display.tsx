@@ -1,3 +1,7 @@
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+// hit.document : any 
 "use client";
 import DOMPurify from "dompurify";
 import { useAtom } from "jotai";

@@ -1,5 +1,5 @@
-import { AccountSwitch } from "@/app/mail/components/account-switch";
-import AskAI from "@/app/mail/components/ask-ai";
+import { AccountSwitch } from "@/components/account-switch";
+import AskAI from "@/components/ask-ai";
 import { cn } from "@/lib/utils";
 import React from "react";
 import {
@@ -10,7 +10,7 @@ import {
 import { useIsMobile } from "@/hooks/use-mobile";
 import { Separator } from "../ui/separator";
 import { useAtom } from "jotai";
-import Sidebar from "@/app/mail/components/sidebar";
+import Sidebar from "@/components/sidebar";
 import { isCollapsedAtom } from "@/lib/atoms";
 
 
