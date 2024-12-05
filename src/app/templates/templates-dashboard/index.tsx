@@ -10,7 +10,7 @@ const DashboardLayout = dynamic(
   () => import("@/components/layout/dashboard-layout"),
   {
     loading: () => (
-      <section className="flex min-h-screen items-center justify-center">
+      <section className="flex min-h-screen items-center bg-background justify-center">
         <Loader2 className="size-32 animate-spin" />
       </section>
     ),
