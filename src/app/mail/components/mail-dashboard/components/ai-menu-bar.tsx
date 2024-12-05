@@ -33,12 +33,14 @@ import { Button } from "@/components/ui/button";
 interface AIMenuBarProps {
   defaultToolbarExpand?: boolean;
   editor: Editor | null;
+  isReplyBox?: boolean;
   setGeneration: (text: string) => void;
 }
 
 const AIMenuBar = ({
   defaultToolbarExpand,
   editor,
+  isReplyBox = false,
   setGeneration,
 }: AIMenuBarProps) => {
   const { threads, account } = useThreads();
@@ -156,24 +158,26 @@ const AIMenuBar = ({
           <p>AI improve</p>
         </TooltipContent>
       </Tooltip>
-      <Tooltip>
-        <TooltipTrigger asChild>
-          <Button
-            onClick={async () => {
-              const _prompt = editor?.getText() ?? "";
-              editor?.commands.clearContent();
-              await replyAI(_prompt);
-            }}
-            size="icon"
-            variant={"outline"}
-          >
-            <BotMessageSquare className="size-5" />
-          </Button>
-        </TooltipTrigger>
-        <TooltipContent>
-          <p>AI reply</p>
-        </TooltipContent>
-      </Tooltip>
+      {isReplyBox && (
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              onClick={async () => {
+                const _prompt = editor?.getText() ?? "";
+                editor?.commands.clearContent();
+                await replyAI(_prompt);
+              }}
+              size="icon"
+              variant={"outline"}
+            >
+              <BotMessageSquare className="size-5" />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>AI reply</p>
+          </TooltipContent>
+        </Tooltip>
+      )}
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
           <Tooltip>

@@ -1,32 +1,20 @@
 "use client";
 
-import { api } from "@/trpc/react";
-import React, { useEffect } from "react";
-import { useLocalStorage } from "usehooks-ts";
-import { type Editor, EditorContent, useEditor } from "@tiptap/react";
+import React from "react";
+import { EditorContent, isMacOS, useEditor } from "@tiptap/react";
 import { StarterKit } from "@tiptap/starter-kit";
 import Text from "@tiptap/extension-text";
 import TipTapMenuBar from "./menu-bar";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
-import { autoComplete, composeEmail, polishText, replyToEmail } from "./action";
+import { autoComplete } from "./action";
 import { cn } from "@/lib/utils";
 import { useThread } from "../../use-thread";
 import useThreads from "../../use-threads";
 import { turndown } from "@/lib/turndown";
 import { useIsMobile } from "@/hooks/use-mobile";
 import useOutsideClick from "@/hooks/use-click-outside";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { useAtom } from "jotai";
-import { templatesAtom } from "@/lib/atoms";
-import { type Template } from "@/lib/types";
 import SendInputs from "./send-inputs";
 import AIMenuBar from "../mail-dashboard/components/ai-menu-bar";
 import MailTemplatesSelect from "./mail-template-select";
@@ -45,6 +33,8 @@ type EmailEditorProps = {
   onCcChange: (values: { label: string; value: string }[]) => void;
 
   defaultToolbarExpand?: boolean;
+
+  isReplyBox?: boolean;
 };
 
 const EmailEditor = ({
@@ -57,19 +47,16 @@ const EmailEditor = ({
   onToChange,
   onCcChange,
   defaultToolbarExpand,
+  isReplyBox = false,
 }: EmailEditorProps) => {
   const [ref] = useAutoAnimate();
-  const [accountId] = useLocalStorage("accountId", "");
-  const { data: suggestions } = api.mail.getEmailSuggestions.useQuery(
-    { accountId: accountId, query: "" },
-    { enabled: !!accountId },
-  );
+
   const [value, setValue] = React.useState("");
 
   const [expanded, setExpanded] = React.useState(defaultToolbarExpand ?? false);
 
   const [generation, setGeneration] = React.useState("");
-  const { threads, account } = useThreads();
+  const { threads } = useThreads();
   const [threadId] = useThread();
   const thread = threads?.find((t) => t.id === threadId);
 
@@ -89,37 +76,17 @@ const EmailEditor = ({
     }
   };
 
-  const replyAI = async (_prompt: string) => {
-    const context = thread?.emails
-      .map(
-        (m) =>
-          `Subject: ${m.subject}\nFrom: ${m.from.address}\n\n${turndown.turndown(m.body ?? m.bodySnippet ?? "")}`,
-      )
-      .join("\n");
-    const textStream = replyToEmail(
-      [
-        context ?? "",
-        account &&
-          `user's data is:
-            - name ${account.name}
-            - email ${account.email}
-      `,
-      ].join("\n"),
-      _prompt,
-    );
-
-    for await (const textPart of await textStream) {
-      if (textPart) {
-        setGeneration(textPart);
-      }
-    }
-  };
-
   // TODO Handle MacOS
   const customText = Text.extend({
     addKeyboardShortcuts() {
       return {
         "Alt-a": () => {
+          (async () => {
+            await autocompleteAI(this.editor.getText());
+          })().catch((error: Error) => console.error("error", error.message));
+          return true;
+        },
+        "Meta-a": () => {
           (async () => {
             await autocompleteAI(this.editor.getText());
           })().catch((error: Error) => console.error("error", error.message));
@@ -172,44 +139,8 @@ const EmailEditor = ({
     editor.commands.insertContent(generation);
   }, [generation, editor]);
 
-  async function polishEmail(_prompt: string) {
-    const textStream = polishText(_prompt);
-    for await (const textPart of await textStream) {
-      if (textPart) {
-        setGeneration(textPart);
-      }
-    }
-  }
-
   const isMobile = useIsMobile();
-  const [prompt, setPrompt] = React.useState("");
-  const [open, setOpen] = React.useState(false);
-  const aiGenerate = async (_prompt: string) => {
-    let context: string | undefined = "";
-    if (defaultToolbarExpand) {
-      context = thread?.emails
-        .map(
-          (m) =>
-            `Subject: ${m.subject}\nFrom: ${m.from.address}\n\n${turndown.turndown(m.body ?? m.bodySnippet ?? "")}`,
-        )
-        .join("\n");
-    }
 
-    const textStream = composeEmail(
-      [
-        context ?? "",
-        account &&
-          `user data is {name:${account.name}, email:${account.email}}`,
-      ].join("\n"),
-      _prompt,
-      account!.id,
-    );
-    for await (const textPart of await textStream) {
-      if (textPart) {
-        setGeneration(textPart);
-      }
-    }
-  };
   const handleClickOutside = () => {
     if (!defaultToolbarExpand) setExpanded(false);
   };
@@ -250,6 +181,7 @@ const EmailEditor = ({
               defaultToolbarExpand={defaultToolbarExpand}
               editor={editor}
               setGeneration={setGeneration}
+              isReplyBox={isReplyBox}
             />
           </span>
           <span className="ml-2 hidden w-1/5 self-center md:block">
@@ -281,7 +213,7 @@ const EmailEditor = ({
           <span className="text-sm">
             Tip: Press{" "}
             <kbd className="rounded-lg border border-gray-200 bg-gray-100 px-2 py-1.5 text-xs font-semibold text-gray-800">
-              Alt + A
+              {`${isMacOS() ? "⌘" : "Alt"} + A`}
             </kbd>{" "}
             for AI autocomplete
           </span>

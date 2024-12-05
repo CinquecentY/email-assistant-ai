@@ -119,6 +119,7 @@ const Component = ({
       to={toValues.map((to) => to.value)}
       handleSend={handleSend}
       isSending={sendEmail.isPending}
+      isReplyBox={true}
     />
   );
 };

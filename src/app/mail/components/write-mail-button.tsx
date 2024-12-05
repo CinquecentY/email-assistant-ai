@@ -73,7 +73,7 @@ const WriteMailButton = () => {
           <p className="hidden md:block">New Email</p>
         </Button>
       </DrawerTrigger>
-      <DrawerContent className="">
+      <DrawerContent>
         <DrawerHeader>
           <DrawerTitle>New Email</DrawerTitle>
           <EmailEditor

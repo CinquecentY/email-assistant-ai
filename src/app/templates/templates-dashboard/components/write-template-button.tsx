@@ -37,22 +37,18 @@ const WriteTemplateButton = () => {
           <p className="hidden md:block">New Template</p>
         </Button>
       </DrawerTrigger>
-      <DrawerContent className="h-[60svh]" data-testid="new-template-drawer">
-        <section className="max-h-[50svh]">
-          <DrawerHeader>
-            <DrawerTitle>New Template</DrawerTitle>
-          </DrawerHeader>
-          <div className="h-full">
-            <TemplateEditor
-              name=""
-              text=""
-              handleSave={(name, text) =>
-                addTemplate({ id: "", name, text, updatedDate: new Date() })
-              }
-              isSaving={false}
-            />
-          </div>
-        </section>
+      <DrawerContent>
+        <DrawerHeader>
+          <DrawerTitle>New Template</DrawerTitle>
+          <TemplateEditor
+            name=""
+            text=""
+            handleSave={(name, text) =>
+              addTemplate({ id: "", name, text, updatedDate: new Date() })
+            }
+            isSaving={false}
+          />
+        </DrawerHeader>
       </DrawerContent>
     </Drawer>
   );
