@@ -4,32 +4,32 @@ import { useAtom } from "jotai";
 import React from "react";
 import { api } from "@/trpc/react";
 import { useDebounceValue, useLocalStorage } from "usehooks-ts";
-import useThreads from "../use-threads";
 import { useThread } from "../use-thread";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
 import { isSearchingAtom, searchValueAtom, tabAtom } from "@/lib/atoms";
 
 const SearchDisplay = () => {
-  const [searchValue, setSearchValue] = useAtom(searchValueAtom);
-  const [isSearching, setIsSearching] = useAtom(isSearchingAtom);
-  const [_, setThreadId] = useThread();
+  const [searchValue] = useAtom(searchValueAtom);
+  const [, setIsSearching] = useAtom(isSearchingAtom);
+  const [, setThreadId] = useThread();
   const search = api.search.search.useMutation();
 
   const [debouncedSearch] = useDebounceValue(searchValue, 500);
-  const [accountId, setAccountId] = useLocalStorage("accountId", "");
+  const [accountId] = useLocalStorage("accountId", "");
 
-  const [tab, setTab] = useAtom(tabAtom);
+  const [, setTab] = useAtom(tabAtom);
   React.useEffect(() => {
     if (!debouncedSearch || !accountId) return;
     search.mutate({ accountId, query: debouncedSearch });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debouncedSearch, accountId]);
 
   return (
     <div className="max-h-[calc(100vh-50px)] overflow-y-auto bg-background p-4">
       <div className="mb-4 flex items-center gap-2">
         <h2 className="text-sm text-gray-600 dark:text-gray-400">
-          Your search for "{searchValue}" came back with...
+          Your search for &quot;{searchValue}&quot; came back with...
         </h2>
         {search.isPending && (
           <Loader2 className="size-4 animate-spin text-gray-400" />
