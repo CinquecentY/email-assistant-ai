@@ -3,7 +3,6 @@
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -22,20 +21,20 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 
-type Props = {
+type AIWriteButtonProps = {
   onGenerate: (value: string) => void;
   isComposing?: boolean;
 };
 
-const AIComposeButton = (props: Props) => {
+const AIWriteButton = ({ isComposing, onGenerate }: AIWriteButtonProps) => {
   const [prompt, setPrompt] = React.useState("");
   const [open, setOpen] = React.useState(false);
   const { account, threads } = useThreads();
   const [threadId] = useThread();
   const thread = threads?.find((t) => t.id === threadId);
-  const aiGenerate = async (prompt: string) => {
+  const aiWrite = async (prompt: string) => {
     let context: string | undefined = "";
-    if (!props.isComposing) {
+    if (!isComposing) {
       context = thread?.emails
         .map(
           (m) =>
@@ -55,7 +54,7 @@ const AIComposeButton = (props: Props) => {
     );
     for await (const textPart of await textStream) {
       if (textPart) {
-        props.onGenerate(textPart);
+        onGenerate(textPart);
       }
     }
   };
@@ -81,13 +80,9 @@ const AIComposeButton = (props: Props) => {
       <DialogContent>
         <DialogHeader>
           <DialogTitle>AI Compose</DialogTitle>
-          <DialogDescription>
-            Unleash the full power of AI! AI will compose an email based on the
-            context of your previous emails.
-          </DialogDescription>
           <div className="h-2"></div>
           <Textarea
-            placeholder="What would you like to compose?"
+            placeholder="What would you like to write?"
             value={prompt}
             onChange={(e) => setPrompt(e.target.value)}
           />
@@ -95,7 +90,7 @@ const AIComposeButton = (props: Props) => {
           <Button
             aria-label="generate"
             onClick={async () => {
-              await aiGenerate(prompt);
+              await aiWrite(prompt);
               setOpen(false);
               setPrompt("");
             }}
@@ -108,4 +103,4 @@ const AIComposeButton = (props: Props) => {
   );
 };
 
-export default AIComposeButton;
+export default AIWriteButton;
