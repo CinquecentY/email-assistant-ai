@@ -3,40 +3,19 @@
 import { api } from "@/trpc/react";
 import React, { useEffect } from "react";
 import { useLocalStorage } from "usehooks-ts";
-import { EditorContent, useEditor } from "@tiptap/react";
+import { type Editor, EditorContent, useEditor } from "@tiptap/react";
 import { StarterKit } from "@tiptap/starter-kit";
 import Text from "@tiptap/extension-text";
 import TipTapMenuBar from "./menu-bar";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
-import TagInput from "./tag-input";
-import { Input } from "@/components/ui/input";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
 import { autoComplete, composeEmail, polishText, replyToEmail } from "./action";
 import { cn } from "@/lib/utils";
 import { useThread } from "../../use-thread";
 import useThreads from "../../use-threads";
 import { turndown } from "@/lib/turndown";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
-import {
-  BotMessageSquare,
-  MessageSquareDiff,
-  MessageSquareQuote,
-  MessageSquareText,
-} from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import { Textarea } from "@/components/ui/textarea";
 import useOutsideClick from "@/hooks/use-click-outside";
 import {
   Select,
@@ -48,6 +27,9 @@ import {
 import { useAtom } from "jotai";
 import { templatesAtom } from "@/lib/atoms";
 import { type Template } from "@/lib/types";
+import SendInputs from "./send-inputs";
+import AIMenuBar from "../mail-dashboard/ai-menu-bar";
+import MailTemplatesSelect from "./mail-template-select";
 
 type EmailEditorProps = {
   toValues: { label: string; value: string }[];
@@ -233,15 +215,6 @@ const EmailEditor = ({
   };
   const clickOutsideRef = useOutsideClick(handleClickOutside);
 
-  const [templates, setTemplates] = useAtom(templatesAtom);
-  const {
-    data: fetchedTemplates,
-  } = api.template.getTemplates.useQuery<Template[]>();
-  useEffect(() => {
-    if (fetchedTemplates) {
-      setTemplates(fetchedTemplates);
-    }
-  }, [fetchedTemplates, setTemplates]);
   return (
     <div
       ref={clickOutsideRef}
@@ -252,31 +225,14 @@ const EmailEditor = ({
     >
       <div ref={ref} className="space-y-2 p-4">
         {(expanded || isMobile) && (
-          <>
-            <TagInput
-              suggestions={suggestions?.map((s) => s.address) ?? []}
-              value={toValues}
-              placeholder="Add tags"
-              label="To"
-              onChange={onToChange}
-            />
-            <TagInput
-              className="hidden md:flex"
-              suggestions={suggestions?.map((s) => s.address) ?? []}
-              value={ccValues}
-              placeholder="Add tags"
-              label="Cc"
-              onChange={onCcChange}
-            />
-            <Input
-              id="subject"
-              className="w-full"
-              placeholder="Subject"
-              value={subject}
-              onChange={(e) => setSubject(e.target.value)}
-              autoComplete="message-subject"
-            />
-          </>
+          <SendInputs
+            toValues={toValues}
+            ccValues={ccValues}
+            subject={subject}
+            setSubject={setSubject}
+            onToChange={onToChange}
+            onCcChange={onCcChange}
+          />
         )}
       </div>
       <div className="rounded border p-2">
@@ -287,118 +243,17 @@ const EmailEditor = ({
           )}
         >
           <span className="hidden flex-1 items-center md:inline-flex">
-            {editor && <TipTapMenuBar editor={editor} />}{" "}
+            {editor && <TipTapMenuBar editor={editor} />}
           </span>
           <span className="inline-flex gap-2 py-1">
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button
-                  onClick={() => autocompleteAI(editor?.getText() ?? "")}
-                  size="icon"
-                  variant={"outline"}
-                >
-                  <MessageSquareDiff className="size-5" />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>AI autocomplete</p>
-              </TooltipContent>
-            </Tooltip>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button
-                  onClick={async () => {
-                    const _prompt = editor?.getText() ?? "";
-                    editor?.commands.clearContent();
-                    await polishEmail(_prompt);
-                  }}
-                  size="icon"
-                  variant={"outline"}
-                >
-                  <MessageSquareText className="size-5" />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>AI improve</p>
-              </TooltipContent>
-            </Tooltip>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button
-                  onClick={async () => {
-                    const _prompt = editor?.getText() ?? "";
-                    editor?.commands.clearContent();
-                    await replyAI(_prompt);
-                  }}
-                  size="icon"
-                  variant={"outline"}
-                >
-                  <BotMessageSquare className="size-5" />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>AI reply</p>
-              </TooltipContent>
-            </Tooltip>
-            <Dialog open={open} onOpenChange={setOpen}>
-              <DialogTrigger asChild>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Button
-                      onClick={() => setOpen(true)}
-                      size="icon"
-                      variant={"outline"}
-                    >
-                      <MessageSquareQuote className="size-5" />
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>AI write</p>
-                  </TooltipContent>
-                </Tooltip>
-              </DialogTrigger>
-              <DialogContent>
-                <DialogHeader>
-                  <DialogTitle>AI Write</DialogTitle>
-                  <div className="h-2"></div>
-                  <Textarea
-                    placeholder="What would you like to write?"
-                    value={prompt}
-                    onChange={(e) => setPrompt(e.target.value)}
-                  />
-                  <div className="h-2"></div>
-                  <Button
-                    onClick={async () => {
-                      setOpen(false);
-                      setPrompt("");
-                      await aiGenerate(prompt);
-                    }}
-                  >
-                    Generate
-                  </Button>
-                </DialogHeader>
-              </DialogContent>
-            </Dialog>
+            <AIMenuBar
+              defaultToolbarExpand={defaultToolbarExpand}
+              editor={editor}
+              setGeneration={setGeneration}
+            />
           </span>
           <span className="ml-2 hidden w-1/5 self-center md:block">
-            <Select>
-              <SelectTrigger>
-                <SelectValue placeholder="Mail Templates" />
-              </SelectTrigger>
-              <SelectContent>
-                {templates.map((t) => (
-                  <SelectItem
-                    key={t.id}
-                    value={t.id}
-                    onClick={() => {
-                      editor?.commands.setContent(t.text);
-                    }}
-                  >
-                    {t.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            <MailTemplatesSelect editor={editor} />
           </span>
           <span className="inline-flex flex-1 items-center justify-end md:hidden">
             <Button
