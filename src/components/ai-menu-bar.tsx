@@ -35,6 +35,8 @@ interface AIMenuBarProps {
   editor: Editor | null;
   isReplyBox?: boolean;
   setGeneration: (text: string) => void;
+  isLoading: boolean;
+  setIsLoading: (isLoading: boolean) => void;
 }
 
 const AIMenuBar = ({
@@ -42,12 +44,15 @@ const AIMenuBar = ({
   editor,
   isReplyBox = false,
   setGeneration,
+  isLoading = false,
+  setIsLoading,
 }: AIMenuBarProps) => {
   const { threads, account } = useThreads();
   const [threadId] = useThread();
   const thread = threads?.find((t) => t.id === threadId);
 
   const autocompleteAI = async (_prompt: string) => {
+    if (isLoading) return;
     const context = thread?.emails
       .map(
         (m) =>
@@ -61,19 +66,25 @@ const AIMenuBar = ({
         setGeneration(textPart);
       }
     }
+    setIsLoading(false);
   };
 
   async function polishEmail(_prompt: string) {
+    if (isLoading) return;
     const textStream = polishText(_prompt);
     for await (const textPart of await textStream) {
       if (textPart) {
         setGeneration(textPart);
       }
     }
+    setIsLoading(false);
   }
   const [prompt, setPrompt] = React.useState("");
   const [open, setOpen] = React.useState(false);
-  const aiGenerate = async (_prompt: string) => {
+
+  async function aiWrite(_prompt: string) {
+    if (isLoading) return;
+
     let context: string | undefined = "";
     if (defaultToolbarExpand) {
       context = thread?.emails
@@ -98,8 +109,11 @@ const AIMenuBar = ({
         setGeneration(textPart);
       }
     }
-  };
-  const replyAI = async (_prompt: string) => {
+    setIsLoading(false);
+  }
+  async function replyAI(_prompt: string) {
+    if (isLoading) return;
+
     const context = thread?.emails
       .map(
         (m) =>
@@ -123,7 +137,8 @@ const AIMenuBar = ({
         setGeneration(textPart);
       }
     }
-  };
+    setIsLoading(false);
+  }
   return (
     <>
       <Tooltip>
@@ -214,7 +229,7 @@ const AIMenuBar = ({
               onClick={async () => {
                 setOpen(false);
                 setPrompt("");
-                await aiGenerate(prompt);
+                await aiWrite(prompt);
               }}
             >
               Generate
