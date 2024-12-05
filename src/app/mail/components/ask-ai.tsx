@@ -91,7 +91,7 @@ const AskAI = ({ isCollapsed }: { isCollapsed: boolean }) => {
                 >
                   What can I ask?
                 </button>
-                <span className="inline-flex w-full justify-end">
+                <span className="inline-flex w-full justify-end md:block md:w-auto">
                   <button
                     onClick={() =>
                       setInput("What can you tell me about my emails?")
