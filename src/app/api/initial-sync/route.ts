@@ -27,12 +27,12 @@ export const POST = async (req: NextRequest) => {
     },
   });
   if (!dbAccount)
-    return NextResponse.json({ error: "ACCOUNT_NOT_FOUND" }, { status: 404 });
+    return NextResponse.json({ message: "ACCOUNT_NOT_FOUND" }, { status: 404 });
 
   const account = new Account(dbAccount.token);
   const response = await account.performInitialSync();
   if (!response)
-    return NextResponse.json({ error: "FAILED_TO_SYNC" }, { status: 500 });
+    return NextResponse.json({ message: "FAILED_TO_SYNC" }, { status: 500 });
 
   const { deltaToken, emails } = response;
 
