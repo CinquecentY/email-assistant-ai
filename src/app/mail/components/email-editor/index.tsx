@@ -17,7 +17,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import useOutsideClick from "@/hooks/use-click-outside";
 import SendInputs from "./send-inputs";
 import AIMenuBar from "../../../../components/ai-menu-bar";
-import MailTemplatesSelect from "./mail-template-select";
+import MailTemplatesMenu from "./mail-template-menu";
 
 type EmailEditorProps = {
   toValues: { label: string; value: string }[];
@@ -187,7 +187,7 @@ const EmailEditor = ({
             />
           </span>
           <span className="ml-2 w-1/5 self-center">
-            <MailTemplatesSelect editor={editor} />
+            <MailTemplatesMenu editor={editor} />
           </span>
           <span className="inline-flex flex-1 items-center justify-end md:hidden">
             <Button
