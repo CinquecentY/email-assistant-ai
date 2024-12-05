@@ -13,19 +13,25 @@ const transitionDebug = {
 };
 const AskAI = ({ isCollapsed }: { isCollapsed: boolean }) => {
   const [accountId] = useLocalStorage("accountId", "");
-  const { input, handleInputChange, setInput, handleSubmit, messages } =
-    useChat({
-      api: "/api/chat",
-      body: {
-        accountId,
-      },
-      onError: (error) => {
-        toast.error("Error", {
-          description: error.message,
-        });
-      },
-      initialMessages: [],
-    });
+  const {
+    input,
+    handleInputChange,
+    setInput,
+    handleSubmit,
+    isLoading,
+    messages,
+  } = useChat({
+    api: "/api/chat",
+    body: {
+      accountId,
+    },
+    onError: (error) => {
+      toast.error("Error", {
+        description: error.message,
+      });
+    },
+    initialMessages: [],
+  });
   React.useEffect(() => {
     const messageContainer = document.getElementById("message-container");
     if (messageContainer) {
@@ -39,7 +45,7 @@ const AskAI = ({ isCollapsed }: { isCollapsed: boolean }) => {
   if (isCollapsed) return null;
   return (
     <div>
-      <motion.div className="flex flex-1 flex-col items-end justify-end rounded-lg border bg-gray-100 p-4 pb-4 shadow-inner dark:bg-gray-900">
+      <motion.div className={cn(isLoading && "animate-pulse","flex flex-1 flex-col items-end justify-end rounded-lg border bg-gray-100 p-4 pb-4 shadow-inner dark:bg-gray-900")}>
         <div
           className="flex max-h-[50vh] w-full flex-col gap-2 overflow-y-auto"
           id="message-container"
