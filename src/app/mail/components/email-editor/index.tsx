@@ -60,6 +60,8 @@ const EmailEditor = ({
   const [threadId] = useThread();
   const thread = threads?.find((t) => t.id === threadId);
 
+  const [isLoading, setIsLoading] = React.useState(false);
+
   const autocompleteAI = async (_prompt: string) => {
     const context = thread?.emails
       .map(
@@ -180,6 +182,8 @@ const EmailEditor = ({
               editor={editor}
               setGeneration={setGeneration}
               isReplyBox={isReplyBox}
+              isLoading={isLoading}
+              setIsLoading={setIsLoading}
             />
           </span>
           <span className="ml-2 w-1/5 self-center">
@@ -198,7 +202,12 @@ const EmailEditor = ({
             </Button>
           </span>
         </div>
-        <div className="prose max-h-[25svh] w-full overflow-y-auto rounded-md border px-4 py-2">
+        <div
+          className={cn(
+            isLoading && "animate-pulse",
+            "prose max-h-[25svh] w-full overflow-y-auto rounded-md border px-4 py-2",
+          )}
+        >
           <EditorContent
             value={value}
             editor={editor}
@@ -223,7 +232,7 @@ const EmailEditor = ({
             editor?.commands.clearContent();
             handleSend(value);
           }}
-          disabled={isSending}
+          disabled={isLoading}
         >
           Send
         </Button>
