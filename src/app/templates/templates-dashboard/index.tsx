@@ -26,5 +26,4 @@ const TemplatesDashboard = () => {
     </DashboardLayout>
   );
 };
-// TODO Swap useLocalStorage with Cookies
 export default TemplatesDashboard;

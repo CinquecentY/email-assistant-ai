@@ -76,7 +76,6 @@ const EmailEditor = ({
     }
   };
 
-  // TODO Handle MacOS
   const customText = Text.extend({
     addKeyboardShortcuts() {
       return {
