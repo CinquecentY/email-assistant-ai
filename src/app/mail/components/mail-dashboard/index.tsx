@@ -3,7 +3,7 @@ import React from "react";
 import { useSearchParams, redirect } from "next/navigation";
 import { useLocalStorage } from "usehooks-ts";
 import { useIsMobile } from "@/hooks/use-mobile";
-import MailDisplay from "./components/mail-display";
+import MailDesktop from "./components/mail-desktop";
 import MailMobile from "./components/mail-mobile";
 import dynamic from "next/dynamic";
 
@@ -27,7 +27,7 @@ const MailDashboard = () => {
   }, [accountId, searchParams, setAccountId]);
   return (
     <DashboardLayout>
-      {isMobile ? <MailMobile /> : <MailDisplay />}
+      {isMobile ? <MailMobile /> : <MailDesktop />}
     </DashboardLayout>
   );
 };

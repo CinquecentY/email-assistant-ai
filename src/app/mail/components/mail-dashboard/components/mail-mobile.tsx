@@ -1,5 +1,5 @@
 import { Tabs, TabsContent } from "@/components/ui/tabs";
-import React from "react";
+import React, { Suspense } from "react";
 import { useThread } from "@/app/mail/use-thread";
 import useThreads from "@/app/mail/use-threads";
 import { cn } from "@/lib/utils";
@@ -17,6 +17,7 @@ import ReplyBox from "../../reply-box";
 import SearchDisplay from "../../search-display";
 import { isSearchingAtom, tabAtom } from "@/lib/atoms";
 import ThreadList from "./thread-list";
+import ThreadDisplay from "./thread-display";
 
 const MailMobile = () => {
   const [tab, setTab] = useAtom(tabAtom);
@@ -52,7 +53,7 @@ const MailMobile = () => {
 
   const [isSearching] = useAtom(isSearchingAtom);
 
-function selectThreadeHandle(id: string) {
+  function selectThreadeHandle(id: string) {
     setThreadId(id);
     setTab("threads");
   }
@@ -68,7 +69,11 @@ function selectThreadeHandle(id: string) {
           </div>
           <Separator />
           <SearchBar />
-          {isSearching ? <SearchDisplay /> : <ThreadList selectThreadeHandle={selectThreadeHandle} />}
+          {isSearching ? (
+            <SearchDisplay />
+          ) : (
+            <ThreadList selectThreadeHandle={selectThreadeHandle} />
+          )}
         </TabsContent>
         <TabsContent value="threads" className="h-screen w-full">
           <div className="flex min-h-11 items-center p-2">
@@ -81,39 +86,9 @@ function selectThreadeHandle(id: string) {
               <h1 className="text-lg font-bold">Inbox</h1>
             </Button>
           </div>
-          <article className="h-full max-h-[calc(100vh-50px)] w-full bg-background">
-            <>
-              {thread ? (
-                <div
-                  data-testid="thread"
-                  className="flex h-full max-h-full flex-col overflow-auto bg-background"
-                >
-                  <div
-                    data-testid="thread-subject"
-                    className="line-clamp-3 w-full p-4 font-bold"
-                  >
-                    {thread.subject}
-                  </div>
-                  <Separator />
-                  <div className="flex flex-1 flex-col overflow-auto">
-                    <div className="flex flex-col gap-4">
-                      {thread.emails.map((email) => {
-                        return <EmailDisplay key={email.id} email={email} />;
-                      })}
-                    </div>
-                  </div>
-                  <Separator />
-                  <ReplyBox />
-                </div>
-              ) : (
-                <>
-                  <div className="h-full bg-background p-8 text-center text-muted-foreground">
-                    No message selected
-                  </div>
-                </>
-              )}
-            </>
-          </article>
+          <Suspense>
+            <ThreadDisplay threadId={threadId ?? ""} />
+          </Suspense>
         </TabsContent>
       </Tabs>
     </ResizablePanel>
