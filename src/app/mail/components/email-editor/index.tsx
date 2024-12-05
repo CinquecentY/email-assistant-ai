@@ -98,7 +98,6 @@ const EmailEditor = ({
   const editor = useEditor({
     autofocus: false,
     extensions: [StarterKit, customText],
-    content: "",
     editorProps: {
       attributes: {
         placeholder: "Write your text here, if you need help use the AI tools",
@@ -183,7 +182,7 @@ const EmailEditor = ({
               isReplyBox={isReplyBox}
             />
           </span>
-          <span className="ml-2 hidden w-1/5 self-center md:block">
+          <span className="ml-2 w-1/5 self-center">
             <MailTemplatesSelect editor={editor} />
           </span>
           <span className="inline-flex flex-1 items-center justify-end md:hidden">

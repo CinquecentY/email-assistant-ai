@@ -1,3 +1,4 @@
+import { Button } from "@/components/ui/button";
 import {
   Select,
   SelectContent,
@@ -22,22 +23,25 @@ const MailTemplatesSelect = ({ editor }: { editor: Editor | null }) => {
       setTemplates(fetchedTemplates);
     }
   }, [fetchedTemplates, setTemplates]);
+  const [open, setOpen] = React.useState(false);
   return (
-    <Select>
-      <SelectTrigger>
+    <Select open={open}>
+      <SelectTrigger onClick={() => setOpen(true)}>
         <SelectValue placeholder="Mail Templates" />
       </SelectTrigger>
       <SelectContent>
-        {templates.map((t) => (
-          <SelectItem
-            key={t.id}
-            value={t.id}
+        {templates.map((template) => (
+          <Button
+            variant={"ghost"}
+            key={template.id}
+            className="w-full font-normal"
             onClick={() => {
-              editor?.commands.setContent(t.text);
+              editor?.commands.setContent(template.text);
+              setOpen(false);
             }}
           >
-            {t.name}
-          </SelectItem>
+            {template.name}
+          </Button>
         ))}
       </SelectContent>
     </Select>
