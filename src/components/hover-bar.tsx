@@ -28,7 +28,6 @@ const HoverBar = () => {
   const { isFetching, accountId } = useThreads();
   const isMobile = useIsMobile();
   const [isCollapsed, setIsCollapsed] = useAtom(isCollapsedAtom);
-  // TODO arial-label all buttons
   return (
     <div
       className={cn(
@@ -48,7 +47,11 @@ const HoverBar = () => {
         </Button>
       )}
       {isSignedIn && (
-        <Button variant={"ghost"} className="rounded-full p-1">
+        <Button
+          aria-label="user-button"
+          variant={"ghost"}
+          className="rounded-full p-1"
+        >
           <UserButton />
         </Button>
       )}
@@ -63,7 +66,11 @@ const HoverBar = () => {
           {isMobile && (
             <Dialog>
               <DialogTrigger asChild>
-                <Button variant={"ghost"} className="rounded-full p-1">
+                <Button
+                  aria-label="ask-ai"
+                  variant={"ghost"}
+                  className="rounded-full p-1"
+                >
                   <Sparkles className="h-[1.2rem] w-[1.2rem]" />
                 </Button>
               </DialogTrigger>

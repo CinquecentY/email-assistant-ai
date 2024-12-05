@@ -44,6 +44,7 @@ const MailMobile = () => {
         <TabsContent value="threads" className="h-screen w-full">
           <div className="flex min-h-11 items-center p-2 pb-0">
             <Button
+              aria-label="mail-button"
               data-testid="switch-tab"
               className={
                 "h-7 rounded-b-none rounded-t-lg font-bold shadow md:hidden"

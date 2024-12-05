@@ -129,6 +129,7 @@ const AIMenuBar = ({
       <Tooltip>
         <TooltipTrigger asChild>
           <Button
+            aria-label="ai-autocomplete"
             onClick={() => autocompleteAI(editor?.getText() ?? "")}
             size="icon"
             variant={"outline"}
@@ -143,6 +144,7 @@ const AIMenuBar = ({
       <Tooltip>
         <TooltipTrigger asChild>
           <Button
+            aria-label="ai-improve"
             onClick={async () => {
               const _prompt = editor?.getText() ?? "";
               editor?.commands.clearContent();
@@ -162,6 +164,7 @@ const AIMenuBar = ({
         <Tooltip>
           <TooltipTrigger asChild>
             <Button
+              aria-label="ai-reply"
               onClick={async () => {
                 const _prompt = editor?.getText() ?? "";
                 editor?.commands.clearContent();
@@ -183,6 +186,7 @@ const AIMenuBar = ({
           <Tooltip>
             <TooltipTrigger asChild>
               <Button
+                aria-label="ai-write"
                 onClick={() => setOpen(true)}
                 size="icon"
                 variant={"outline"}
@@ -206,6 +210,7 @@ const AIMenuBar = ({
             />
             <div className="h-2"></div>
             <Button
+              aria-label="generate"
               onClick={async () => {
                 setOpen(false);
                 setPrompt("");

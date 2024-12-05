@@ -19,7 +19,6 @@ export const POST = async (req: NextRequest) => {
       },
       { status: 400 },
     );
-  // TODO add messages to errors
   const dbAccount = await db.accounts.findUnique({
     where: {
       id: accountId,

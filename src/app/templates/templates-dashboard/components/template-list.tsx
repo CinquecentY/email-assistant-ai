@@ -93,11 +93,20 @@ const TemplateList = ({
               <span>
                 <Dialog>
                   <DialogTrigger asChild>
-                    <Button data-testid="delete-template-button" size="icon" variant="ghost" className="rounded-full bg-transparent text-foreground hover:bg-destructive hover:text-destructive-foreground">
+                    <Button
+                      aria-label="delete-template"
+                      data-testid="delete-template-button"
+                      size="icon"
+                      variant="ghost"
+                      className="rounded-full bg-transparent text-foreground hover:bg-destructive hover:text-destructive-foreground"
+                    >
                       <Trash2 />
                     </Button>
                   </DialogTrigger>
-                  <DialogContent data-testid="delete-template-dialog" className="rounded-xl">
+                  <DialogContent
+                    data-testid="delete-template-dialog"
+                    className="rounded-xl"
+                  >
                     <DialogHeader>
                       <DialogTitle>Delete Template?</DialogTitle>
                       <DialogDescription>
@@ -107,6 +116,7 @@ const TemplateList = ({
                     <DialogFooter>
                       <DialogClose asChild>
                         <Button
+                          aria-label="delete-template-confirm"
                           variant={"destructive"}
                           type="submit"
                           className="hover:bg-destructive"

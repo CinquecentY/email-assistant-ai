@@ -87,6 +87,7 @@ const AskAI = ({ isCollapsed }: { isCollapsed: boolean }) => {
               <div className="flex flex-wrap items-center gap-2">
                 <button
                   onClick={() => setInput("What can I ask?")}
+                  aria-label="choice-1"
                   className="rounded-b-xl rounded-r-xl bg-gray-800 px-2 py-1 text-xs text-gray-200"
                 >
                   What can I ask?
@@ -96,6 +97,7 @@ const AskAI = ({ isCollapsed }: { isCollapsed: boolean }) => {
                     onClick={() =>
                       setInput("What can you tell me about my emails?")
                     }
+                    aria-label="choice-2"
                     className="rounded-b-xl rounded-l-xl bg-gray-800 px-2 py-1 text-xs text-gray-200"
                   >
                     What can you tell me about my emails?
@@ -103,6 +105,7 @@ const AskAI = ({ isCollapsed }: { isCollapsed: boolean }) => {
                 </span>
                 <button
                   onClick={() => setInput("Who are my clients?")}
+                  aria-label="choice-3"
                   className="rounded-b-xl rounded-r-xl bg-gray-800 px-2 py-1 text-xs text-gray-200"
                 >
                   Who are my clients?
@@ -110,6 +113,7 @@ const AskAI = ({ isCollapsed }: { isCollapsed: boolean }) => {
                 <span className="inline-flex w-full justify-end md:block md:w-auto">
                   <button
                     onClick={() => setInput("When is my next meeting?")}
+                    aria-label="choice-4"
                     className="rounded-b-xl rounded-l-xl bg-gray-800 px-2 py-1 text-xs text-gray-200"
                   >
                     When is my next meeting?

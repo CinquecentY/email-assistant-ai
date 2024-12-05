@@ -32,7 +32,11 @@ const WriteTemplateButton = () => {
   return (
     <Drawer open={open} onOpenChange={setOpen}>
       <DrawerTrigger asChild>
-        <Button className="w-full p-3" data-testid="new-template-button">
+        <Button
+          aria-label="new-template"
+          className="w-full p-3"
+          data-testid="new-template-button"
+        >
           <Plus className="md:mr-1" />
           <p className="hidden md:block">New Template</p>
         </Button>

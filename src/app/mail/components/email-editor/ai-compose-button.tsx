@@ -62,20 +62,21 @@ const AIComposeButton = (props: Props) => {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button
-                onClick={() => setOpen(true)}
-                size="icon"
-                variant={"outline"}
-              >
-                <MessageSquareQuote className="size-5" />
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent>
-              <p>AI write</p>
-            </TooltipContent>
-          </Tooltip>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              onClick={() => setOpen(true)}
+              size="icon"
+              variant={"outline"}
+              aria-label="ai-write"
+            >
+              <MessageSquareQuote className="size-5" />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>AI write</p>
+          </TooltipContent>
+        </Tooltip>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
@@ -92,6 +93,7 @@ const AIComposeButton = (props: Props) => {
           />
           <div className="h-2"></div>
           <Button
+            aria-label="generate"
             onClick={async () => {
               await aiGenerate(prompt);
               setOpen(false);

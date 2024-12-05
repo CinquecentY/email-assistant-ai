@@ -32,6 +32,7 @@ const MailTemplatesSelect = ({ editor }: { editor: Editor | null }) => {
       <SelectContent>
         {templates.map((template) => (
           <Button
+            aria-label="mail-template-button"
             variant={"ghost"}
             key={template.id}
             className="w-full font-normal"

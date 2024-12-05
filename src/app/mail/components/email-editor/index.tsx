@@ -187,6 +187,7 @@ const EmailEditor = ({
           </span>
           <span className="inline-flex flex-1 items-center justify-end md:hidden">
             <Button
+              aria-label="send"
               onClick={async () => {
                 editor?.commands.clearContent();
                 handleSend(value);
@@ -217,6 +218,7 @@ const EmailEditor = ({
           </span>
         </span>
         <Button
+          aria-label="send"
           onClick={async () => {
             editor?.commands.clearContent();
             handleSend(value);

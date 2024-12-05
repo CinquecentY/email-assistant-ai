@@ -68,7 +68,7 @@ const WriteMailButton = () => {
   return (
     <Drawer open={open} onOpenChange={setOpen}>
       <DrawerTrigger asChild>
-        <Button className="w-full p-3">
+        <Button className="w-full p-3" aria-label="new-email">
           <Plus className="md:mr-1" />
           <p className="hidden md:block">New Email</p>
         </Button>

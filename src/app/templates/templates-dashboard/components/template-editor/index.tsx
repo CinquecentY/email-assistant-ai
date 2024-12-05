@@ -129,6 +129,7 @@ const TemplateEditor = ({
           </span>
           <span className="inline-flex flex-1 items-center justify-end md:hidden">
             <Button
+              aria-label="save"
               onClick={async () => {
                 handleSave(nameValue, textValue);
               }}
@@ -161,6 +162,7 @@ const TemplateEditor = ({
           </span>
         </span>
         <Button
+          aria-label="save"
           onClick={async () => {
             handleSave(nameValue, textValue);
           }}
