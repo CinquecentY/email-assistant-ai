@@ -32,6 +32,8 @@ const TemplateEditor = ({
   const [textValue, setTextValue] = React.useState(text);
 
   const [generation, setGeneration] = React.useState("");
+  const [isLoading, setIsLoading] = React.useState(false);
+
   const autocompleteAI = async (_prompt: string) => {
     const context = "";
     const textStream = autoComplete(context ?? "", _prompt);
@@ -125,7 +127,12 @@ const TemplateEditor = ({
             {editor && <TipTapMenuBar editor={editor} />}{" "}
           </span>
           <span className="inline-flex gap-2 py-1">
-            <AIMenuBar setGeneration={setGeneration} editor={editor} />
+            <AIMenuBar
+              setGeneration={setGeneration}
+              editor={editor}
+              isLoading={isLoading}
+              setIsLoading={setIsLoading}
+            />
           </span>
           <span className="inline-flex flex-1 items-center justify-end md:hidden">
             <Button
@@ -141,7 +148,10 @@ const TemplateEditor = ({
         </div>
         <div
           data-testid="template-editor-text"
-          className="prose max-h-[25svh] w-full overflow-y-auto rounded-md border px-4 py-2"
+          className={cn(
+            isLoading && "animate-pulse",
+            "prose max-h-[25svh] w-full overflow-y-auto rounded-md border px-4 py-2",
+          )}
         >
           <EditorContent
             value={textValue}
