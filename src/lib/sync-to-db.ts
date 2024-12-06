@@ -12,6 +12,8 @@ import { OramaManager } from "./orama";
 import { turndown } from "./turndown";
 import { generateEmbedding } from "./ai/rag/embeddings";
 
+export const maxDuration = 60;
+
 async function syncEmailsToDatabase(emails: EmailMessage[], accountId: string) {
   const limit = pLimit(10); // Process up to 10 emails concurrently
 
