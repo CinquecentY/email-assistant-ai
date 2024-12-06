@@ -97,7 +97,14 @@ const Component = ({
       },
       {
         onSuccess: () => {
-          toast.success("Email sent");
+          toast.success("Mail sent successfully", {
+            description: "The changes should reflect in a moment",
+          });
+        },
+        onError: (error: { message: string }) => {
+          toast.error("An error has occurred", {
+            description: error.message,
+          });
         },
       },
     );

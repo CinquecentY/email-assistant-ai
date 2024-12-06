@@ -17,6 +17,7 @@ import { useEffect } from "react";
 import { templatesAtom } from "@/lib/atoms";
 import { Button } from "@/components/ui/button";
 import { type Template } from "@/lib/types";
+import { toast } from "sonner";
 
 interface TemplateListProps {
   selectTemplateHandle: (templateId: string) => void;
@@ -29,23 +30,23 @@ const TemplateList = ({
 }: TemplateListProps) => {
   const [templates, setTemplates] = useAtom<Template[]>(templatesAtom);
 
-  const {
-    data: fetchedTemplates,
-    isLoading,
-    error,
-  } = api.template.getTemplates.useQuery<Template[]>();
+  const { data: fetchedTemplates } =
+    api.template.getTemplates.useQuery<Template[]>();
 
   const deleteTemplateMutation = api.template.deleteTemplate.useMutation();
   function deleteTemplate(id: string) {
     deleteTemplateMutation.mutate(
       { id },
       {
-        onError: (error) => {
-          console.error(error);
-        },
-        onSuccess: (data) => {
+        onSuccess: () => {
           setTemplates(templates.filter((template) => template.id !== id));
           if (deleteTemplateHandle) deleteTemplateHandle();
+          toast.success("Template deleted successfully");
+        },
+        onError: (error: { message: string }) => {
+          toast.error("An error has occurred", {
+            description: error.message,
+          });
         },
       },
     );

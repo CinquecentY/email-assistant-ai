@@ -11,6 +11,7 @@ import { Poppins } from "next/font/google";
 import { cn } from "@/lib/utils";
 import HoverBar from "@/components/hover-bar";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { Toaster } from "sonner";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -41,6 +42,7 @@ export default function RootLayout({
               <TooltipProvider delayDuration={0}>
                 <HoverBar />
                 {children}
+                <Toaster richColors />
               </TooltipProvider>
             </ThemeProvider>
           </body>

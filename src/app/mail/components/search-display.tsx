@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
-// hit.document : any 
+// hit.document : any
 "use client";
 import DOMPurify from "dompurify";
 import { useAtom } from "jotai";
@@ -25,7 +25,16 @@ const SearchDisplay = () => {
   const [, setTab] = useAtom(mailTabAtom);
   React.useEffect(() => {
     if (!debouncedSearch || !accountId) return;
-    search.mutate({ accountId, query: debouncedSearch });
+    search.mutate(
+      { accountId, query: debouncedSearch },
+      {
+        onError: (error: { message: string }) => {
+          toast.error("An error has occurred", {
+            description: error.message,
+          });
+        },
+      },
+    );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debouncedSearch, accountId]);
 

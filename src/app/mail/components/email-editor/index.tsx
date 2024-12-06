@@ -18,6 +18,7 @@ import useOutsideClick from "@/hooks/use-click-outside";
 import SendInputs from "./send-inputs";
 import AIMenuBar from "../../../../components/ai-menu-bar";
 import MailTemplatesMenu from "./mail-template-menu";
+import { toast } from "sonner";
 
 type EmailEditorProps = {
   toValues: { label: string; value: string }[];
@@ -84,13 +85,21 @@ const EmailEditor = ({
         "Alt-a": () => {
           (async () => {
             await autocompleteAI(this.editor.getText());
-          })().catch((error: Error) => console.error("error", error.message));
+          })().catch((error: Error) =>
+            toast.error("An error has occurred", {
+              description: error.message,
+            }),
+          );
           return true;
         },
         "Meta-a": () => {
           (async () => {
             await autocompleteAI(this.editor.getText());
-          })().catch((error: Error) => console.error("error", error.message));
+          })().catch((error: Error) =>
+            toast.error("An error has occurred", {
+              description: error.message,
+            }),
+          );
           return true;
         },
       };

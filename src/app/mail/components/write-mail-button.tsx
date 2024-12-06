@@ -54,7 +54,9 @@ const WriteMailButton = () => {
       },
       {
         onSuccess: () => {
-          toast.success("Email sent");
+          toast.success("Mail sent successfully", {
+            description: "The changes should reflect in a moment",
+          });
           setOpen(false);
         },
         onError: (error: { message: string }) => {

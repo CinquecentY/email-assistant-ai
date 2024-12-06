@@ -79,10 +79,12 @@ export function AccountSwitch({ isCollapsed }: AccountSwitcherProps) {
                   const url = await getAurinkoAuthorizationUrl("Google");
                   window.location.href = url;
                 } catch (error) {
-                  toast.error((error as Error).message);
+                  toast.error("An error has occurred", {
+                    description: (error as Error).message,
+                  });
                 }
               }}
-              className="relative flex w-full cursor-pointer items-center rounded-sm py-1.5 pl-2 pr-8 text-sm outline-none hover:bg-gray-50 focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50"
+              className="relative flex w-full cursor-pointer items-center rounded-sm py-1.5 pl-2 pr-8 text-sm outline-none hover:bg-gray-50 focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50 dark:hover:bg-gray-900"
             >
               <Plus className="mr-1 size-4" />
               Add account

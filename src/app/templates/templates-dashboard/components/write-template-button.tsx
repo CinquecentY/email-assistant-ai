@@ -13,6 +13,7 @@ import { useAtom } from "jotai";
 import { type Template } from "@/lib/types";
 import { templatesAtom } from "@/lib/atoms";
 import { api } from "@/trpc/react";
+import { toast } from "sonner";
 
 const WriteTemplateButton = () => {
   const [open, setOpen] = React.useState(false);
@@ -22,9 +23,12 @@ const WriteTemplateButton = () => {
     addTemplateMutation.mutate(newTemplate, {
       onSuccess: (data) => {
         setTemplates((prev) => [...prev, data as Template]);
+        toast.success("Template created successfully");
       },
-      onError: (error) => {
-        console.error(error);
+      onError: (error: { message: string }) => {
+        toast.error("An error has occurred", {
+          description: error.message,
+        });
       },
     });
     setOpen(false);

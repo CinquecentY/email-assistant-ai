@@ -4,6 +4,7 @@ import { useAtom } from "jotai";
 import React, { useEffect, useState } from "react";
 import TemplateEditor from "./template-editor";
 import { type Template } from "@/lib/types";
+import { toast } from "sonner";
 
 interface TemplateDisplayProps {
   updateTemplateHandle?: () => void;
@@ -26,14 +27,17 @@ const TemplateDisplay = ({
     updateTemplateMutation.mutate(
       { ...template },
       {
-        onError: (error) => {
-          console.error(error);
-        },
         onSuccess: () => {
           setTemplates(
             templates.map((t) => (t.id === template.id ? template : t)),
           );
           if (updateTemplateHandle) updateTemplateHandle();
+          toast.success("Template updated successfully");
+        },
+        onError: (error: { message: string }) => {
+          toast.error("An error has occurred", {
+            description: error.message,
+          });
         },
       },
     );
