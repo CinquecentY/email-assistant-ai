@@ -177,7 +177,7 @@ By the end of the setup, your `.env` file must look like this:
 ```bash
 # Prisma
 # https://www.prisma.io/docs/reference/database-reference/connection-urls#env
-DATABASE_URL=
+DATABASE_URL=postgresql://postgres:mysecretpassword@localhost:5432/email-assistant-ai
 
 # Clerk
 NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=
