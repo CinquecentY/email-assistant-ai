@@ -31,8 +31,6 @@ const EmailDisplay = ({ email }: Props) => {
 
   const isMe = account?.email === email.from.address;
 
-  const isMobile = useIsMobile();
-
   return (
     <div
       className={cn(
