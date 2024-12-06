@@ -30,8 +30,8 @@ const DeleteAccountButton = ({
         onSuccess: () => {
           if (deleteAccountId === accountId) {
             setAccountId("");
-            window.location.reload();
           }
+          window.location.reload();
           toast.success("Account deleted successfully", {});
         },
         onError: (error: { message: string }) => {

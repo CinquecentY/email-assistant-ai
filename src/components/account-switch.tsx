@@ -12,6 +12,7 @@ import { Plus } from "lucide-react";
 import React from "react";
 import { toast } from "sonner";
 import { useLocalStorage } from "usehooks-ts";
+import DeleteAccountButton from "./delete-account-button";
 
 interface AccountSwitcherProps {
   isCollapsed: boolean;
@@ -65,13 +66,12 @@ export function AccountSwitch({ isCollapsed }: AccountSwitcherProps) {
           </SelectTrigger>
           <SelectContent>
             {data.map((account) => (
-              <SelectItem
-                key={account.id}
-                value={account.id}
-                data-testid="account-item"
-              >
-                {account.email}
-              </SelectItem>
+              <span key={account.id} className="inline-flex w-full">
+                <SelectItem value={account.id} data-testid="account-item">
+                  {account.email}
+                </SelectItem>
+                <DeleteAccountButton deleteAccountId={account.id} />
+              </span>
             ))}
             <div
               onClick={async () => {
