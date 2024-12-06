@@ -1,17 +1,10 @@
-import {
-  create,
-  insert,
-  search,
-  save,
-  load,
-  type AnyOrama,
-} from "@orama/orama";
+import { create, insert, search, type AnyOrama } from "@orama/orama";
 import { persist, restore } from "@orama/plugin-data-persistence";
 import { db } from "@/server/db";
 import { generateEmbedding } from "./ai/rag/embeddings";
 
 export class OramaManager {
-  // @ts-ignore
+  // @ts-expect-error Property 'orama' has no initializer and is not definitely assigned in the constructor.
   private orama: AnyOrama;
   private accountId: string;
 

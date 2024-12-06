@@ -2,6 +2,8 @@ import { api } from "@/trpc/react";
 import { getQueryKey } from "@trpc/react-query";
 import { useLocalStorage } from "usehooks-ts";
 
+// For fetching threads, accountId and states
+
 const useThreads = () => {
   const { data: accounts } = api.mail.getAccounts.useQuery();
   const [accountId] = useLocalStorage("accountId", "");
@@ -26,7 +28,7 @@ const useThreads = () => {
     {
       enabled: !!accountId && !!tab,
       placeholderData: (e) => e,
-      refetchInterval: 12000,
+      refetchInterval: 12000, // Fetching interval
     },
   );
 

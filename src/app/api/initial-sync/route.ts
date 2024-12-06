@@ -8,6 +8,8 @@ interface RequestBody {
   userId: string;
 }
 
+// Initial sync of accounts
+
 export const POST = async (req: NextRequest) => {
   const body = (await req.json()) as RequestBody;
   const { accountId, userId } = body;

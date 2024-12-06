@@ -13,7 +13,6 @@ import { turndown } from "./turndown";
 import { generateEmbedding } from "./ai/rag/embeddings";
 
 async function syncEmailsToDatabase(emails: EmailMessage[], accountId: string) {
-  //console.log(`Syncing ${emails.length} emails to database`);
   const limit = pLimit(10); // Process up to 10 emails concurrently
 
   const oramaManager = new OramaManager(accountId);
@@ -64,7 +63,7 @@ async function upsertEmail(
 ) {
   //console.log(`Upserting email ${index + 1}`, JSON.stringify(email, null, 2));
   try {
-    // determine email label type
+    // Determine email label type
     let emailLabelType: "inbox" | "sent" | "draft" = "inbox";
     if (
       email.sysLabels.includes("inbox") ||

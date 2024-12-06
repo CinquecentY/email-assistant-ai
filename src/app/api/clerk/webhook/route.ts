@@ -1,6 +1,8 @@
 import { db } from "@/server/db";
 import { type UserJSON } from "@clerk/nextjs/server";
 
+// Webhook on creating a user
+
 export const POST = async (req: Request) => {
   const { data } = (await req.json()) as { data: UserJSON };
   if (!data.email_addresses[0]) return new Response("NO DATA", { status: 400 });
