@@ -1,9 +1,22 @@
 
 # Mail Assistant AI
 
-An email assistant powered by AI to help you do more.
+An email assistant powered by AI to help you do more. Using Nextjs, Prisma, Postgres, Orama,
 
 ![image info](./pictures/frontpage.png)
+
+> NB: To test out the deployed project, please use one of the following pre-existent accounts to test the AI functionalities using client data:
+
+```text
+michael.brown@company.com
+^+"74;(j{RH('d5{W}u)
+
+emma.wilson@company.com
+^+"74;(j{RH('d5{W}u)
+
+john.smith@company.com
+^+"74;(j{RH('d5{W}u)
+```
 
 # Contents
 
@@ -41,6 +54,7 @@ An email assistant powered by AI to help you do more.
 - [Orama](https://orama.com) Knowledge database to search through emails and feed it to the AI models via vectors.
 - [Gemini](https://gemini.google.com) Google AI model, provides state-of-the-art generative AI models and tools optimal for the project
 - [Vercel AI SDK](https://sdk.vercel.ai) Library that provides the tools needed to build with the Gemini model using RAG, data chunking, and embedding to provide the AI model with context regarding the specific queries.
+- [Jotai](https://jotai.org/) Primitive and flexible state management library
 - [Playwright](https://playwright.dev) End-to-end testing for web applications using various rendering engines including Chromium, WebKit, and Firefox. Used to test most user flows, mail checking, analytics viewing, template management
 
 # Application Architecture
@@ -89,6 +103,16 @@ To set up authentication, we need to set up an api key from Clerk.
 2. Click on Create user
 3. Add an email and password and save
 4. Copy the newly creates user's email and password and put them into `E2E_CLERK_USER_USERNAME` and `E2E_CLERK_USER_PASSWORD`
+
+### 6: Set up webhook for user creation
+
+We need to set up a webhook to store the user whenever we create one.
+
+1. Navigate to the **Webhooks** section
+2. Click on **Add Endpoint**.
+3. Enter the URL of your server endpoint where you want to receive the webhook events. Must be a public url, eg. <https://example.com/api/clerk/webhook>
+4. **Message Filtering**: Select the `user.created` event from the list of available events.
+5. Click **Create** to save the webhook endpoint.
 
 ## Gmail API
 
@@ -152,6 +176,8 @@ Add the website call so Aurinko can redirect back into the website
 2. Click on **Callbacks**
 3. Add the callback urls e.g <http://localhost:3000/api/aurinko/callback>
 4. Click Save
+
+> NB: Users and accounts are very different, users are what we use to log into the app, accounts are the Google account we use for our mail management
 
 ## Google Gemini
 
