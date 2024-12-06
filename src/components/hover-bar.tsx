@@ -27,7 +27,7 @@ const HoverBar = () => {
   const pathname = usePathname();
   const { isFetching, accountId } = useThreads();
   const isMobile = useIsMobile();
-  const [isCollapsed, setIsCollapsed] = useAtom(isCollapsedAtom);
+  const [isCollapsed] = useAtom(isCollapsedAtom);
   return (
     <div
       className={cn(
@@ -35,17 +35,20 @@ const HoverBar = () => {
         isCollapsed && isMobile && "hidden",
       )}
     >
-      {isSignedIn && pathname === "/mail" && accountId && isFetching && (
-        <Button
-          variant={"ghost"}
-          className="rounded-full p-2 md:hidden"
-          asChild
-        >
-          <span>
-            <Loader2 className="h-[1.2rem] w-[1.2rem] animate-spin" />
-          </span>
-        </Button>
-      )}
+      {isSignedIn &&
+        pathname === "/mail" &&
+        accountId.length !== 0 &&
+        isFetching && (
+          <Button
+            variant={"ghost"}
+            className="rounded-full p-2 md:hidden"
+            asChild
+          >
+            <span>
+              <Loader2 className="h-[1.2rem] w-[1.2rem] animate-spin" />
+            </span>
+          </Button>
+        )}
       {isSignedIn && (
         <Button
           aria-label="user-button"
@@ -92,7 +95,7 @@ const HoverBar = () => {
               <WriteTemplateButton />
             </span>
           )}
-          {accountId && isFetching && (
+          {accountId.length !== 0 && isFetching && (
             <Button
               variant={"ghost"}
               className="hidden rounded-full p-2 md:block"

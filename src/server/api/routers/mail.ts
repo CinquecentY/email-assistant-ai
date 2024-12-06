@@ -1,11 +1,11 @@
-import { Prisma } from "@prisma/client";
+import { type Prisma } from "@prisma/client";
 import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "../trpc";
 import { db } from "@/server/db";
 import Account from "@/lib/account";
 import { emailAddressSchema } from "@/lib/types";
 
-export const authoriseAccountAccess = async (
+export const authorizeAccountAccess = async (
   accountId: string,
   userId: string,
 ) => {
@@ -53,6 +53,20 @@ export const mailRouter = createTRPCRouter({
       },
     });
   }),
+  deleteAccount: protectedProcedure
+    .input(z.object({ accountId: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const account = await authorizeAccountAccess(
+        input.accountId,
+        ctx.auth.userId,
+      );
+      await db.accounts.delete({
+        where: {
+          id: account.id,
+        },
+      });
+      return { success: true };
+    }),
   getNumThreads: protectedProcedure
     .input(
       z.object({
@@ -61,7 +75,7 @@ export const mailRouter = createTRPCRouter({
       }),
     )
     .query(async ({ ctx, input }) => {
-      const account = await authoriseAccountAccess(
+      const account = await authorizeAccountAccess(
         input.accountId,
         ctx.auth.userId,
       );
@@ -98,12 +112,12 @@ export const mailRouter = createTRPCRouter({
       }),
     )
     .query(async ({ ctx, input }) => {
-      const account = await authoriseAccountAccess(
+      const account = await authorizeAccountAccess(
         input.accountId,
         ctx.auth.userId,
       );
       const acc = new Account(account.token);
-      acc.syncEmails();
+      await acc.syncEmails();
 
       /*let filter: Prisma.ThreadWhereInput = {};
       if (input.tab === "inbox") {
@@ -165,10 +179,6 @@ export const mailRouter = createTRPCRouter({
       }),
     )
     .query(async ({ ctx, input }) => {
-      const account = await authoriseAccountAccess(
-        input.accountId,
-        ctx.auth.userId,
-      );
       return await ctx.db.thread.findUnique({
         where: { id: input.threadId },
         include: {
@@ -200,7 +210,7 @@ export const mailRouter = createTRPCRouter({
       }),
     )
     .query(async ({ ctx, input }) => {
-      const account = await authoriseAccountAccess(
+      const account = await authorizeAccountAccess(
         input.accountId,
         ctx.auth.userId,
       );
@@ -235,10 +245,6 @@ export const mailRouter = createTRPCRouter({
         throw new Error("No external email found in thread");
       }
 
-      const allRecipients = new Set([
-        ...thread.emails.flatMap((e) => [e.from, ...e.to, ...e.cc]),
-      ]);
-
       if (input.replyType === "reply") {
         return {
           to: [lastExternalEmail.from],
@@ -267,13 +273,13 @@ export const mailRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      const account = await authoriseAccountAccess(
+      const account = await authorizeAccountAccess(
         input.accountId,
         ctx.auth.userId,
       );
       if (!account) throw new Error("Invalid token");
       const acc = new Account(account.token);
-      acc.syncEmails();
+      await acc.syncEmails();
     }),
   setUndone: protectedProcedure
     .input(
@@ -284,7 +290,7 @@ export const mailRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      const account = await authoriseAccountAccess(
+      const account = await authorizeAccountAccess(
         input.accountId,
         ctx.auth.userId,
       );
@@ -328,7 +334,7 @@ export const mailRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      const acc = await authoriseAccountAccess(
+      const acc = await authorizeAccountAccess(
         input.accountId,
         ctx.auth.userId,
       );
@@ -354,7 +360,7 @@ export const mailRouter = createTRPCRouter({
       }),
     )
     .query(async ({ ctx, input }) => {
-      const account = await authoriseAccountAccess(
+      const account = await authorizeAccountAccess(
         input.accountId,
         ctx.auth.userId,
       );
