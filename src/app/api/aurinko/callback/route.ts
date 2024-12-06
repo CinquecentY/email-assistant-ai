@@ -60,6 +60,8 @@ export const GET = async (req: NextRequest) => {
   );
 
   return NextResponse.redirect(
-    new URL(`/mail?accountId=${token.accountId.toString()}`, req.url),
+    //new URL(`/mail?accountId=${token.accountId.toString()}`, req.url),
+    new URL("/mail", req.url),
+    { status: 302 },
   );
 };
