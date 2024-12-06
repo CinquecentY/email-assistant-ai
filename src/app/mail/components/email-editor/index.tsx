@@ -187,7 +187,7 @@ const EmailEditor = ({
             />
           </span>
           <span className="ml-2 w-1/5 self-center">
-            <MailTemplatesMenu editor={editor} />
+            <MailTemplatesMenu setValue={setValue} editor={editor} />
           </span>
           <span className="inline-flex flex-1 items-center justify-end md:hidden">
             <Button

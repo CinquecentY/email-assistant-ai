@@ -14,7 +14,12 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { ChevronDown } from "lucide-react";
 
-const MailTemplatesMenu = ({ editor }: { editor: Editor | null }) => {
+interface MailTemplatesMenuProps {
+  editor: Editor | null;
+  setValue: (value: string) => void;
+}
+
+const MailTemplatesMenu = ({ editor, setValue }: MailTemplatesMenuProps) => {
   const [templates, setTemplates] = useAtom(templatesAtom);
   const { data: fetchedTemplates } =
     api.template.getTemplates.useQuery<Template[]>();
@@ -37,6 +42,7 @@ const MailTemplatesMenu = ({ editor }: { editor: Editor | null }) => {
             className="w-full cursor-pointer"
             onClick={() => {
               editor?.commands.setContent(template.text);
+              setValue(template.text);
             }}
           >
             {template.name}
