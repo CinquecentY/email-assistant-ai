@@ -1,0 +1,21 @@
+name: email-assistant-ai
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+        - .:/app
+        - /app/node_modules
+        - /app/.next
+    ports:
+      - "3000:3000"
+  db:
+    image: cinqye100/email-assistant-ai-db
+    restart: always
+        # set shared memory limit when using docker-compose
+    shm_size: 128mb
+    volumes:
+      - db:/var/lib/postgresql/data
+volumes:
+  db:
