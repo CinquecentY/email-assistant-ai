@@ -13,6 +13,13 @@ export const dataRouter = createTRPCRouter({
       where: {
         createdBy: ctx.auth.userId,
       },
+      include: {
+        Client: {
+          select: {
+            name: true,
+          },
+        },
+      },
     });
   }),
   getEvents: protectedProcedure.query(async ({ ctx }) => {
@@ -34,12 +41,26 @@ export const dataRouter = createTRPCRouter({
       where: {
         createdBy: ctx.auth.userId,
       },
+      include: {
+        Client: {
+          select: {
+            name: true,
+          },
+        },
+      },
     });
   }),
   getNotes: protectedProcedure.query(async ({ ctx }) => {
     return await ctx.db.notes.findMany({
       where: {
         createdBy: ctx.auth.userId,
+      },
+      include: {
+        Client: {
+          select: {
+            name: true,
+          },
+        },
       },
     });
   }),
