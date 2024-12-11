@@ -97,7 +97,9 @@ const AIMenuBar = ({
 
     const textStream = composeEmail(
       [
-        context ?? "",
+        "This is the user's email thread the user must reply to",
+        context,
+        "-----------",
         account &&
           `user data is {name:${account.name}, email:${account.email}}`,
       ].join("\n"),
