@@ -5,6 +5,7 @@ import axios, { type AxiosError } from "axios";
 import { type NextRequest, NextResponse } from "next/server";
 import { waitUntil } from "@vercel/functions";
 import { error } from "console";
+import { cookies } from "next/headers";
 
 export const GET = async (req: NextRequest) => {
   const { userId } = await auth();
@@ -14,6 +15,7 @@ export const GET = async (req: NextRequest) => {
       { status: 401 },
     );
 
+  const cookieStore = await cookies();
   const params = req.nextUrl.searchParams;
   const status = params.get("status");
   if (status !== "success")
@@ -62,6 +64,8 @@ export const GET = async (req: NextRequest) => {
         if (err.response) console.log(err.response.data);
       }),
   );
+
+  cookieStore.set("accountId", token.accountId.toString());
 
   return NextResponse.redirect(
     //new URL(`/mail?accountId=${token.accountId.toString()}`, req.url),
